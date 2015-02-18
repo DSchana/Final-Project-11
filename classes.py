@@ -61,9 +61,10 @@ class player:
 		return self.y
 
 class enemy:
-	def __init__(self, speed, ko_time, AI_level, kind, x, y):
+	def __init__(self, speed, ko_time, AI_level, attack_radius, kind, x, y):
 		self.x = x
 		self.y = y
+		self.attack_radius = attack_radius
 		self.enemyRect = Rect(x, y, 40, 50)
 		self.speed = speed
 		self.ko_time = ko_time
@@ -72,6 +73,8 @@ class enemy:
 
 	def move(self, px, py, screen):
 		"Move enemy"
+		draw.circle(screen, (148, 0, 0, 30), (int(self.x)+20, int(self.y)+25), self.attack_radius)
+		draw.circle(screen, (150, 0, 0, 255), (int(self.x)+20, int(self.y)+25), self.attack_radius, 10)
 		if abs(py - self.y) == abs(px - self.x):
 			if py > self.y:
 				self.y += self.speed
@@ -104,31 +107,6 @@ class enemy:
 	def getY(self):
 		"get y position of object"
 		return self.y
-
-class block:
-	def __init__(self, speed, can_pull, kind, can_break, x, y):
-		self.x = x
-		self.y = y
-		self.blockRect = Rect(x, y, 50, 50)
-		self.speed = speed
-		self.can_pull = can_pull
-		self.kind = kind
-		self.can_break = can_break
-
-	def pull(self):
-		"Change how the block interacts with the player"
-
-	def throw(self):
-		"Change how block moves while moving"
-
-	def show(self, screen):
-		"Show blocks"
-		draw.rect(screen, (145, 145, 145), self.blockRect)
-
-	# get methods
-	def getBlockRect(self):
-		"Get Rect of object"
-		return self.blockRect
 
 # enumeration
 class playerMode(Enum):

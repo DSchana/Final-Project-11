@@ -6,28 +6,24 @@ from enum import *
 from math import *
 from random import *
 
-screen = display.set_mode((700, 500))
+screen = display.set_mode((850, 600))
 screen.fill((0, 0, 255))
 
 enemyList = []
 playerList = []
-blockList = []
 
 playerList.append(player(4, 100, 3.2, 400, False, 100, 300, "arrow"))
-playerList.append(player(3, 100, 3.2, 400, False, 600, 200, "wasd"))
+#playerList.append(player(3, 100, 3.2, 400, False, 600, 200, "wasd"))
 
-enemyList.append(enemy(1.5, 3, 10, "blob", 10, 20))
-enemyList.append(enemy(0.5, 3, 10, "blob", 100, 400))
-enemyList.append(enemy(1, 3, 10, "blob", 100, 200))
-
-for i in range(8):
-	blockList.append(block(5, True, "stone", False, 100 + i*60, 300))
+enemyList.append(enemy(1.5, 3, 10, 100, "blob", 10, 20))
+enemyList.append(enemy(0.5, 3, 10, 50, "blob", 100, 400))
+enemyList.append(enemy(1, 3, 10, 150, "blob", 100, 200))
 
 gameClock = time.Clock()
 running = True
 
 while running:
-	screen.fill((0, 0, 255))
+	screen.fill((0, 168, 64))
 	for e in event.get():
 		if e.type == QUIT:
 			running = False
@@ -48,9 +44,6 @@ while running:
 	else:
 		for i in range(len(enemyList)):
 			enemyList[i].move(playerList[0].getX(), playerList[0].getY(), screen)
-
-	for i in range(len(blockList)):
-		blockList[i].show(screen)
 
 	gameClock.tick(60)
 	display.flip()
