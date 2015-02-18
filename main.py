@@ -4,18 +4,24 @@ from pygame import *
 from classes import *
 from enum import *
 from math import *
+from random import *
 
 screen = display.set_mode((700, 500))
 screen.fill((0, 0, 255))
 
 enemyList = []
 playerList = []
+blockList = []
 
-playerList.append(player(3, 100, 3.2, 400, False, 100, 300, "arrow"))
-playerList.append(player(2, 100, 3.2, 400, False, 600, 200, "wasd"))
+playerList.append(player(4, 100, 3.2, 400, False, 100, 300, "arrow"))
+playerList.append(player(3, 100, 3.2, 400, False, 600, 200, "wasd"))
 
-enemyList.append(enemy(1, 3, 10, "blob", 10, 20))
-enemyList.append(enemy(0.5, 3, 10, "blob", 100, 200))
+enemyList.append(enemy(1.5, 3, 10, "blob", 10, 20))
+enemyList.append(enemy(0.5, 3, 10, "blob", 100, 400))
+enemyList.append(enemy(1, 3, 10, "blob", 100, 200))
+
+for i in range(8):
+	blockList.append(block(5, True, "stone", False, 100 + i*60, 300))
 
 gameClock = time.Clock()
 running = True
@@ -29,19 +35,22 @@ while running:
 	pressed = key.get_pressed()
 
 	# do player meathods
-	player1.move(pressed, screen)
-	player2.move(pressed, screen)
+	for i in range(len(playerList)):
+		playerList[i].move(pressed, screen)
 
 	# do enemy methods
-	if sqrt((player1.getX()-enemy1.getX())**2 + (player1.getY() - enemy1.getY())**2) < sqrt((player2.getX()-enemy1.getX())**2 + (player2.getY() - enemy1.getY())**2):
-		enemy1.move(player1.getX(), player1.getY(), screen)
-	elif sqrt((player1.getX()-enemy1.getX())**2 + (player1.getY() - enemy1.getY())**2) > sqrt((player2.getX()-enemy1.getX())**2 + (player2.getY() - enemy1.getY())**2):
-		enemy1.move(player2.getX(), player2.getY(), screen)
+	if len(playerList)>1:
+		for i in range(len(enemyList)):
+			if sqrt((playerList[0].getX()-enemyList[i].getX())**2 + (playerList[0].getY() - enemyList[i].getY())**2) < sqrt((playerList[1].getX()-enemyList[i].getX())**2 + (playerList[1].getY() - enemyList[i].getY())**2):
+				enemyList[i].move(playerList[0].getX(), playerList[0].getY(), screen)
+			elif sqrt((playerList[0].getX()-enemyList[i].getX())**2 + (playerList[0].getY() - enemyList[i].getY())**2) > sqrt((playerList[1].getX()-enemyList[i].getX())**2 + (playerList[1].getY() - enemyList[i].getY())**2):
+				enemyList[i].move(playerList[1].getX(), playerList[1].getY(), screen)
+	else:
+		for i in range(len(enemyList)):
+			enemyList[i].move(playerList[0].getX(), playerList[0].getY(), screen)
 
-	if sqrt((player1.getX()-enemy2.getX())**2 + (player1.getY() - enemy2.getY())**2) < sqrt((player2.getX()-enemy2.getX())**2 + (player2.getY() - enemy2.getY())**2):
-		enemy2.move(player1.getX(), player1.getY(), screen)
-	elif sqrt((player1.getX()-enemy2.getX())**2 + (player1.getY() - enemy2.getY())**2) > sqrt((player2.getX()-enemy2.getX())**2 + (player2.getY() - enemy2.getY())**2):
-		enemy2.move(player2.getX(), player2.getY(), screen)
+	for i in range(len(blockList)):
+		blockList[i].show(screen)
 
 	gameClock.tick(60)
 	display.flip()

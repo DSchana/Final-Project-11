@@ -8,7 +8,7 @@ class player:
 		self.x = x
 		self.y = y
 		self.moveMode = moveMode
-		self.playerRect = Rect(x, y, 20, 50)
+		self.playerRect = Rect(x, y, 40, 50)
 		self.speed = speed
 		self.tongue_range = tongue_range
 		self.tongue_speed = tongue_speed
@@ -37,7 +37,7 @@ class player:
 			elif pressed[K_d]:
 				self.x += self.speed
 
-		self.playerRect = Rect(self.x, self.y, 20, 50)
+		self.playerRect = Rect(self.x, self.y, 40, 50)
 		draw.rect(screen, (0, 255, 0), self.playerRect)
 
 	def suck(self):
@@ -64,7 +64,7 @@ class enemy:
 	def __init__(self, speed, ko_time, AI_level, kind, x, y):
 		self.x = x
 		self.y = y
-		self.enemyRect = Rect(x, y, 20, 50)
+		self.enemyRect = Rect(x, y, 40, 50)
 		self.speed = speed
 		self.ko_time = ko_time
 		self.AI_level = AI_level
@@ -72,16 +72,23 @@ class enemy:
 
 	def move(self, px, py, screen):
 		"Move enemy"
-		if px > self.x:
-			self.x += self.speed
-		elif px < self.x:
-			self.x -= self.speed
-		elif py > self.y:
-			self.y += self.speed
-		elif py < self.y:
-			self.y -= self.speed
+		if abs(py - self.y) == abs(px - self.x):
+			if py > self.y:
+				self.y += self.speed
+			elif py < self.y:
+				self.y -= self.speed
+		elif abs(py - self.y) > abs(px - self.x):
+			if py > self.y:
+				self.y += self.speed
+			elif py < self.y:
+				self.y -= self.speed
+		elif abs(py - self.y) < abs(px - self.x):
+			if px > self.x:
+				self.x += self.speed
+			elif px < self.x:
+				self.x -= self.speed
 
-		self.enemyRect = Rect(self.x, self.y, 20, 50)
+		self.enemyRect = Rect(self.x, self.y, 40, 50)
 		draw.rect(screen, (255, 0, 0), self.enemyRect)
 
 	def knock_out(self):
@@ -99,7 +106,10 @@ class enemy:
 		return self.y
 
 class block:
-	def __init__(self, speed, can_pull, kind, can_break):
+	def __init__(self, speed, can_pull, kind, can_break, x, y):
+		self.x = x
+		self.y = y
+		self.blockRect = Rect(x, y, 50, 50)
 		self.speed = speed
 		self.can_pull = can_pull
 		self.kind = kind
@@ -111,7 +121,16 @@ class block:
 	def throw(self):
 		"Change how block moves while moving"
 
-# enum
+	def show(self, screen):
+		"Show blocks"
+		draw.rect(screen, (145, 145, 145), self.blockRect)
+
+	# get methods
+	def getBlockRect(self):
+		"Get Rect of object"
+		return self.blockRect
+
+# enumeration
 class playerMode(Enum):
-	player_1 = True
-	player_2 = True
+	player_1 = 1
+	player_2 = 2
