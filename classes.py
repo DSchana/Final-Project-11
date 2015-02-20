@@ -68,9 +68,7 @@ class player:
 		return self.health
 	def gotHit(self):
 		"do things for being hit"
-		self.health -= 10
-		self.x -= 50
-		self.y -= 50
+		self.health -= 1
 
 class enemy:
 	def __init__(self, health, speed, ko_time, AI_level, attack_radius, kind, x, y):
@@ -114,10 +112,34 @@ class enemy:
 	def getY(self):
 		"get y position of object"
 		return self.y
-	def getVector(self):
+	# fix
+	def getVector(self, px, py):
 		"get direction vector of enemy"
-		if py > self.y:
-			angle = atan2(radians(speed)/radians(speed))
+		if self.x <= px and self.y >= py:
+			ang = degrees(atan2(radians(self.speed),radians(self.speed)))
+			mag = sqrt(2*(self.speed**2))
+		elif self.x <= px and self.y <= py:
+			ang = degrees(atan2(radians(self.speed),radians(-self.speed)))
+			mag = sqrt(2*(self.speed**2))
+		elif self.x >= px and self.y <= py:
+			ang = degrees(atan2(radians(-self.speed),radians(-self.speed)))
+			mag = sqrt(2*(self.speed**2))
+		elif self.x >= px and self.y >= py:
+			ang = degrees(atan2(radians(-self.speed),radians(self.speed)))
+			mag = sqrt(2*(self.speed**2))
+		elif self.x <= px and self.y == py:
+			ang = 0
+			mag = self.speed
+		elif self.x >= px and self.y == py:
+			ang = 180
+			mag = self.speed
+		elif self.y <= py and self.x == px:
+			ang = 270
+			mag = self.speed
+		elif self.y >= py and self.x == px:
+			ang = 90
+			mag = self.speed
+		return(ang,mag)
 
 	def checkCollision(self, player_rect):
 		"check if player dies"

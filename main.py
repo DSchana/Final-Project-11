@@ -15,8 +15,8 @@ playerList = []
 playerList.append(player("Jeffery", 100,  "Slytherin", 1, 1, 1, 10, 4, 100, 300, "wasd"))
 #playerList.append(player(3, 100, 3.2, 400, False, 600, 200, "wasd"))
 
-enemyList.append(enemy(100, 1.5, 3, 10, 100, "blob", 10, 20))
-enemyList.append(enemy(100, 0.5, 3, 10, 200, "blob", 100, 400))
+enemyList.append(enemy(100, 2, 3, 10, 100, "blob", 10, 20))
+enemyList.append(enemy(100, 2, 3, 10, 200, "blob", 100, 400))
 enemyList.append(enemy(100, 1, 3, 10, 300, "blob", 100, 200))
 
 gameClock = time.Clock()
