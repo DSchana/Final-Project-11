@@ -5,8 +5,9 @@ from math import *
 from enum import *
 
 class player:
-	def __init__(self, name, house, level, spell_level, potion_level, stamina, speed, x, y, moveMode):
+	def __init__(self, name, health, house, level, spell_level, potion_level, stamina, speed, x, y, moveMode):
 		self.name = name
+		self.health = health
 		self.house = house
 		self.level = level
 		self.spell_level = spell_level
@@ -62,11 +63,20 @@ class player:
 	def getRect(self):
 		"get the rect of object"
 		return self.playerRect
+	def getHealth(self):
+		"get health of player"
+		return self.health
+	def gotHit(self):
+		"do things for being hit"
+		self.health -= 10
+		self.x -= 50
+		self.y -= 50
 
 class enemy:
-	def __init__(self, speed, ko_time, AI_level, attack_radius, kind, x, y):
+	def __init__(self, health, speed, ko_time, AI_level, attack_radius, kind, x, y):
 		self.x = x
 		self.y = y
+		self.health = health
 		self.attack_radius = attack_radius
 		self.enemyRect = Rect(x, y, 40, 50)
 		self.speed = speed
@@ -79,21 +89,14 @@ class enemy:
 		#draw.circle(screen, (148, 0, 0, 30), (int(self.x)+20, int(self.y)+25), self.attack_radius)
 		#draw.circle(screen, (150, 0, 0, 255), (int(self.x)+20, int(self.y)+25), self.attack_radius, 10)
 		if sqrt((px-self.x)**2 + (py - self.y)**2) < self.attack_radius:
-			if abs(py - self.y) == abs(px - self.x):
-				if py > self.y:
-					self.y += self.speed
-				elif py < self.y:
-					self.y -= self.speed
-			elif abs(py - self.y) > abs(px - self.x):
-				if py > self.y:
-					self.y += self.speed
-				elif py < self.y:
-					self.y -= self.speed
-			elif abs(py - self.y) < abs(px - self.x):
-				if px > self.x:
-					self.x += self.speed
-				elif px < self.x:
-					self.x -= self.speed
+			if py > self.y:
+				self.y += self.speed
+			if py < self.y:
+				self.y -= self.speed
+			if px > self.x:
+				self.x += self.speed
+			if px < self.x:
+				self.x -= self.speed
 
 		self.enemyRect = Rect(self.x, self.y, 40, 50)
 		draw.rect(screen, (255, 0, 0), self.enemyRect)
@@ -111,6 +114,10 @@ class enemy:
 	def getY(self):
 		"get y position of object"
 		return self.y
+	def getVector(self):
+		"get direction vector of enemy"
+		if py > self.y:
+			angle = atan2(radians(speed)/radians(speed))
 
 	def checkCollision(self, player_rect):
 		"check if player dies"
