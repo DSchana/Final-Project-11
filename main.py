@@ -12,12 +12,12 @@ screen.fill((0, 0, 255))
 enemyList = []
 playerList = []
 
-playerList.append(player("Jeffery", 100,  "Slytherin", 1, 1, 1, 10, 4, 100, 300, "wasd"))
+playerList.append(player("Jeffery", 100,  "Slytherin", 1, 1, 1, 10, 4, 400, 300, "wasd"))
 #playerList.append(player(3, 100, 3.2, 400, False, 600, 200, "wasd"))
 
-enemyList.append(enemy(100, 2, 10, 100, "blob", 10, 20))
-enemyList.append(enemy(100, 2, 10, 200, "blob", 100, 400))
-enemyList.append(enemy(100, 1, 10, 300, "blob", 100, 200))
+enemyList.append(enemy(100, 2, 10, 50, "blob", 10, 20))
+enemyList.append(enemy(100, 2, 10, 75, "blob", 100, 400))
+enemyList.append(enemy(100, 1, 10, 100, "blob", 100, 200))
 
 gameClock = time.Clock()
 running = True
@@ -46,7 +46,14 @@ while running:
 			enemyList[i].move(playerList[0].getX(), playerList[0].getY(), screen)
 
 	for i in range(len(enemyList)):
-		if enemyList[i].checkCollision(playerList[0].getRect()):
+		rx = playerList[0].getX()
+		ry = playerList[0].getY()
+		width = playerList[0].getWidth()
+		height = playerList[0].getHeight()
+		cx = enemyList[i].getX()
+		cy = enemyList[i].getY()
+		radius = enemyList[i].getAttackRadius()
+		if enemyList[i].checkCollision(rx, ry, width, height, cx, cy, radius):
 			playerList[0].gotHit()
 
 	if playerList[0].getHealth() <= 0:
