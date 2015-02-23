@@ -6,13 +6,15 @@ from math import *
 from enum import *
 
 class player:
-    def __init__(self, name, health, house, level, spell_level, potion_level, stamina, speed, x, y, moveMode):
+    def __init__(self, name, health, house, xp, level, spell_level, potion_level, attack_radius, spell_energy, stamina, speed, x, y, moveMode):
         self.name = name
         self.health = health
         self.house = house
         self.level = level
         self.spell_level = spell_level
+        self.selected_spell = "Expeliomus"
         self.potion_level = potion_level
+        self.attack_radius = attack_radius
         self.stamina = stamina
         self.speed = speed
         self.x = x
@@ -24,28 +26,36 @@ class player:
 
     def move(self, pressed, screen):
         "Move player"
-        if self.moveMode == "wasd":  # temporary use enumerations
-            if pressed[K_w]:
-                self.y -= self.speed
-            if pressed[K_s]:
-                self.y += self.speed
-            if pressed[K_a]:
-                self.x -= self.speed
-            if pressed[K_d]:
-                self.x += self.speed
-
-        if self.moveMode == "arrow":
-            if pressed[K_UP]:
-                self.y -= self.speed
-            if pressed[K_DOWN]:
-                self.y += self.speed
-            if pressed[K_LEFT]:
-                self.x -= self.speed
-            if pressed[K_RIGHT]:
-                self.x += self.speed
+        if pressed[K_w]:
+            self.y -= self.speed
+        if pressed[K_s]:
+            self.y += self.speed
+        if pressed[K_a]:
+            self.x -= self.speed
+        if pressed[K_d]:
+            self.x += self.speed
 
         self.playerRect = Rect(self.x, self.y, 40, 50)
         draw.rect(screen, (0, 255, 0), self.playerRect)
+
+    def gotHit(self, fireRate):
+        "do things for being hit"
+        fireChance = randint(1, 100)
+        if fireChance % fireRate == 0:
+        	self.health -= 1
+
+    def doSpell(self, mx, my, screen):
+    	"player performs a spell"
+    	sx = self.x
+    	sy = self.y
+    	dx = mx - sx
+    	dy = my - sy
+    	d_incx = dx / self.attack_radius
+    	d_incy = dy / self.attack_radius
+    	for i in range(0, self.attack_radius):
+    		sx += int(i * d_incx)
+    		sy += int(i * d_incy)
+    		draw.circle(screen, (0, 20, 140), (sx, sy), 3)
 
 
     # get meathods
@@ -76,21 +86,19 @@ class player:
     def getHealth(self):
         "get health of player"
         return self.health
-    
-    def gotHit(self):
-        "do things for being hit"
-        self.health -= 1
 
 class enemy:
-    def __init__(self, health, speed, AI_level, attack_radius, kind, x, y):
+    def __init__(self, health, house, speed, AI_level, attack_radius, fireRate, kind, x, y):
         self.x = x
         self.y = y
         self.health = health
+        self.house = house
         self.follow_radius = attack_radius + randint(50,150)
         self.attack_radius = attack_radius
         self.enemyRect = Rect(x, y, 40, 50)
         self.speed = speed
         self.AI_level = AI_level
+        self.fireRate = fireRate
         self.kind = kind
 
     def move(self, px, py, screen):
@@ -110,11 +118,15 @@ class enemy:
         self.enemyRect = Rect(self.x, self.y, 40, 50)
         draw.rect(screen, (255, 0, 0), self.enemyRect)
 
+    def show(self, screen):
+    	"Draw enemy"  # use only when enemy will not be moving
+    	draw.rect(screen, (255, 0, 0), self.enemyRect)
+
     def AI(self):
         "AI for enemies"
 
     def checkCollision(self, rleft, rtop, width, height, center_x, center_y, radius):
-        "Detect collision between a rectangle and circle"
+        "Detect collision between a rectangle and circle (playerRect and attack_radius"
 
         # complete boundbox of the rectangle
         rright, rbottom = rleft + width/2, rtop + height/2
@@ -159,6 +171,10 @@ class enemy:
     	"get health of enemy"
     	return self.health
 
+    def getFireRate(self):
+    	"get fire rate of enemy"
+    	return self.fireRate
+
     # fix
     def getVector(self, px, py):
         "get direction vector of enemy"
@@ -187,6 +203,30 @@ class enemy:
             ang = 90
             mag = self.speed
         return(ang,mag)
+
+class spell:
+	def __init__(self, name, power, level, energy):
+		self.name = name
+		self.power = power
+		self.level = level
+		self.energy = energy
+
+	# spell get methods
+	def getName(self):
+		"get name of spell"
+		return self.name
+
+	def getPower(self):
+		"get power level"
+		return self.power
+
+	def getLevel(self):
+		"get unlock level"
+		return self.level
+
+	def getEnergy(self):
+		"get required energy"
+		return self.energy
 
 # enumeration
 class playerMode(Enum):

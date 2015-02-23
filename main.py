@@ -12,12 +12,15 @@ screen.fill((0, 0, 255))
 enemyList = []
 playerList = []
 
-playerList.append(player("Jeffery", 100,  "Slytherin", 1, 1, 1, 10, 4, 400, 300, "wasd"))
-#playerList.append(player(3, 100, 3.2, 400, False, 600, 200, "wasd"))
+playerList.append(player("Jeffery", 100,  "Huflepuff", 0, 1, 1, 1, 200, 100, 10, 4, 400, 300, "wasd"))
 
-enemyList.append(enemy(100, 2, 10, 50, "blob", 10, 20))
-enemyList.append(enemy(100, 2, 10, 75, "blob", 100, 400))
-enemyList.append(enemy(100, 1, 10, 100, "blob", 100, 200))
+enemyList.append(enemy(100, "Slytherin", 2, 5, 50, 4, "Beletrix", 10, 20))
+enemyList.append(enemy(100, "Slytherin", 2, 5, 75, 6, "Lucius", 100, 400))
+enemyList.append(enemy(100, "Slytherin", 1, 10, 100, 10, "Voldemort", 100, 200))
+
+# Constant player values
+p_width = playerList[0].getWidth()
+p_height = playerList[0].getHeight()
 
 gameClock = time.Clock()
 running = True
@@ -27,34 +30,27 @@ while running:
 	for e in event.get():
 		if e.type == QUIT:
 			running = False
+		if e.type == MOUSEBUTTONDOWN:
+			playerList[0].doSpell(mx, my, screen)
 
+	mx, my = mouse.get_pos()
 	pressed = key.get_pressed()
 
-	# do player meathods
 	for i in range(len(playerList)):
 		playerList[i].move(pressed, screen)
 
 	# do enemy methods
-	if len(playerList)>1:
-		for i in range(len(enemyList)):
-			if sqrt((playerList[0].getX()-enemyList[i].getX())**2 + (playerList[0].getY() - enemyList[i].getY())**2) < sqrt((playerList[1].getX()-enemyList[i].getX())**2 + (playerList[1].getY() - enemyList[i].getY())**2):
-				enemyList[i].move(playerList[0].getX(), playerList[0].getY(), screen)
-			elif sqrt((playerList[0].getX()-enemyList[i].getX())**2 + (playerList[0].getY() - enemyList[i].getY())**2) > sqrt((playerList[1].getX()-enemyList[i].getX())**2 + (playerList[1].getY() - enemyList[i].getY())**2):
-				enemyList[i].move(playerList[1].getX(), playerList[1].getY(), screen)
-	else:
-		for i in range(len(enemyList)):
-			enemyList[i].move(playerList[0].getX(), playerList[0].getY(), screen)
-
 	for i in range(len(enemyList)):
 		rx = playerList[0].getX()
 		ry = playerList[0].getY()
-		width = playerList[0].getWidth()
-		height = playerList[0].getHeight()
 		cx = enemyList[i].getX()
 		cy = enemyList[i].getY()
 		radius = enemyList[i].getAttackRadius()
-		if enemyList[i].checkCollision(rx, ry, width, height, cx, cy, radius):
-			playerList[0].gotHit()
+		if enemyList[i].checkCollision(rx, ry, p_width, p_height, cx, cy, radius):
+			playerList[0].gotHit(enemyList[i].getFireRate())
+			enemyList[i].show(screen)
+		else:
+			enemyList[i].move(playerList[0].getX(), playerList[0].getY(), screen)
 
 	if playerList[0].getHealth() <= 0:
 		running = False
