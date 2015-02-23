@@ -71,14 +71,13 @@ class player:
 		self.health -= 1
 
 class enemy:
-	def __init__(self, health, speed, ko_time, AI_level, attack_radius, kind, x, y):
+	def __init__(self, health, speed, AI_level, attack_radius, kind, x, y):
 		self.x = x
 		self.y = y
 		self.health = health
 		self.attack_radius = attack_radius
 		self.enemyRect = Rect(x, y, 40, 50)
 		self.speed = speed
-		self.ko_time = ko_time
 		self.AI_level = AI_level
 		self.kind = kind
 
