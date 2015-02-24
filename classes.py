@@ -46,8 +46,8 @@ class player:
 
     def doSpell(self, mx, my, screen):
     	"player performs a spell"
-    	sx = self.x
-    	sy = self.y
+    	sx = int(self.x + self.width/2)
+    	sy = int(self.y + self.height/2)
     	dx = mx - sx
     	dy = my - sy
     	d_incx = dx / self.attack_radius
