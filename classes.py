@@ -52,10 +52,10 @@ class player:
     	dy = my - sy
     	d_incx = dx / self.attack_radius
     	d_incy = dy / self.attack_radius
-    	for i in range(0, self.attack_radius):
-    		sx += int(i * d_incx)
-    		sy += int(i * d_incy)
-    		draw.circle(screen, (0, 20, 140), (sx, sy), 3)
+    	while sqrt((sx-self.x)**2 + (sy-self.y)**2) < self.attack_radius:
+	    	sx += int(0.5)
+	    	sy += int(0.5)
+	    	draw.circle(screen, (0, 20, 140), (sx, sy), 3)
 
 
     # get meathods
