@@ -20,7 +20,7 @@ class player:
         self.x = x
         self.y = y
         self.moveMode = moveMode
-        self.playerRect = Rect(x, y, 40, 50)
+        self.playerRect = Rect(x, y, 40, 50) 
         self.width = self.playerRect[2]
         self.height = self. playerRect[3]
 
