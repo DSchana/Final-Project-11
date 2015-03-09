@@ -5,9 +5,16 @@ from classes import *
 from enum import *
 from math import *
 from random import *
+from sound import *
 
 screen = display.set_mode((850, 600))
 screen.fill((0, 0, 255))
+
+# main music
+main_theme = soundTracks("Audio/main.mp3")
+
+# play main sound track
+main_theme.execute(-1)
 
 enemyList = []
 playerList = []
