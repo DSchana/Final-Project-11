@@ -1,11 +1,12 @@
 # main.py
 
 from pygame import *
-from classes import *
 from enum import *
 from math import *
 from random import *
-from sound import *
+from Sound import *
+from Player import *
+from Enemy import *
 
 screen = display.set_mode((850, 600))
 screen.fill((0, 0, 255))
