@@ -12,6 +12,9 @@ class spell:
 		self.level = level
 		self.energy = energy
 
+	def doSpell(self):
+		"Have player perform spell"
+
 	# spell get methods
 	def getName(self):
 		"get name of spell"

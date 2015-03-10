@@ -45,7 +45,7 @@ class player:
         if fireChance % fireRate == 0:
         	self.health -= 1
 
-    def doSpell(self, mx, my, screen):
+    def attack(self, mx, my, screen):
     	"player performs a spell"
     	sx = int(self.x + self.width/2)
     	sy = int(self.y + self.height/2)

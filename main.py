@@ -39,7 +39,7 @@ while running:
 		if e.type == QUIT:
 			running = False
 		if e.type == MOUSEBUTTONDOWN:
-			playerList[0].doSpell(mx, my, screen)
+			playerList[0].attack(mx, my, screen)
 
 	mx, my = mouse.get_pos()
 	pressed = key.get_pressed()
