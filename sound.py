@@ -1,7 +1,7 @@
 from pygame import *
 mixer.init()
 
-class soundTracks:
+class Sound:
 	def __init__(self, sound_track):
 		self.track_name = sound_track
 	def execute(self, repeat):

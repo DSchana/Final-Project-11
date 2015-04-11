@@ -6,7 +6,7 @@ from math import *
 from Spells import *
 from enum import *
 
-class enemy:
+class Enemy:
     def __init__(self, health, house, speed, AI_level, attack_radius, fireRate, kind, x, y):
         self.x = x
         self.y = y

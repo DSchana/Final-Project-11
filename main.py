@@ -12,7 +12,7 @@ screen = display.set_mode((850, 600))
 screen.fill((0, 0, 255))
 
 # main music
-main_theme = soundTracks("Audio/main.mp3")
+main_theme = Sound("Audio/main.mp3")
 
 # play main sound track
 main_theme.execute(-1)
@@ -20,11 +20,11 @@ main_theme.execute(-1)
 enemyList = []
 playerList = []
 
-playerList.append(player("Jeffery", 100,  "Huflepuff", 0, 1, 1, 1, 200, 100, 10, 4, 400, 300, "wasd"))
+playerList.append(Player("Jeffery", 100,  "Huflepuff", 0, 1, 1, 1, 200, 100, [], 10, 4, 400, 300, "wasd"))
 
-enemyList.append(enemy(100, "Slytherin", 2, 5, 50, 4, "Beletrix", 10, 20))
-enemyList.append(enemy(100, "Slytherin", 2, 5, 75, 6, "Lucius", 100, 400))
-enemyList.append(enemy(100, "Slytherin", 1, 10, 100, 10, "Voldemort", 100, 200))
+enemyList.append(Enemy(100, "Slytherin", 2, 5, 50, 4, "Beletrix", 10, 20))
+enemyList.append(Enemy(100, "Slytherin", 2, 5, 75, 6, "Lucius", 100, 400))
+enemyList.append(Enemy(100, "Slytherin", 1, 10, 100, 10, "Voldemort", 100, 200))
 
 # Constant player values
 p_width = playerList[0].getWidth()

@@ -6,14 +6,13 @@ from math import *
 from Spells import *
 from enum import *
 
-class player:
-    def __init__(self, name, health, house, xp, level, spell_level, potion_level, attack_radius, spell_energy, stamina, speed, x, y, moveMode):
+class Player:
+    def __init__(self, name, health, house, xp, level, spell_level, potion_level, attack_radius, spell_energy, spell_list, stamina, speed, x, y, moveMode):
         self.name = name
         self.health = health
         self.house = house
         self.level = level
         self.spell_level = spell_level
-        self.selected_spell = "Expeliomus"
         self.potion_level = potion_level
         self.attack_radius = attack_radius
         self.stamina = stamina
@@ -24,6 +23,9 @@ class player:
         self.playerRect = Rect(x, y, 40, 50) 
         self.width = self.playerRect[2]
         self.height = self. playerRect[3]
+        self.spell_list = spell_list
+        self.learnSpell("Expelliarmus", 10, 1, 10)
+        self.selected_spell = self.spell_list[0]
 
     def move(self, pressed, screen):
         "Move player"
@@ -43,20 +45,15 @@ class player:
         "do things for being hit"
         fireChance = randint(1, 100)
         if fireChance % fireRate == 0:
-        	self.health -= 1
+            self.health -= 1
 
     def attack(self, mx, my, screen):
-    	"player performs a spell"
-    	sx = self.x + self.width//2
-    	sy = self.y + self.height//2
-    	dx = mx - sx
-    	dy = my - sy
-    	d_incx = dx // self.attack_radius
-    	d_incy = dy // self.attack_radius
-    	while sqrt((sx-self.x)**2 + (sy-self.y)**2) < self.attack_radius:
-	    	sx += d_incx
-	    	sy += d_incy
-	    	draw.circle(screen, (218, 135, 4), (sx, sy), 3)
+        "player performs a spell"
+        selected_spell.doSpell(mx, my, self.width, self.height, self.x, self.y, self.attack_radius, screen)
+
+    def learnSpell(self, name, power, level, energy):
+        "Add spell to the player's spell list"
+        self.spell_list.append(Spells(name, power, level, energy))
 
 
     # get meathods
