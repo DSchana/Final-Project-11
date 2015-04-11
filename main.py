@@ -12,10 +12,10 @@ screen = display.set_mode((850, 600))
 screen.fill((0, 0, 255))
 
 # main music
-main_theme = Sound("Audio/main.mp3")
+## main_theme = Sound("Audio/main.mp3")
 
 # play main sound track
-main_theme.execute(-1)
+## main_theme.execute(-1)
 
 enemyList = []
 playerList = []
