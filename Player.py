@@ -47,16 +47,16 @@ class player:
 
     def attack(self, mx, my, screen):
     	"player performs a spell"
-    	sx = int(self.x + self.width/2)
-    	sy = int(self.y + self.height/2)
+    	sx = self.x + self.width//2
+    	sy = self.y + self.height//2
     	dx = mx - sx
     	dy = my - sy
-    	d_incx = dx / self.attack_radius
-    	d_incy = dy / self.attack_radius
+    	d_incx = dx // self.attack_radius
+    	d_incy = dy // self.attack_radius
     	while sqrt((sx-self.x)**2 + (sy-self.y)**2) < self.attack_radius:
-	    	sx += int(0.5)
-	    	sy += int(0.5)
-	    	draw.circle(screen, (0, 20, 140), (sx, sy), 3)
+	    	sx += d_incx
+	    	sy += d_incy
+	    	draw.circle(screen, (218, 135, 4), (sx, sy), 3)
 
 
     # get meathods
