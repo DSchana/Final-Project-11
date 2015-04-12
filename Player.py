@@ -13,6 +13,7 @@ class Player:
         self.house = house
         self.level = level
         self.spell_level = spell_level
+        self.spell_energy = spell_energy
         self.potion_level = potion_level
         self.attack_radius = attack_radius
         self.stamina = stamina
@@ -49,7 +50,8 @@ class Player:
 
     def attack(self, mx, my, screen):
         "player performs a spell"
-        selected_spell.doSpell(mx, my, self.width, self.height, self.x, self.y, self.attack_radius, screen)
+        self.selected_spell.doSpell(mx, my, self.width, self.height, self.x, self.y, self.attack_radius, screen)
+        self.spell_energy -= self.selected_spell.getEnergy()
 
     def learnSpell(self, name, power, level, energy):
         "Add spell to the player's spell list"
@@ -96,3 +98,7 @@ class Player:
     def getStamina(self):
         "get the player's stamina"
         return self.stamina
+
+    def getSpellEnergy(self):
+        "get the spell energy of player"
+        return self.spell_energy

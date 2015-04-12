@@ -18,12 +18,12 @@ class Spells:
         sy = y + height//2
         dx = mx - sx
         dy = my - sy
-        d_incx = dx // attack_radius
-        d_incy = dy // attack_radius
+        d_incx = dx / attack_radius
+        d_incy = dy / attack_radius
         while sqrt((sx-x)**2 + (sy-y)**2) < attack_radius:
             sx += d_incx
             sy += d_incy
-            draw.circle(screen, (218, 135, 4), (sx, sy), 3)
+            draw.circle(screen, (218, 135, 4), (int(sx), int(sy)), 3)
 
     # spell get methods
     def getName(self):

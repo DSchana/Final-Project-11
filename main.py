@@ -63,7 +63,7 @@ while running:
 	if playerList[0].getHealth() <= 0:
 		running = False
 
-	print(playerList[0].getHealth())
+	print(playerList[0].getHealth(), playerList[0].getSpellEnergy())
 			
 
 	gameClock.tick(60)
