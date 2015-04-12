@@ -84,3 +84,15 @@ class Player:
     def getHealth(self):
         "get health of player"
         return self.health
+
+    def getSpellList(self):
+        "get the list possible spells player can currently cast"
+        return self.spell_list
+
+    def getSelectedSpell(self):
+        "get the current spell the user has selected"
+        return self.selected_spell
+
+    def getStamina(self):
+        "get the player's stamina"
+        return self.stamina
