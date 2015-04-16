@@ -12,10 +12,10 @@ screen = display.set_mode((850, 600))
 screen.fill((0, 0, 255))
 
 # main music
-## main_theme = Sound("Audio/main.mp3")
+main_theme = Sound("Audio/main.mp3")
 
 # play main sound track
-## main_theme.execute(-1)
+main_theme.execute(0)
 
 enemyList = []
 playerList = []
@@ -55,7 +55,7 @@ while running:
 		cy = enemyList[i].getY()
 		radius = enemyList[i].getAttackRadius()
 		if enemyList[i].checkCollision(rx, ry, p_width, p_height, cx, cy, radius):
-			playerList[0].gotHit(enemyList[i].getFireRate())
+			enemyList[i].attack(playerList[0].getX()+playerList[0].getWidth()//2, playerList[0].getY()+playerList[0].getHeight()//2, screen, playerList[0])
 			enemyList[i].show(screen)
 		else:
 			enemyList[i].move(playerList[0].getX(), playerList[0].getY(), screen)
@@ -63,7 +63,7 @@ while running:
 	if playerList[0].getHealth() <= 0:
 		running = False
 
-	print(playerList[0].getHealth(), playerList[0].getSpellEnergy())
+	print(playerList[0].getHealth(), playerList[0].getSpellEnergy(), playerList[0].getStamina())
 			
 
 	gameClock.tick(60)

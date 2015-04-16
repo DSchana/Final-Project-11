@@ -30,23 +30,35 @@ class Player:
 
     def move(self, pressed, screen):
         "Move player"
-        if pressed[K_w]:
-            self.y -= self.speed
-        if pressed[K_s]:
-            self.y += self.speed
-        if pressed[K_a]:
-            self.x -= self.speed
-        if pressed[K_d]:
-            self.x += self.speed
+        if pressed[K_LSHIFT] and self.stamina > 0:
+            if pressed[K_w]:
+                self.y -= self.speed*1.5
+                self.stamina -= 0.05
+            if pressed[K_s]:
+                self.y += self.speed*1.5
+                self.stamina -= 0.05
+            if pressed[K_a]:
+                self.x -= self.speed*1.5
+                self.stamina -= 0.05
+            if pressed[K_d]:
+                self.x += self.speed*1.5
+                self.stamina -= 0.05
+        else:
+            if pressed[K_w]:
+                self.y -= self.speed
+            if pressed[K_s]:
+                self.y += self.speed
+            if pressed[K_a]:
+                self.x -= self.speed
+            if pressed[K_d]:
+                self.x += self.speed
 
         self.playerRect = Rect(self.x, self.y, 40, 50)
         draw.rect(screen, (0, 255, 0), self.playerRect)
 
-    def gotHit(self, fireRate):
+    def gotHit(self):
         "do things for being hit"
-        fireChance = randint(1, 100)
-        if fireChance % fireRate == 0:
-            self.health -= 1
+        self.health -= 1
 
     def attack(self, mx, my, screen):
         "player performs a spell"

@@ -15,10 +15,13 @@ class Enemy:
         self.follow_radius = attack_radius + randint(50,150)
         self.attack_radius = attack_radius
         self.enemyRect = Rect(x, y, 40, 50)
+        self.width = self.enemyRect[2]
+        self.height = self.enemyRect[3]
         self.speed = speed
         self.AI_level = AI_level
         self.fireRate = fireRate
         self.kind = kind
+        self.selected_spell = Spells("stun", randint(5, 15), 1, 10)
 
     def move(self, px, py, screen):
         "Move enemy"
@@ -71,6 +74,17 @@ class Enemy:
             return True  # overlaid
 
         return False  # no collision detected
+
+    def gotHit(self):
+        "Damage to ememies"
+        self.health -= 1
+
+    def attack(self, mx, my, screen, player):
+        "emeny performs a spell"
+        fireChance = randint(1, 100)
+        if fireChance % self.fireRate == 0:
+            self.selected_spell.doSpell(mx, my, self.width, self.height, self.x, self.y, self.attack_radius, screen)
+            player.gotHit()
 
 
     # get methods
