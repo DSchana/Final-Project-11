@@ -46,6 +46,7 @@ while running:
 
 	for i in range(len(playerList)):
 		playerList[i].move(pressed, screen)
+		playerList[i].regenerate();
 
 	# do enemy methods
 	for i in range(len(enemyList)):
@@ -63,7 +64,7 @@ while running:
 	if playerList[0].getHealth() <= 0:
 		running = False
 
-	print(playerList[0].getHealth(), playerList[0].getSpellEnergy(), playerList[0].getStamina())
+	print(round(playerList[0].getHealth(), 0), round(playerList[0].getSpellEnergy(), 0), round(playerList[0].getStamina(), 0))
 			
 
 	gameClock.tick(60)

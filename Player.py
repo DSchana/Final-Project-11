@@ -8,15 +8,19 @@ from enum import *
 
 class Player:
     def __init__(self, name, health, house, xp, level, spell_level, potion_level, attack_radius, spell_energy, spell_list, stamina, speed, x, y, moveMode):
+        # initialize all variables
         self.name = name
         self.health = health
+        self.max_health = health
         self.house = house
         self.level = level
         self.spell_level = spell_level
         self.spell_energy = spell_energy
+        self.max_spell_energy = spell_energy
         self.potion_level = potion_level
         self.attack_radius = attack_radius
         self.stamina = stamina
+        self.max_stamina = stamina
         self.speed = speed
         self.x = x
         self.y = y
@@ -30,7 +34,7 @@ class Player:
 
     def move(self, pressed, screen):
         "Move player"
-        if pressed[K_LSHIFT] and self.stamina > 0:
+        if pressed[K_LSHIFT] and self.stamina >= 1:
             if pressed[K_w]:
                 self.y -= self.speed*1.5
                 self.stamina -= 0.05
@@ -62,12 +66,22 @@ class Player:
 
     def attack(self, mx, my, screen):
         "player performs a spell"
-        self.selected_spell.doSpell(mx, my, self.width, self.height, self.x, self.y, self.attack_radius, screen)
-        self.spell_energy -= self.selected_spell.getEnergy()
+        if self.spell_energy > self.selected_spell.getEnergy():
+            self.selected_spell.doSpell(mx, my, self.width, self.height, self.x, self.y, self.attack_radius, screen)
+            self.spell_energy -= self.selected_spell.getEnergy()
 
     def learnSpell(self, name, power, level, energy):
         "Add spell to the player's spell list"
         self.spell_list.append(Spells(name, power, level, energy))
+
+    def regenerate(self):
+        "regenerate health, stamina, and energy over time"
+        if self.health < self.max_health-15:
+            self.health += 0.009
+        if self.stamina < self.max_stamina:
+            self.stamina += 0.007
+        if self.spell_energy < self.max_spell_energy:
+            self.spell_energy += 0.01
 
 
     # get meathods

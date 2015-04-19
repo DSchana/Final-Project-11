@@ -81,6 +81,8 @@ class Enemy:
 
     def attack(self, mx, my, screen, player):
         "emeny performs a spell"
+        mx += randint(-10, 10)
+        my += randint(-10, 10)
         fireChance = randint(1, 100)
         if fireChance % self.fireRate == 0:
             self.selected_spell.doSpell(mx, my, self.width, self.height, self.x, self.y, self.attack_radius, screen)
