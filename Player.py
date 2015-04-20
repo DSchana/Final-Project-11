@@ -31,30 +31,39 @@ class Player:
         self.spell_list = spell_list
         self.learnSpell("Expelliarmus", 10, 1, 10)
         self.selected_spell = self.spell_list[0]
+        self.direction = "left"
 
     def move(self, pressed, screen):
         "Move player"
         if pressed[K_LSHIFT] and self.stamina >= 1:
             if pressed[K_w]:
+                self.direction = "up"
                 self.y -= self.speed*1.5
                 self.stamina -= 0.05
             if pressed[K_s]:
+                self.direction = "down"
                 self.y += self.speed*1.5
                 self.stamina -= 0.05
             if pressed[K_a]:
+                self.direction = "left"
                 self.x -= self.speed*1.5
                 self.stamina -= 0.05
             if pressed[K_d]:
+                self.direction = "right"
                 self.x += self.speed*1.5
                 self.stamina -= 0.05
         else:
             if pressed[K_w]:
+                self.direction = "up"
                 self.y -= self.speed
             if pressed[K_s]:
+                self.direction = "down"
                 self.y += self.speed
             if pressed[K_a]:
+                self.direction = "left"
                 self.x -= self.speed
             if pressed[K_d]:
+                self.direction = "right"
                 self.x += self.speed
 
         self.playerRect = Rect(self.x, self.y, 40, 50)
@@ -64,7 +73,7 @@ class Player:
         "do things for being hit"
         self.health -= 1
 
-    def attack(self, mx, my, screen):
+    def attack(self, screen):
         "player performs a spell"
         if self.spell_energy > self.selected_spell.getEnergy():
             self.selected_spell.doSpell(mx, my, self.width, self.height, self.x, self.y, self.attack_radius, screen)

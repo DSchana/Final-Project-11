@@ -9,7 +9,6 @@ from Player import *
 from Enemy import *
 
 screen = display.set_mode((850, 600))
-screen.fill((0, 0, 255))
 
 # main music
 main_theme = Sound("Audio/main.mp3")
@@ -22,8 +21,11 @@ playerList = []
 
 playerList.append(Player("Jeffery", 100,  "Huflepuff", 0, 1, 1, 1, 200, 100, [], 10, 4, 400, 300, "wasd"))
 
-enemyList.append(Enemy(100, "Slytherin", 2, 5, 50, 4, "Beletrix", 10, 20))
-enemyList.append(Enemy(100, "Slytherin", 2, 5, 75, 6, "Lucius", 100, 400))
+for i in range(5):
+	enemyList.append(Enemy(100, "Slytherin", randint(1, 3), randint(1, 10), randint(50, 150), randint(2, 10), "Minnion", randint()))
+
+enemyList.append(Enemy(100, "Slytherin", 2, 5, 50, 4, "Dilpreet", 10, 20))
+enemyList.append(Enemy(100, "Slytherin", 2, 5, 75, 6, "Rishi", 100, 400))
 enemyList.append(Enemy(100, "Slytherin", 1, 10, 100, 10, "Voldemort", 100, 200))
 
 # Constant player values
@@ -34,15 +36,15 @@ gameClock = time.Clock()
 running = True
 
 while running:
-	screen.fill((0, 168, 64))
 	for e in event.get():
 		if e.type == QUIT:
 			running = False
-		if e.type == MOUSEBUTTONDOWN:
-			playerList[0].attack(mx, my, screen)
 
 	mx, my = mouse.get_pos()
 	pressed = key.get_pressed()
+
+	if pressed[k_SPACE]:
+		playerList[0].attack(screen)
 
 	for i in range(len(playerList)):
 		playerList[i].move(pressed, screen)
@@ -64,10 +66,12 @@ while running:
 	if playerList[0].getHealth() <= 0:
 		running = False
 
+	# temporary
 	print(round(playerList[0].getHealth(), 0), round(playerList[0].getSpellEnergy(), 0), round(playerList[0].getStamina(), 0))
-			
 
-	gameClock.tick(60)
+	# draw stuff
+	screen.fill((0, 168, 64))
 	display.flip()
+	gameClock.tick(60)
 
 quit()
