@@ -4,7 +4,6 @@ from pygame import *
 from random import *
 from math import *
 from Spells import *
-from enum import *
 
 class Enemy:
     def __init__(self, health, house, speed, AI_level, attack_radius, fireRate, kind, x, y):

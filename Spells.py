@@ -3,7 +3,6 @@
 from pygame import *
 from random import *
 from math import *
-from enum import *
 
 class Spells:
     def __init__(self, name, power, level, energy):
