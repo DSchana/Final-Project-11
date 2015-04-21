@@ -71,7 +71,7 @@ class Enemy:
 
         # check if center of circle is inside rectangle
         if rleft <= center_x <= rright and rtop <= center_y <= rbottom:
-            return True  # overlaid
+            return True
 
         return False  # no collision detected
 
