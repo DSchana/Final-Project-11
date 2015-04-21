@@ -38,6 +38,8 @@ while running:
 			running = False
 		if e.type == KEYDOWN and key.get_pressed()[K_SPACE]:
 			playerList[0].attack(screen)
+		if e.type == KEYUP:
+			playerList[0].changeDirection("none")
 
 	mx, my = mouse.get_pos()
 	pressed = key.get_pressed()

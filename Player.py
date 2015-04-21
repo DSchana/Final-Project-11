@@ -35,39 +35,46 @@ class Player:
 
     def move(self, pressed, screen):
         "Move player"
+        self.changeDirection(pressed)
         if pressed[K_LSHIFT] and self.stamina >= 1:
             if pressed[K_w]:
-                self.direction = "up"
                 self.y -= self.speed*1.5
                 self.stamina -= 0.05
             if pressed[K_s]:
-                self.direction = "down"
                 self.y += self.speed*1.5
                 self.stamina -= 0.05
             if pressed[K_a]:
-                self.direction = "left"
                 self.x -= self.speed*1.5
                 self.stamina -= 0.05
             if pressed[K_d]:
-                self.direction = "right"
                 self.x += self.speed*1.5
                 self.stamina -= 0.05
         else:
             if pressed[K_w]:
-                self.direction = "up"
                 self.y -= self.speed
             if pressed[K_s]:
-                self.direction = "down"
                 self.y += self.speed
             if pressed[K_a]:
-                self.direction = "left"
                 self.x -= self.speed
             if pressed[K_d]:
-                self.direction = "right"
                 self.x += self.speed
 
         self.playerRect = Rect(self.x, self.y, 40, 50)
         draw.rect(screen, (0, 255, 0), self.playerRect)
+
+    def changeDirection(self, pressed):
+        """Change the direction of the player when different keys are pressed
+        The directions are used in attack logic"""
+        if pressed == "none":
+            self.direction = ""
+        elif pressed[K_w]:
+            self.direction += ",up"
+        elif pressed[K_s]:
+            self.direction += ",down"
+        elif pressed[K_a]:
+            self.direction += ",left"
+        elif pressed[K_d]:
+            self.direction += ",right"
 
     def gotHit(self):
         "do things for being hit"
@@ -76,14 +83,36 @@ class Player:
     def attack(self, screen):
         "player performs a spell"
         if self.spell_energy > self.selected_spell.getEnergy():
-            if self.direction == "left":
-                self.selected_spell.doSpell((self.x+self.width/2)-self.attack_radius, (self.y+self.height/2), self.width, self.height, self.x, self.y, self.attack_radius, screen)
-            if self.direction == "right":
-                self.selected_spell.doSpell((self.x+self.width/2)+self.attack_radius, (self.y+self.height/2), self.width, self.height, self.x, self.y, self.attack_radius, screen)
-            if self.direction == "up":
-                self.selected_spell.doSpell((self.x+self.width/2), (self.y+self.height/2)-self.attack_radius, self.width, self.height, self.x, self.y, self.attack_radius, screen)
-            if self.direction == "down":
-                self.selected_spell.doSpell((self.x+self.width/2), (self.y+self.height/2)+self.attack_radius, self.width, self.height, self.x, self.y, self.attack_radius, screen)
+           
+            if self.direction.count(",") <= 1:
+                if self.direction[self.direction.index(",")+1:] == "left":
+                    self.selected_spell.doSpell((self.x+self.width/2)-self.attack_radius, (self.y+self.height/2), self.width, self.height, self.x, self.y, self.attack_radius, screen)
+                
+                if self.direction[self.direction.index(",")+1:] == "right":
+                    self.selected_spell.doSpell((self.x+self.width/2)+self.attack_radius, (self.y+self.height/2), self.width, self.height, self.x, self.y, self.attack_radius, screen)
+                
+                if self.direction[self.direction.index(",")+1:] == "up":
+                    self.selected_spell.doSpell((self.x+self.width/2), (self.y+self.height/2)-self.attack_radius, self.width, self.height, self.x, self.y, self.attack_radius, screen)
+                
+                if self.direction[self.direction.index(",")+1:] == "down":
+                    self.selected_spell.doSpell((self.x+self.width/2), (self.y+self.height/2)+self.attack_radius, self.width, self.height, self.x, self.y, self.attack_radius, screen)
+
+            elif self.direction.count(",") == 2:
+                self.direction = self.direction[self.direction.index(",")+1:]
+                d1 = self.direction[:self.direction.index(",")]
+                d2 = self.direction[self.direction.index(",")+1:]
+
+                if d1 == "up" and d2 == "left" or d2 == "up" and d2 == "left":
+                    self.selected_spell.doSpell((self.x+self.width/2)-self.attack_radius, (self.y+self.height/2)-self.attack_radius, self.width, self.height, self.x, self.y, self.attack_radius, screen)
+
+                if d1 == "left" and d2 == "down" or d1 == "down" and d2 == "left":
+                    self.selected_spell.doSpell((self.x+self.width/2)-self.attack_radius, (self.y+self.height/2)+self.attack_radius, self.width, self.height, self.x, self.y, self.attack_radius, screen)
+
+                if d1 == "down" and d2 == "right" or d1 == "right" and d2 == "down":
+                    self.selected_spell.doSpell((self.x+self.width/2)+self.attack_radius, (self.y+self.height/2)+self.attack_radius, self.width, self.height, self.x, self.y, self.attack_radius, screen)
+
+                if d1 == "right" and d2 == "up" or d1 == "up" and d2 == "right":
+                    self.selected_spell.doSpell((self.x+self.width/2)+self.attack_radius, (self.y+self.height/2)-self.attack_radius, self.width, self.height, self.x, self.y, self.attack_radius, screen)
 
             self.spell_energy -= self.selected_spell.getEnergy()
 
