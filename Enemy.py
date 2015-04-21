@@ -48,7 +48,7 @@ class Enemy:
         "AI for enemies"
 
     def checkCollision(self, rleft, rtop, width, height, center_x, center_y, radius):
-        "Detect collision between a rectangle and circle (playerRect and attack_radius"
+        "Detect collision between a rectangle and circle (playerRect and attack_radius)"
 
         # complete boundbox of the rectangle
         rright, rbottom = rleft + width/2, rtop + height/2
@@ -79,13 +79,13 @@ class Enemy:
         "Damage to ememies"
         self.health -= 1
 
-    def attack(self, mx, my, screen, player):
+    def attack(self, x, y, screen, player):
         "emeny performs a spell"
-        mx += randint(-10, 10)
-        my += randint(-10, 10)
-        fireChance = randint(1, 100)
+        x += randint(-10, 10)
+        y += randint(-10, 10)
+        fireChance = randint(1, 50)
         if fireChance % self.fireRate == 0:
-            self.selected_spell.doSpell(mx, my, self.width, self.height, self.x, self.y, self.attack_radius, screen)
+            self.selected_spell.doSpell(x, y, self.width, self.height, self.x, self.y, self.attack_radius, screen)
             player.gotHit()
 
 

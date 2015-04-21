@@ -76,7 +76,15 @@ class Player:
     def attack(self, screen):
         "player performs a spell"
         if self.spell_energy > self.selected_spell.getEnergy():
-            self.selected_spell.doSpell(mx, my, self.width, self.height, self.x, self.y, self.attack_radius, screen)
+            if self.direction == "left":
+                self.selected_spell.doSpell((self.x+self.width/2)-self.attack_radius, (self.y+self.height/2), self.width, self.height, self.x, self.y, self.attack_radius, screen)
+            if self.direction == "right":
+                self.selected_spell.doSpell((self.x+self.width/2)+self.attack_radius, (self.y+self.height/2), self.width, self.height, self.x, self.y, self.attack_radius, screen)
+            if self.direction == "up":
+                self.selected_spell.doSpell((self.x+self.width/2), (self.y+self.height/2)-self.attack_radius, self.width, self.height, self.x, self.y, self.attack_radius, screen)
+            if self.direction == "down":
+                self.selected_spell.doSpell((self.x+self.width/2), (self.y+self.height/2)+self.attack_radius, self.width, self.height, self.x, self.y, self.attack_radius, screen)
+
             self.spell_energy -= self.selected_spell.getEnergy()
 
     def learnSpell(self, name, power, level, energy):
@@ -88,9 +96,9 @@ class Player:
         if self.health < self.max_health-15:
             self.health += 0.009
         if self.stamina < self.max_stamina:
-            self.stamina += 0.007
+            self.stamina += 0.04
         if self.spell_energy < self.max_spell_energy:
-            self.spell_energy += 0.01
+            self.spell_energy += 0.09
 
 
     # get meathods
