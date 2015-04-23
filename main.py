@@ -9,6 +9,9 @@ from Enemy import *
 
 screen = display.set_mode((850, 600))
 
+# create subsurface of a camera
+camera = screen.subsurface((0, 0, 850, 600))
+
 # main music
 main_theme = Sound("Audio/main.mp3")
 
@@ -36,13 +39,13 @@ while running:
 		if e.type == QUIT:
 			running = False
 		if e.type == KEYDOWN and key.get_pressed()[K_SPACE]:
-			playerList[0].attack(screen)
+			playerList[0].attack(camera)
 
 	mx, my = mouse.get_pos()
 	pressed = key.get_pressed()
 
 	for i in range(len(playerList)):
-		playerList[i].move(pressed, screen)
+		playerList[i].move(pressed, camera)
 		playerList[i].regenerate();
 
 	# do enemy methods
@@ -56,7 +59,7 @@ while running:
 			enemyList[i].attack(playerList[0].getX()+playerList[0].getWidth()//2, playerList[0].getY()+playerList[0].getHeight()//2, screen, playerList[0])
 			enemyList[i].show(screen)
 		else:
-			enemyList[i].move(playerList[0].getX(), playerList[0].getY(), screen)
+			enemyList[i].move(playerList[0].getX(), playerList[0].getY(), camera)
 
 	if playerList[0].getHealth() <= 0:
 		running = False
