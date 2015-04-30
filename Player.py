@@ -32,9 +32,16 @@ class Player:
         self.selected_spell = self.spell_list[0]
         self.direction = "left"
 
-    def move(self, pressed, screen):
+    def analyzeInput(self, camera, player, pressed, attack_button):
+        "Centralized method that analyzes inputs and calls adequett functions"
+        self.move(pressed, camera)
+        self.regenerate()
+        if attack_button:
+            self.attack(camera, pressed)
+
+    def move(self, pressed, camera):
         "Move player"
-        if pressed[K_LSHIFT] and self.stamina >= 1:
+        if pressed[K_LSHIFT] and self.stamina > 1.1:
             if pressed[K_w]:
                 self.direction = "up"
                 self.y -= self.speed*1.5
@@ -66,23 +73,23 @@ class Player:
                 self.x += self.speed
 
         self.playerRect = Rect(self.x, self.y, 40, 50)
-        draw.rect(screen, (0, 255, 0), self.playerRect)
+        draw.rect(camera, (0, 255, 0), self.playerRect)
 
     def gotHit(self):
         "do things for being hit"
         self.health -= 1
 
-    def attack(self, screen):
+    def attack(self, camera, pressed):
         "player performs a spell"
         if self.spell_energy > self.selected_spell.getEnergy():
             if self.direction == "left":
-                self.selected_spell.doSpell((self.x+self.width/2)-self.attack_radius, (self.y+self.height/2), self.width, self.height, self.x, self.y, self.attack_radius, screen)
+                self.selected_spell.doSpell((self.x+self.width/2)-self.attack_radius, (self.y+self.height/2), self.width, self.height, self.x, self.y, self.attack_radius, camera)
             if self.direction == "right":
-                self.selected_spell.doSpell((self.x+self.width/2)+self.attack_radius, (self.y+self.height/2), self.width, self.height, self.x, self.y, self.attack_radius, screen)
+                self.selected_spell.doSpell((self.x+self.width/2)+self.attack_radius, (self.y+self.height/2), self.width, self.height, self.x, self.y, self.attack_radius, camera)
             if self.direction == "up":
-                self.selected_spell.doSpell((self.x+self.width/2), (self.y+self.height/2)-self.attack_radius, self.width, self.height, self.x, self.y, self.attack_radius, screen)
+                self.selected_spell.doSpell((self.x+self.width/2), (self.y+self.height/2)-self.attack_radius, self.width, self.height, self.x, self.y, self.attack_radius, camera)
             if self.direction == "down":
-                self.selected_spell.doSpell((self.x+self.width/2), (self.y+self.height/2)+self.attack_radius, self.width, self.height, self.x, self.y, self.attack_radius, screen)
+                self.selected_spell.doSpell((self.x+self.width/2), (self.y+self.height/2)+self.attack_radius, self.width, self.height, self.x, self.y, self.attack_radius, camera)
 
             self.spell_energy -= self.selected_spell.getEnergy()
 

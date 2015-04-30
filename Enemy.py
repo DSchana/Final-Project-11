@@ -22,7 +22,18 @@ class Enemy:
         self.kind = kind
         self.selected_spell = Spells("stun", randint(5, 15), 1, 10)
 
-    def move(self, px, py, screen):
+    def analyzeInput(self, camera, player, pressed, e):
+        "Centralized method that analyzes inputs and calls adequett functions"
+        # Check attack
+        rx = player.getX()
+        ry = player.getY()
+        if self.checkCollision(rx, ry, player.getWidth(), player.getHeight(), self.x, self.y, self.attack_radius):
+            self.attack(player.getX()+player.getWidth()//2, player.getY()+player.getHeight()//2, camera, player)
+            self.show(camera)
+        else:
+            self.move(player.getX(), player.getY(), camera)
+
+    def move(self, px, py, camera):
         "Move enemy"
         #draw.circle(screen, (0, 0, 148, 30), (int(self.x)+20, int(self.y)+25), self.follow_radius)
         #draw.circle(screen, (148, 0, 0, 30), (int(self.x)+20, int(self.y)+25), self.attack_radius)
@@ -37,11 +48,11 @@ class Enemy:
                 self.x -= self.speed
 
         self.enemyRect = Rect(self.x, self.y, 40, 50)
-        draw.rect(screen, (255, 0, 0), self.enemyRect)
+        draw.rect(camera, (255, 0, 0), self.enemyRect)
 
-    def show(self, screen):
+    def show(self, camera):
     	"Draw enemy"  # use only when enemy will not be moving
-    	draw.rect(screen, (255, 0, 0), self.enemyRect)
+    	draw.rect(camera, (255, 0, 0), self.enemyRect)
 
     def AI(self):
         "AI for enemies"
@@ -78,13 +89,13 @@ class Enemy:
         "Damage to ememies"
         self.health -= 1
 
-    def attack(self, x, y, screen, player):
+    def attack(self, x, y, camera, player):
         "emeny performs a spell"
         x += randint(-10, 10)
         y += randint(-10, 10)
         fireChance = randint(1, 50)
         if fireChance % self.fireRate == 0:
-            self.selected_spell.doSpell(x, y, self.width, self.height, self.x, self.y, self.attack_radius, screen)
+            self.selected_spell.doSpell(x, y, self.width, self.height, self.x, self.y, self.attack_radius, camera)
             player.gotHit()
 
 

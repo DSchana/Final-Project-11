@@ -11,9 +11,9 @@ class Spells:
         self.level = level
         self.energy = energy
 
-    def doSpell(self, mx, my, width, height, x, y, attack_radius, screen):
+    def doSpell(self, mx, my, width, height, x, y, attack_radius, camera):
         "Have player perform spell"
-        frame_copy = screen.copy()
+        frame_copy = camera.copy()
         sx = x + width//2
         sy = y + height//2
         dx = mx - sx
@@ -21,10 +21,11 @@ class Spells:
         d_incx = dx / attack_radius
         d_incy = dy / attack_radius
         while sqrt((sx-x)**2 + (sy-y)**2) < attack_radius:
-            screen.blit(frame_copy, (0, 0))
+
+            camera.blit(frame_copy, (0, 0))
             sx += d_incx
             sy += d_incy
-            draw.circle(screen, (218, 135, 4), (int(sx), int(sy)), 3)
+            draw.circle(camera, (218, 135, 4), (int(sx), int(sy)), 3)
             display.flip()
 
     # spell get methods

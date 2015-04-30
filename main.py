@@ -34,38 +34,30 @@ gameClock = time.Clock()
 running = True
 
 while running:
-	screen.fill((0, 168, 64))
+	mx, my = mouse.get_pos()
+	pressed = key.get_pressed()
+
+	camera.fill((0, 168, 64))
 	for e in event.get():
 		if e.type == QUIT:
 			running = False
 		if e.type == KEYDOWN and key.get_pressed()[K_SPACE]:
-			playerList[0].attack(camera)
-
-	mx, my = mouse.get_pos()
-	pressed = key.get_pressed()
+			attack_button = True
+		else:
+			attack_button = False
 
 	for i in range(len(playerList)):
-		playerList[i].move(pressed, camera)
-		playerList[i].regenerate();
+		playerList[i].analyzeInput(camera, False, pressed, attack_button)
 
 	# do enemy methods
 	for i in range(len(enemyList)):
-		rx = playerList[0].getX()
-		ry = playerList[0].getY()
-		cx = enemyList[i].getX()
-		cy = enemyList[i].getY()
-		radius = enemyList[i].getAttackRadius()
-		if enemyList[i].checkCollision(rx, ry, p_width, p_height, cx, cy, radius):
-			enemyList[i].attack(playerList[0].getX()+playerList[0].getWidth()//2, playerList[0].getY()+playerList[0].getHeight()//2, screen, playerList[0])
-			enemyList[i].show(screen)
-		else:
-			enemyList[i].move(playerList[0].getX(), playerList[0].getY(), camera)
+		enemyList[i].analyzeInput(camera, playerList[0], False, False)
 
 	if playerList[0].getHealth() <= 0:
 		running = False
 
 	# temporary
-	print(round(playerList[0].getHealth(), 0), round(playerList[0].getSpellEnergy(), 0), round(playerList[0].getStamina(), 0))
+	print(round(playerList[0].getHealth(), 0), round(playerList[0].getSpellEnergy(), 0), round(playerList[0].getStamina(), 0), playerList[0].getX(), playerList[0].getY())
 
 	# draw stuff
 	display.flip()
