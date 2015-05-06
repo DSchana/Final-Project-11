@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="32" tileheight="32" nextobjectid="1">
+ <tileset firstgid="1" name="Main enterance big" tilewidth="32" tileheight="32">
+  <image source="../Tilesets/Entrance hall.png" width="632" height="800"/>
+ </tileset>
+ <tileset firstgid="476" name="Main entrance" tilewidth="32" tileheight="32">
+  <image source="../Tilesets/Entrance hall.png" width="632" height="729"/>
+ </tileset>
+ <layer name="Background" width="100" height="100">
+  <data encoding="base64" compression="zlib">
+   eJztwwEJAAAMA6DBS61/ssFzKNhLqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq/gEX7wE4
+  </data>
+ </layer>
+ <layer name="Main entrance hall" width="100" height="100">
+  <data encoding="base64" compression="zlib">
+   eJzt11WMHWUYgOEttBSrYnVX6u7u7u7u7u7eInXBEqgLGmiRCnqPwwXucIO7PMly0ZykLMnSHrrne5PnYs7Onvnn+yeTnLS0KEovF7nJQ17ykZ8bkrmoFK4EJSlFacpQlnJJXFMqV4va1KEu9ahPg2QuKoVrSzva04GOdKJzMheVwg1gIIMYzBCGMiyZi0rhJjOFqUxjOjOYmcxFpXDLWM4KVrKK1axJ4ppSua1sYzs72MkudidzUSncfg5wkEMc5ghHk7moFO4kp1h5hXcVq1nD6WQvLAuXDSNOu5Ls5OAqcrLNH/awg53sYvffn0UXpxu5iZu5hQIUpBCFKUJRilE8SWv8P/YO7/Ie7/MBH/JRwnmrPfBrWMs61mf75+8tTwUqciuVqEwVqlKN6tSg5n90L1mhr/mGb/mO7/mBHxPO22X+u9nDXvZlsB8NaURjmtCUZjSnBS1pRWvanPd/uTJ3O5d92c01B1eRk6u5hmsT5n3E8VGOcZwTGexHF7rSje70oCe96E0f+tKP/mnpv9kj73ZzLUBBClGYIhRNmPczjk9zhrOcy2A/hjOCkYxiNGMYyzjGM4GJTEpL/80eebebayUqU4WqVKN6BvPOqFnMZg5zmcd8FrCQRSxmCUszd6ksVRNzb0ozmtOClrTK5H6sZR3r2cBGNrGZLQnnlnWtcpSnAhUzee3Lue7uvQc96UVv+tA3kzPZw172cRd3cw/3cl/CufVdqwENaUTjFN6PUe59NGMYyzjGMyFhJsUcF6cEJSlFacpcYHbHOM4JHuQhHuYRHuWx887t5Ds604WudEvh/Zjr3ucxnwUsZBGLE2ZSw3FNalGbOtSl3gVmd4aznONZnuN5XuBFXjrv3KG+YxjDGcHIFN6PDe59I5vYzBZu4/aEmbR23Ia2tKM9HeiYLf35TuxlXuFVXuN13uBN3uLt886d4f9nMovZzEnh/fi39TOj/gxgIIMYzJBs6c93Yh/zCZ/yGZ/zBV/y1SVcd1ZtoplPYjJTmMo0pl/gWf6Jn/mFX/mN3/mDPy/RmrNyS8x9KctYzgpWsuoC+3Gdz68nF7nJQ17ykT/eR5nuDjO8k61sYzs72BmzTUr3m/sD7OcABznE4diPpPS4uT/BSU7xJE/xdOxHFEVRFEVRFEVRFEVRFEVRFEVRFEVRFEVRFEVRFEVRFEVRFEVRFEVRFEVRFEVRFEVRFEVRFEVRFEVRFEVRFEVRFEVRFEVRFEVRFEVRFEVRFEVRFF20/gKoBa8q
+  </data>
+ </layer>
+</map>

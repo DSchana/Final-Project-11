@@ -22,7 +22,7 @@ class Enemy:
         self.kind = kind
         self.selected_spell = Spells("stun", randint(5, 15), 1, 10)
 
-    def analyzeInput(self, camera, player, pressed, e):
+    def analyzeInput(self, camera, player):
         "Centralized method that analyzes inputs and calls adequett functions"
         # Check attack
         rx = player.getX()
@@ -32,23 +32,6 @@ class Enemy:
             self.show(camera)
         else:
             self.move(player.getX(), player.getY(), camera)
-
-    def move(self, px, py, camera):
-        "Move enemy"
-        #draw.circle(screen, (0, 0, 148, 30), (int(self.x)+20, int(self.y)+25), self.follow_radius)
-        #draw.circle(screen, (148, 0, 0, 30), (int(self.x)+20, int(self.y)+25), self.attack_radius)
-        if sqrt((px-self.x)**2 + (py - self.y)**2) < self.follow_radius:
-            if py > self.y:
-                self.y += self.speed
-            if py < self.y:
-                self.y -= self.speed
-            if px > self.x:
-                self.x += self.speed
-            if px < self.x:
-                self.x -= self.speed
-
-        self.enemyRect = Rect(self.x, self.y, 40, 50)
-        draw.rect(camera, (255, 0, 0), self.enemyRect)
 
     def show(self, camera):
     	"Draw enemy"  # use only when enemy will not be moving
@@ -91,12 +74,15 @@ class Enemy:
 
     def attack(self, x, y, camera, player):
         "emeny performs a spell"
+
+        # Not how it works, it is like pokemon, need to fix dis shit
+        '''
         x += randint(-10, 10)
         y += randint(-10, 10)
         fireChance = randint(1, 50)
         if fireChance % self.fireRate == 0:
             self.selected_spell.doSpell(x, y, self.width, self.height, self.x, self.y, self.attack_radius, camera)
-            player.gotHit()
+            player.gotHit()'''
 
 
     # get methods

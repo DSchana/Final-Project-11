@@ -32,12 +32,10 @@ class Player:
         self.selected_spell = self.spell_list[0]
         self.direction = "left"
 
-    def analyzeInput(self, camera, player, pressed, attack_button):
+    def analyzeInput(self, camera, player, pressed):
         "Centralized method that analyzes inputs and calls adequett functions"
         self.move(pressed, camera)
         self.regenerate()
-        if attack_button:
-            self.attack(camera, pressed)
 
     def move(self, pressed, camera):
         "Move player"
@@ -81,6 +79,9 @@ class Player:
 
     def attack(self, camera, pressed):
         "player performs a spell"
+        
+        # Turns out the game has a turn based attack system similar to pokemon
+        '''
         if self.spell_energy > self.selected_spell.getEnergy():
             if self.direction == "left":
                 self.selected_spell.doSpell((self.x+self.width/2)-self.attack_radius, (self.y+self.height/2), self.width, self.height, self.x, self.y, self.attack_radius, camera)
@@ -92,6 +93,7 @@ class Player:
                 self.selected_spell.doSpell((self.x+self.width/2), (self.y+self.height/2)+self.attack_radius, self.width, self.height, self.x, self.y, self.attack_radius, camera)
 
             self.spell_energy -= self.selected_spell.getEnergy()
+            '''
 
     def learnSpell(self, name, power, level, energy):
         "Add spell to the player's spell list"

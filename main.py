@@ -18,13 +18,14 @@ main_theme = Sound("Audio/main.mp3")
 # play main sound track
 main_theme.execute(0)
 
-enemyList = []
-playerList = []
+# create usable player
+self.enemyList = []
+self.playerList = []
 
-playerList.append(Player("Jeffery", 100,  "Huflepuff", 0, 1, 1, 1, 200, 100, [], 10, 4, 400, 300, "wasd"))
+self.playerList.append(Player("Jeffery", 100,  "Huflepuff", 0, 1, 1, 1, 200, 100, [], 10, 4, 400, 300, "wasd"))
 
 for i in range(5):
-	enemyList.append(Enemy(100, "Slytherin", randint(1, 3), randint(1, 10), randint(50, 150), randint(5, 10), "Death eater", randint(10, 800), randint(10, 550)))
+	self.enemyList.append(Enemy(100, "Slytherin", randint(1, 3), randint(1, 10), randint(50, 150), randint(5, 10), "Death eater", randint(10, 800), randint(10, 550)))
 
 # Constant player values
 p_width = playerList[0].getWidth()
@@ -41,17 +42,13 @@ while running:
 	for e in event.get():
 		if e.type == QUIT:
 			running = False
-		if e.type == KEYDOWN and key.get_pressed()[K_SPACE]:
-			attack_button = True
-		else:
-			attack_button = False
 
-	for i in range(len(playerList)):
-		playerList[i].analyzeInput(camera, False, pressed, attack_button)
+	# do player stuff
+	playerList[0].analyzeInput(camera, False, pressed)
 
 	# do enemy methods
 	for i in range(len(enemyList)):
-		enemyList[i].analyzeInput(camera, playerList[0], False, False)
+		enemyList[i].analyzeInput(camera, playerList[0])
 
 	if playerList[0].getHealth() <= 0:
 		running = False
