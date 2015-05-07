@@ -30,8 +30,6 @@ class Enemy:
         if self.checkCollision(rx, ry, player.getWidth(), player.getHeight(), self.x, self.y, self.attack_radius):
             self.attack(player.getX()+player.getWidth()//2, player.getY()+player.getHeight()//2, camera, player)
             self.show(camera)
-        else:
-            self.move(player.getX(), player.getY(), camera)
 
     def show(self, camera):
     	"Draw enemy"  # use only when enemy will not be moving

@@ -6,6 +6,11 @@ from random import *
 from Sound import *
 from Player import *
 from Enemy import *
+from Battle import *
+
+def drawScene():
+	display.flip()
+	gameClock.tick(60)
 
 screen = display.set_mode((850, 600))
 
@@ -19,13 +24,13 @@ main_theme = Sound("Audio/main.mp3")
 main_theme.execute(0)
 
 # create usable player
-self.enemyList = []
-self.playerList = []
+enemyList = []
+playerList = []
 
-self.playerList.append(Player("Jeffery", 100,  "Huflepuff", 0, 1, 1, 1, 200, 100, [], 10, 4, 400, 300, "wasd"))
+playerList.append(Player("Jeffery", 100,  "Huflepuff", 0, 1, 1, 1, 200, 100, [], 10, 4, 400, 300, "wasd"))
 
 for i in range(5):
-	self.enemyList.append(Enemy(100, "Slytherin", randint(1, 3), randint(1, 10), randint(50, 150), randint(5, 10), "Death eater", randint(10, 800), randint(10, 550)))
+	enemyList.append(Enemy(100, "Slytherin", randint(1, 3), randint(1, 10), randint(50, 150), randint(5, 10), "Death eater", randint(10, 800), randint(10, 550)))
 
 # Constant player values
 p_width = playerList[0].getWidth()
@@ -56,8 +61,6 @@ while running:
 	# temporary
 	print(round(playerList[0].getHealth(), 0), round(playerList[0].getSpellEnergy(), 0), round(playerList[0].getStamina(), 0), playerList[0].getX(), playerList[0].getY())
 
-	# draw stuff
-	display.flip()
-	gameClock.tick(60)
+	drawScene()
 
 quit()
