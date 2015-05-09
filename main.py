@@ -45,11 +45,13 @@ while running:
 
 	camera.fill((0, 168, 64))
 	for e in event.get():
+		# do player stuff
+		playerList[0].analyzeInput(camera, pressed, e)
 		if e.type == QUIT:
 			running = False
 
 	# do player stuff
-	playerList[0].analyzeInput(camera, False, pressed)
+	playerList[0].analyzeInput(camera, pressed, False)
 
 	# do enemy methods
 	for i in range(len(enemyList)):

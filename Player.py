@@ -31,69 +31,108 @@ class Player:
         self.learnSpell("Expelliarmus", 10, 1, 10)
         self.selected_spell = self.spell_list[0]
         self.direction = "left"
+        self.location = ""
 
-    def analyzeInput(self, camera, player, pressed):
+    def analyzeInput(self, camera, pressed, e):
         "Centralized method that analyzes inputs and calls adequett functions"
+        self.changeDirection(pressed)
         self.move(pressed, camera)
         self.regenerate()
+        if e.type == KEYDOWN and pressed[K_SPACE]:
+            self.attack(camera)
+
+    def changeDirection(self, pressed):
+        "Change the direction used to affect player"
+
+        self.direction = ""
+
+        if pressed[K_w]:
+            self.direction += "up"
+        if pressed[K_a]:
+            self.direction += "left"
+        if pressed[K_s]:
+            self.direction += "down"
+        if pressed[K_d]:
+            self.direction += "right"
+
+    def changeLocation(self):
+        "Change the location ex. main entrance, grounds"
 
     def move(self, pressed, camera):
         "Move player"
         if pressed[K_LSHIFT] and self.stamina > 1.1:
-            if pressed[K_w]:
-                self.direction = "up"
+            if self.direction.find("up") != -1:
                 self.y -= self.speed*1.5
                 self.stamina -= 0.05
-            if pressed[K_s]:
-                self.direction = "down"
+            if self.direction.find("down") != -1:
                 self.y += self.speed*1.5
                 self.stamina -= 0.05
-            if pressed[K_a]:
-                self.direction = "left"
+            if self.direction.find("left") != -1:
                 self.x -= self.speed*1.5
                 self.stamina -= 0.05
-            if pressed[K_d]:
-                self.direction = "right"
+            if self.direction.find("right") != -1:
                 self.x += self.speed*1.5
                 self.stamina -= 0.05
         else:
-            if pressed[K_w]:
-                self.direction = "up"
+            if self.direction.find("up") != -1:
                 self.y -= self.speed
-            if pressed[K_s]:
-                self.direction = "down"
+            if self.direction.find("down") != -1:
                 self.y += self.speed
-            if pressed[K_a]:
-                self.direction = "left"
+            if self.direction.find("left") != -1:
                 self.x -= self.speed
-            if pressed[K_d]:
-                self.direction = "right"
+            if self.direction.find("right") != -1:
                 self.x += self.speed
 
         self.playerRect = Rect(self.x, self.y, 40, 50)
-        draw.rect(camera, (0, 255, 0), self.playerRect)
+        draw.rect(camera, (0, 255, 0), self.playerRect)  # replace with sprite images
 
     def gotHit(self):
         "do things for being hit"
         self.health -= 1
 
-    def attack(self, camera, pressed):
+    def attack(self, camera):
         "player performs a spell"
+
+        # straight facing spells
+        if self.direction == "up":
+        	# do up spell animation
+            print("up")
+        if self.direction == "left":
+        	# do left spell animation
+            print("up")
+        if self.direction == "down":
+        	# do down spell animation
+            print("up")
+        if self.direction == "right":
+        	# do right animation
+            print("up")
+
+            # diagonal facing spells
+        if self.direction == "upleft":
+            # do upleft animation
+            print("up")
+        if self.direction == "leftdown":
+            # do leftdown animation
+            print("up")
+        if self.direction == "downright":
+            # do downright animation
+            print("up")
+        if self.direction == "upright":
+            # do rightup anumation
+            print("up")
         
         # Turns out the game has a turn based attack system similar to pokemon
-        '''
-        if self.spell_energy > self.selected_spell.getEnergy():
-            if self.direction == "left":
-                self.selected_spell.doSpell((self.x+self.width/2)-self.attack_radius, (self.y+self.height/2), self.width, self.height, self.x, self.y, self.attack_radius, camera)
-            if self.direction == "right":
-                self.selected_spell.doSpell((self.x+self.width/2)+self.attack_radius, (self.y+self.height/2), self.width, self.height, self.x, self.y, self.attack_radius, camera)
-            if self.direction == "up":
-                self.selected_spell.doSpell((self.x+self.width/2), (self.y+self.height/2)-self.attack_radius, self.width, self.height, self.x, self.y, self.attack_radius, camera)
-            if self.direction == "down":
-                self.selected_spell.doSpell((self.x+self.width/2), (self.y+self.height/2)+self.attack_radius, self.width, self.height, self.x, self.y, self.attack_radius, camera)
+        # if self.spell_energy > self.selected_spell.getEnergy():
+        #     if self.direction == "left":
+        #         self.selected_spell.doSpell((self.x+self.width/2)-self.attack_radius, (self.y+self.height/2), self.width, self.height, self.x, self.y, self.attack_radius, camera)
+        #     if self.direction == "right":
+        #         self.selected_spell.doSpell((self.x+self.width/2)+self.attack_radius, (self.y+self.height/2), self.width, self.height, self.x, self.y, self.attack_radius, camera)
+        #     if self.direction == "up":
+        #         self.selected_spell.doSpell((self.x+self.width/2), (self.y+self.height/2)-self.attack_radius, self.width, self.height, self.x, self.y, self.attack_radius, camera)
+        #     if self.direction == "down":
+        #         self.selected_spell.doSpell((self.x+self.width/2), (self.y+self.height/2)+self.attack_radius, self.width, self.height, self.x, self.y, self.attack_radius, camera)
 
-            self.spell_energy -= self.selected_spell.getEnergy()
-            '''
+        #     self.spell_energy -= self.selected_spell.getEnergy()
 
     def learnSpell(self, name, power, level, energy):
         "Add spell to the player's spell list"
@@ -101,8 +140,6 @@ class Player:
 
     def regenerate(self):
         "regenerate health, stamina, and energy over time"
-        if self.health < self.max_health-15:
-            self.health += 0.009
         if self.stamina < self.max_stamina:
             self.stamina += 0.04
         if self.spell_energy < self.max_spell_energy:
@@ -153,3 +190,7 @@ class Player:
     def getSpellEnergy(self):
         "get the spell energy of player"
         return self.spell_energy
+
+    def getDirection(self):
+        "get the direction of the player"
+        return self.direction

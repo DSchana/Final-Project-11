@@ -103,32 +103,3 @@ class Enemy:
     def getFireRate(self):
     	"get fire rate of enemy"
     	return self.fireRate
-
-    # fix
-    def getVector(self, px, py):
-        "get direction vector of enemy"
-        if self.x <= px and self.y >= py:
-            ang = degrees(atan2(radians(self.speed),radians(self.speed)))
-            mag = sqrt(2*(self.speed**2))
-        elif self.x <= px and self.y <= py:
-            ang = degrees(atan2(radians(self.speed),radians(-self.speed)))
-            mag = sqrt(2*(self.speed**2))
-        elif self.x >= px and self.y <= py:
-            ang = degrees(atan2(radians(-self.speed),radians(-self.speed)))
-            mag = sqrt(2*(self.speed**2))
-        elif self.x >= px and self.y >= py:
-            ang = degrees(atan2(radians(-self.speed),radians(self.speed)))
-            mag = sqrt(2*(self.speed**2))
-        elif self.x <= px and self.y == py:
-            ang = 0
-            mag = self.speed
-        elif self.x >= px and self.y == py:
-            ang = 180
-            mag = self.speed
-        elif self.y <= py and self.x == px:
-            ang = 270
-            mag = self.speed
-        elif self.y >= py and self.x == px:
-            ang = 90
-            mag = self.speed
-        return(ang,mag)
