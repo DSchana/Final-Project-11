@@ -12,28 +12,28 @@ screen = display.set_mode((850,600))
 #The following lists store the sprites for movement 
 rightWalkSpriteList = []
 for i in range(9):
-    rightWalkSpriteList.append(image.load("walkRight\\walkRight" + str(i) + ".png"))
+    rightWalkSpriteList.append(image.load("Images/walking/walkRight/walkRight" + str(i) + ".png"))
 leftWalkSpriteList = []
 for i in range(9):
-    leftWalkSpriteList.append(image.load("walkLeft\\walkLeft" + str(i) + ".png"))
+    leftWalkSpriteList.append(image.load("Images/walking/walkLeft/walkLeft" + str(i) + ".png"))
 upWalkSpriteList = []
 for i in range(9):
-    upWalkSpriteList.append(image.load("walkUp\\walkUp" + str(i) + ".png"))
+    upWalkSpriteList.append(image.load("Images/walking/walkUp/walkUp" + str(i) + ".png"))
 downWalkSpriteList = []
 for i in range(9):
-    downWalkSpriteList.append(image.load("walkDown\\walkDown" + str(i) + ".png"))
+    downWalkSpriteList.append(image.load("Images/walking/walkDown/walkDown" + str(i) + ".png"))
 rightUpWalkSpriteList = []
 for i in range(9):
-    rightUpWalkSpriteList.append(image.load("walkUpRight\\walkUpRight" + str(i) + ".png"))
+    rightUpWalkSpriteList.append(image.load("Images/walking/walkUpRight/walkUpRight" + str(i) + ".png"))
 rightDownWalkSpriteList = []
 for i in range(9):
-    rightDownWalkSpriteList.append(image.load("walkDownRight\\walkDownRight" + str(i) + ".png"))
+    rightDownWalkSpriteList.append(image.load("Images/walking/walkDownRight/walkDownRight" + str(i) + ".png"))
 leftUpWalkSpriteList = []
 for i in range(9):
-    leftUpWalkSpriteList.append(image.load("walkUpLeft\\walkUpLeft" + str(i) + ".png"))
+    leftUpWalkSpriteList.append(image.load("Images/walking/walkUpLeft/walkUpLeft" + str(i) + ".png"))
 leftDownSpriteList = []
 for i in range(9):
-    leftDownSpriteList.append(image.load("walkDownLeft\\walkDownLeft" + str(i) + ".png"))
+    leftDownSpriteList.append(image.load("Images/walking/walkDownLeft/walkDownLeft" + str(i) + ".png"))
 
 playerX, playerY = 400,300
 screen.fill((255,255,255))

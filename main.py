@@ -1,5 +1,6 @@
 # main.py
 
+import os
 from pygame import *
 from math import *
 from random import *
@@ -7,10 +8,9 @@ from Sound import *
 from Player import *
 from Enemy import *
 from Battle import *
+from Sprites import *
 
-def drawScene():
-	display.flip()
-	gameClock.tick(60)
+os.environ['SDL_VIDEO_WINDOW_POS'] = '25,50' #Opens up in the upper left corner 
 
 screen = display.set_mode((850, 600))
 
@@ -23,10 +23,14 @@ main_theme = Sound("Audio/main.mp3")
 # play main sound track
 main_theme.execute(0)
 
-# create usable player
 enemyList = []
 playerList = []
 
+harrySprites = Sprites("Images/walking/walkUp/", "Images/walking/walkLeft/", "Images/walking/walkDown/", "Images/walking/walkRight/", "Images/walking/walkUpLeft/", 
+		"Images/walking/walkDownLeft/", "Images/walking/walkDownRight/", "Images/walking/walkUpRight/")
+harrySprites.loadImages()
+
+# create usable player
 playerList.append(Player("Jeffery", 100,  "Huflepuff", 0, 1, 1, 1, 200, 100, [], 10, 4, 400, 300, "wasd"))
 
 for i in range(5):
@@ -46,12 +50,12 @@ while running:
 	camera.fill((0, 168, 64))
 	for e in event.get():
 		# do player stuff
-		playerList[0].analyzeInput(camera, pressed, e)
+		playerList[0].analyzeInput(camera, pressed, e, harrySprites)
 		if e.type == QUIT:
 			running = False
 
 	# do player stuff
-	playerList[0].analyzeInput(camera, pressed, False)
+	playerList[0].analyzeInput(camera, pressed, False, harrySprites)
 
 	# do enemy methods
 	for i in range(len(enemyList)):
@@ -60,9 +64,7 @@ while running:
 	if playerList[0].getHealth() <= 0:
 		running = False
 
-	# temporary
-	print(round(playerList[0].getHealth(), 0), round(playerList[0].getSpellEnergy(), 0), round(playerList[0].getStamina(), 0), playerList[0].getX(), playerList[0].getY())
-
-	drawScene()
+	display.flip()
+	gameClock.tick(60)
 
 quit()
