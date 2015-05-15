@@ -9,62 +9,77 @@ from Player import *
 from Enemy import *
 from Battle import *
 from Sprites import *
+from Menu import *
 
 os.environ['SDL_VIDEO_WINDOW_POS'] = '25,50' #Opens up in the upper left corner 
-
 screen = display.set_mode((850, 600))
+display.set_caption("Harry Potter: New Horizons")
+mouse.set_cursor(*cursors.tri_left)
 
 # create subsurface of a camera
 camera = screen.subsurface((0, 0, 850, 600))
 
 # main music
-main_theme = Sound("Audio/main.mp3")
+music = {}
+music["main"] = Sound("Audio/main.mp3")
+music["menu"] = Sound("Audio/menu.mp3")
+music["credits"] = Sound("Audio/credits.mp3")
 
-# play main sound track
-main_theme.execute(0)
+mode_select = loadImages(screen, music["menu"])
 
-enemyList = []
-playerList = []
+if mode_select == "controls":
+	print("Controls")
 
-harrySprites = Sprites("Images/walking/walkUp/", "Images/walking/walkLeft/", "Images/walking/walkDown/", "Images/walking/walkRight/", "Images/walking/walkUpLeft/", 
-		"Images/walking/walkDownLeft/", "Images/walking/walkDownRight/", "Images/walking/walkUpRight/")
-harrySprites.loadImages()
+if mode_select == "credits":
+	print("Credits")
+	displayCredits(screen, music["credits"])
+	mode_select = loadImages(screen, music["menu"])
 
-# create usable player
-playerList.append(Player("Jeffery", 100,  "Huflepuff", 0, 1, 1, 1, 200, 100, [], 10, 4, 400, 300, "wasd"))
+if mode_select == "play":
+	enemyList = []
+	playerList = []
 
-for i in range(5):
-	enemyList.append(Enemy(100, "Slytherin", randint(1, 3), randint(1, 10), randint(50, 150), randint(5, 10), "Death eater", randint(10, 800), randint(10, 550)))
+	harrySprites = Sprites("Images/walking/walkUp/", "Images/walking/walkLeft/", "Images/walking/walkDown/", "Images/walking/walkRight/", "Images/walking/walkUpLeft/", 
+			"Images/walking/walkDownLeft/", "Images/walking/walkDownRight/", "Images/walking/walkUpRight/")
+	harrySprites.loadImages()
 
-# Constant player values
-p_width = playerList[0].getWidth()
-p_height = playerList[0].getHeight()
+	# create usable player
+	playerList.append(Player("Jeffery", 100,  "Huflepuff", 0, 1, 1, 1, 200, 100, [], 10, 4, 400, 300, "wasd"))
 
-gameClock = time.Clock()
-running = True
+	for i in range(5):
+		enemyList.append(Enemy(100, "Slytherin", randint(1, 3), randint(1, 10), randint(50, 150), randint(5, 10), "Death eater", randint(10, 800), randint(10, 550)))
 
-while running:
-	mx, my = mouse.get_pos()
-	pressed = key.get_pressed()
+	# Constant player values
+	p_width = playerList[0].getWidth()
+	p_height = playerList[0].getHeight()
 
-	camera.fill((0, 168, 64))
-	for e in event.get():
+	gameClock = time.Clock()
+	running = True
+
+	music["main"].execute(0)
+
+	while running:
+		mx, my = mouse.get_pos()
+		pressed = key.get_pressed()
+
+		camera.fill((0, 168, 64))  # replace with blit background
+		for e in event.get():
+			# do player stuff
+			#playerList[0].analyzeInput(camera, pressed, e, harrySprites)
+			if e.type == QUIT:
+				running = False
+
 		# do player stuff
-		playerList[0].analyzeInput(camera, pressed, e, harrySprites)
-		if e.type == QUIT:
+		playerList[0].analyzeInput(camera, pressed, False, harrySprites)
+
+		# do enemy methods
+		for i in range(len(enemyList)):
+			enemyList[i].analyzeInput(camera, playerList[0])
+
+		if playerList[0].getHealth() <= 0:
 			running = False
 
-	# do player stuff
-	playerList[0].analyzeInput(camera, pressed, False, harrySprites)
-
-	# do enemy methods
-	for i in range(len(enemyList)):
-		enemyList[i].analyzeInput(camera, playerList[0])
-
-	if playerList[0].getHealth() <= 0:
-		running = False
-
-	display.flip()
-	gameClock.tick(60)
+		display.flip()
+		gameClock.tick(60)
 
 quit()

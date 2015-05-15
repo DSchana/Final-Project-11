@@ -39,8 +39,12 @@ class Player:
 		self.changeDirection(pressed)
 		self.move(pressed, camera, sprite)
 		self.regenerate()
+		if pressed[K_w] or pressed[K_a] or pressed[K_s] or pressed[K_d]:
+			sprite.changeSprite(self, camera)
+		else:
+			sprite.displayIdle(self, camera)
 		# if e.type == KEYDOWN and pressed[K_SPACE]:
-		#     self.attack(camera)
+		#	self.attack(camera)
 
 	def changeDirection(self, pressed):
 		"Change the direction used to affect player"
@@ -84,8 +88,6 @@ class Player:
 				self.x -= self.speed
 			if self.direction.find("right") != -1:
 				self.x += self.speed
-
-		sprite.changeSprite(self, camera)
 
 	def gotHit(self):
 		"do things for being hit"
