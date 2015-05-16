@@ -7,7 +7,7 @@ from Spells import *
 from Sprites import *
 
 class Player:
-	def __init__(self, name, health, house, xp, level, spell_level, potion_level, attack_radius, spell_energy, spell_list, stamina, speed, x, y, moveMode):
+	def __init__(self, name, health, house, xp, level, spell_level, potion_level, attack_radius, spell_energy, spell_list, stamina, speed, x, y):
 		# initialize all variables
 		self.name = name
 		self.health = health
@@ -24,7 +24,6 @@ class Player:
 		self.speed = speed
 		self.x = x
 		self.y = y
-		self.moveMode = moveMode
 		self.playerRect = Rect(x, y, 22, 45) 
 		self.width = self.playerRect[2]
 		self.height = self. playerRect[3]
@@ -36,13 +35,13 @@ class Player:
 
 	def analyzeInput(self, camera, pressed, e, sprite):
 		"Centralized method that analyzes inputs and calls adequett functions"
-		self.changeDirection(pressed)
-		self.move(pressed, camera, sprite)
-		self.regenerate()
-		if pressed[K_w] or pressed[K_a] or pressed[K_s] or pressed[K_d]:
+		if pressed[K_w] or pressed[K_a] or pressed[K_s] or pressed[K_d] or pressed[K_UP] or pressed[K_LEFT] or pressed[K_DOWN] or pressed[K_RIGHT]:
 			sprite.changeSprite(self, camera)
 		else:
 			sprite.displayIdle(self, camera)
+		self.changeDirection(pressed)
+		self.move(pressed, camera, sprite)
+		self.regenerate()
 		# if e.type == KEYDOWN and pressed[K_SPACE]:
 		#	self.attack(camera)
 
@@ -51,13 +50,13 @@ class Player:
 
 		self.direction = ""
 
-		if pressed[K_w]:
+		if pressed[K_w] or pressed[K_UP]:
 			self.direction += "up"
-		if pressed[K_a]:
+		if pressed[K_a] or pressed[K_LEFT]:
 			self.direction += "left"
-		if pressed[K_s]:
+		if pressed[K_s] or pressed[K_DOWN]:
 			self.direction += "down"
-		if pressed[K_d]:
+		if pressed[K_d] or pressed[K_RIGHT]:
 			self.direction += "right"
 
 	def changeLocation(self):

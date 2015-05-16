@@ -27,59 +27,65 @@ music["credits"] = Sound("Audio/credits.mp3")
 
 mode_select = loadImages(screen, music["menu"])
 
-if mode_select == "controls":
-	print("Controls")
+# Variable checks if the game has been drawn so it does not draw again
+gameScreenInit = False
+running = True
 
-if mode_select == "credits":
-	print("Credits")
-	displayCredits(screen, music["credits"])
-	mode_select = loadImages(screen, music["menu"])
+while running:
+	if mode_select == "controls":
+		print("Controls")
 
-if mode_select == "play":
-	enemyList = []
-	playerList = []
+	if mode_select == "credits":
+		displayCredits(screen, music["credits"])
+		mode_select = loadImages(screen, music["menu"])
 
-	harrySprites = Sprites("Images/walking/walkUp/", "Images/walking/walkLeft/", "Images/walking/walkDown/", "Images/walking/walkRight/", "Images/walking/walkUpLeft/", 
-			"Images/walking/walkDownLeft/", "Images/walking/walkDownRight/", "Images/walking/walkUpRight/")
-	harrySprites.loadImages()
+	if mode_select == "play":
+		if not gameScreenInit:
+			enemyList = []
+			playerList = []
 
-	# create usable player
-	playerList.append(Player("Jeffery", 100,  "Huflepuff", 0, 1, 1, 1, 200, 100, [], 10, 4, 400, 300, "wasd"))
+			harrySprites = Sprites("Images/walking/walkUp/", "Images/walking/walkLeft/", "Images/walking/walkDown/", "Images/walking/walkRight/", "Images/walking/walkUpLeft/", 
+					"Images/walking/walkDownLeft/", "Images/walking/walkDownRight/", "Images/walking/walkUpRight/")
+			harrySprites.loadImages()
 
-	for i in range(5):
-		enemyList.append(Enemy(100, "Slytherin", randint(1, 3), randint(1, 10), randint(50, 150), randint(5, 10), "Death eater", randint(10, 800), randint(10, 550)))
+			# create usable player
+			playerList.append(Player("Jeffery", 100,  "Huflepuff", 0, 1, 1, 1, 200, 100, [], 10, 4, 400, 300))
 
-	# Constant player values
-	p_width = playerList[0].getWidth()
-	p_height = playerList[0].getHeight()
+			# Constant player values
+			p_width = playerList[0].getWidth()
+			p_height = playerList[0].getHeight()
 
-	gameClock = time.Clock()
-	running = True
+			gameClock = time.Clock()
 
-	music["main"].execute(0)
+			music["main"].execute(0)
 
-	while running:
-		mx, my = mouse.get_pos()
-		pressed = key.get_pressed()
+			gameScreenInit = True
 
-		camera.fill((0, 168, 64))  # replace with blit background
-		for e in event.get():
+		elif gameScreenInit:
+			mx, my = mouse.get_pos()
+			pressed = key.get_pressed()
+
+			camera.fill((0, 168, 64))  # replace with blit background
+			for e in event.get():
+				# do player stuff
+				#playerList[0].analyzeInput(camera, pressed, e, harrySprites)
+				if e.type == QUIT:
+					running = False
+
 			# do player stuff
-			#playerList[0].analyzeInput(camera, pressed, e, harrySprites)
-			if e.type == QUIT:
+			playerList[0].analyzeInput(camera, pressed, False, harrySprites)
+
+			# do enemy methods
+			for i in range(len(enemyList)):
+				enemyList[i].analyzeInput(camera, playerList[0])
+
+			if playerList[0].getHealth() <= 0:
 				running = False
 
-		# do player stuff
-		playerList[0].analyzeInput(camera, pressed, False, harrySprites)
+			display.flip()
+			gameClock.tick(60)
 
-		# do enemy methods
-		for i in range(len(enemyList)):
-			enemyList[i].analyzeInput(camera, playerList[0])
-
-		if playerList[0].getHealth() <= 0:
+		if mode_select == "exit":
 			running = False
-
-		display.flip()
-		gameClock.tick(60)
 
 quit()

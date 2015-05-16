@@ -28,6 +28,8 @@ class Sprites:
 		self.frame = 0
 		self.max_frame = 0
 
+		self.last_direction = ""
+
 	def loadImages(self):
 		for i in range(len(self.directories)):
 			if self.directories[i] != False:
@@ -62,24 +64,28 @@ class Sprites:
 			if self.frame > len(self.sprites[3]) - 1: #8 frames total for this animation
 				self.frame = 0
 			self.frame += 0.2
+			self.last_direction = "right"
 			
 		elif pDirection == "left":
 			camera.blit(self.sprites[1][int(self.frame)],(px,py))
 			if self.frame > len(self.sprites[1]) - 1: #8 frames total for this animation
 				self.frame = 0
 			self.frame += 0.2
+			self.last_direction = "left"
 
 		elif pDirection == "up":
 			camera.blit(self.sprites[0][int(self.frame)],(px,py))
 			if self.frame > len(self.sprites[0]) - 1: #8 frames total for this animation
 				self.frame = 0
 			self.frame += 0.2
+			self.last_direction = "up"
 
 		elif pDirection == "down":
 			camera.blit(self.sprites[2][int(self.frame)],(px,py))
 			if self.frame > len(self.sprites[2]) - 1: #8 frames total for this animation
 				self.frame = 0
 			self.frame += 0.2
+			self.last_direction = "down"
 
 		# diagonal sprites
 		elif pDirection == "upleft":
@@ -87,24 +93,28 @@ class Sprites:
 			if self.frame > len(self.sprites[4]) - 1: #8 frames total for this animation
 				self.frame = 0
 			self.frame += 0.2
+			self.last_direction = "upleft"
 
 		elif pDirection == "leftdown":
 			camera.blit(self.sprites[5][int(self.frame)],(px,py))
 			if self.frame > len(self.sprites[5]) - 1: #8 frames total for this animation
 				self.frame = 0
 			self.frame += 0.2
+			self.last_direction = "leftdown"
 
 		elif pDirection == "downright":
 			camera.blit(self.sprites[6][int(self.frame)],(px,py))
 			if self.frame > len(self.sprites[6]) - 1: #8 frames total for this animation
 				self.frame = 0
 			self.frame += 0.2
+			self.last_direction = "downright"
 
 		elif pDirection == "upright":
 			camera.blit(self.sprites[7][int(self.frame)],(px,py))
 			if self.frame > len(self.sprites[7]) - 1: #8 frames total for this animation
 				self.frame = 0
 			self.frame += 0.2
+			self.last_direction = "upright"
 
 		else:
 			self.frame = 0
@@ -112,21 +122,20 @@ class Sprites:
 	def displayIdle(self, Player, camera):
 		px = Player.getX()
 		py = Player.getY()
-		pDirection = Player.getDirection()
 
-		if pDirection == "up":
+		if self.last_direction == "up":
 			camera.blit(self.idle[0], (px, py))
-		elif pDirection == "left":
+		elif self.last_direction == "left":
 			camera.blit(self.idle[1], (px, py))
-		elif pDirection == "down":
+		elif self.last_direction == "down":
 			camera.blit(self.idle[2], (px, py))
-		elif pDirection == "right":
+		elif self.last_direction == "right":
 			camera.blit(self.idle[3], (px, py))
-		elif pDirection == "upleft":
+		elif self.last_direction == "upleft":
 			camera.blit(self.idle[4], (px, py))
-		elif pDirection == "leftdown":
+		elif self.last_direction == "leftdown":
 			camera.blit(self.idle[5], (px, py))
-		elif pDirection == "downright":
+		elif self.last_direction == "downright":
 			camera.blit(self.idle[6], (px, py))
-		elif pDirection == "upright":
+		elif self.last_direction == "upright":
 			camera.blit(self.idle[7], (px, py))

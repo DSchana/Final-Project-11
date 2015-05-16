@@ -10,3 +10,6 @@ class Sound:
 	def execute(self, repeat, start = 0.0):
 		mixer.music.load(self.track_name)
 		mixer.music.play(repeat, start)
+
+	def halt(self):
+		mixer.music.fadeout(300)
