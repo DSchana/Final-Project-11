@@ -49,7 +49,7 @@ while running:
 			harrySprites.loadImages()
 
 			# create usable player
-			playerList.append(Player("Jeffery", 100,  "Huflepuff", 0, 1, 1, 1, 200, 100, [], 10, 4, 400, 300))
+			playerList.append(Player("Jeffery", 100,  "Huflepuff", 0, 1, 1, 1, 200, 100, [], 10, 2, 400, 300))
 
 			# Constant player values
 			p_width = playerList[0].getWidth()
