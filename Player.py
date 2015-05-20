@@ -21,7 +21,8 @@ class Player:
 		self.attack_radius = attack_radius
 		self.stamina = stamina
 		self.max_stamina = stamina
-		self.speed = speed
+		self.angle_speed = speed * cos(radians(45))
+		self.straight_speed = speed
 		self.x = x
 		self.y = y
 		self.playerRect = Rect(x, y, 22, 45) 
@@ -35,10 +36,11 @@ class Player:
 
 	def analyzeInput(self, camera, pressed, e, sprite):
 		"Centralized method that analyzes inputs and calls adequett functions"
-		if pressed[K_w] or pressed[K_a] or pressed[K_s] or pressed[K_d] or pressed[K_UP] or pressed[K_LEFT] or pressed[K_DOWN] or pressed[K_RIGHT]:
-			sprite.changeSprite(self, camera)
-		else:
+		if self.direction == "":
 			sprite.displayIdle(self, camera)
+		else:
+			sprite.changeSprite(self, camera)
+			
 		self.changeDirection(pressed)
 		self.move(pressed, camera, sprite)
 		self.regenerate()
@@ -50,14 +52,21 @@ class Player:
 
 		self.direction = ""
 
-		if pressed[K_w] or pressed[K_UP]:
+		if pressed[K_w]:
 			self.direction += "up"
-		if pressed[K_a] or pressed[K_LEFT]:
+		if pressed[K_a]:
 			self.direction += "left"
-		if pressed[K_s] or pressed[K_DOWN]:
+		if pressed[K_s]:
 			self.direction += "down"
-		if pressed[K_d] or pressed[K_RIGHT]:
+		if pressed[K_d]:
 			self.direction += "right"
+		if pressed[K_a] and pressed[K_d] or pressed[K_w] and pressed[K_s]:
+			self.direction = ""
+
+		if len(self.direction) >= 6:
+			self.speed = self.angle_speed
+		else:
+			self.speed = self.straight_speed
 
 	def changeLocation(self):
 		"Change the location ex. main entrance, grounds"
@@ -67,16 +76,16 @@ class Player:
 
 		if pressed[K_LSHIFT] and self.stamina > 1.1:
 			if self.direction.find("up") != -1:
-				self.y -= self.speed*1.5
+				self.y -= self.speed*2
 				self.stamina -= 0.05
 			if self.direction.find("down") != -1:
-				self.y += self.speed*1.5
+				self.y += self.speed*2
 				self.stamina -= 0.05
 			if self.direction.find("left") != -1:
-				self.x -= self.speed*1.5
+				self.x -= self.speed*2
 				self.stamina -= 0.05
 			if self.direction.find("right") != -1:
-				self.x += self.speed*1.5
+				self.x += self.speed*2
 				self.stamina -= 0.05
 		else:
 			if self.direction.find("up") != -1:

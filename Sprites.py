@@ -1,8 +1,5 @@
 #sprites.py
-
-#This file contains the code to control the sprites
-
-#def spriteMovement ():
+#This file contains the code to control the sprites v
 
 from pygame import *
 import glob

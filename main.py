@@ -32,14 +32,16 @@ gameScreenInit = False
 running = True
 
 while running:
-	if mode_select == "controls":
-		print("Controls")
-
-	if mode_select == "credits":
-		displayCredits(screen, music["credits"])
+	if mode_select == "menu":
 		mode_select = loadImages(screen, music["menu"])
 
-	if mode_select == "play":
+	elif mode_select == "controls":
+		mode_select = displayControls(screen)
+
+	elif mode_select == "credits":
+		mode_select = displayCredits(screen, music["credits"])
+
+	elif mode_select == "play":
 		if not gameScreenInit:
 			enemyList = []
 			playerList = []
@@ -82,10 +84,10 @@ while running:
 			if playerList[0].getHealth() <= 0:
 				running = False
 
-			display.flip()
-			gameClock.tick(60)
-
-		if mode_select == "exit":
+		elif mode_select == "exit":
 			running = False
+
+		gameClock.tick(60)
+		display.flip()
 
 quit()

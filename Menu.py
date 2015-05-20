@@ -120,15 +120,22 @@ def loadImages(screen, music):
 			if playButtonRect.collidepoint((mx,my)):
 				draw.rect(screen,(0,255,0),[322,218,202,82],2)
 				if mb[0]:
+					music.halt()
 					return "play"
 			elif controlsButtonRect.collidepoint((mx,my)):
 				draw.rect(screen,(0,255,0),[325,330,200,50],2)
 				if mb[0]:
+					music.halt()
 					return "controls"
 			elif creditsButtonRect.collidepoint((mx,my)):
 				draw.rect(screen,(0,255,0),[325,410,200,50],2)
 				if mb[0]:
+					music.halt()
 					return "credits"
+			elif e.type == KEYDOWN:
+				if key.get_pressed()[K_ESCAPE]:
+					music.halt()
+					return "exit"
 
 		display.flip()
 
@@ -138,6 +145,18 @@ def displayCredits(screen, music):
 	display.flip()
 	music.execute(0)
 	while True:
-		pressed = key.get_pressed()
-		if pressed[K_ESCAPE]:
-			return -1
+		for e in event.get():
+			if e.type == KEYDOWN:
+				if key.get_pressed()[K_ESCAPE]:
+					music.halt()
+					return "menu"
+
+def displayControls(screen):
+	controlsScreen = image.load("Images/loading/controls.jpg")
+	screen.blit(controlsScreen, (0, 0))
+	display.flip()
+	while True:
+		for e in event.get():
+			if e.type == KEYDOWN:
+				if key.get_pressed()[K_ESCAPE]:
+					return "menu"
