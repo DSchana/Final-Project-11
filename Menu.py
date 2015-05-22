@@ -73,13 +73,15 @@ def loadImages(screen, music):
 	font.init()
 	otherFont = font.SysFont("High Tower Text", 28)
 
-	music.execute(0)
+	music.execute(-1)
 
 	while menu == "home":
 		mb = mouse.get_pressed()
 		mx,my = mouse.get_pos()
 
 		for e in event.get():
+			if e.type == QUIT:
+				return "exit"
 			if loadingComplete == False:
 				screen.blit(blackScreen,(0,0))
 				display.flip()

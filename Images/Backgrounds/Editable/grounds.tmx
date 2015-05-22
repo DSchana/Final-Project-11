@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="32" tileheight="32" nextobjectid="1">
+ <tileset firstgid="1" name="Tileset 1" tilewidth="32" tileheight="32">
+  <image source="../Tilesets/rpg_maker_vx__modernrtp_tilea2_by_painhurt-d3f7rwg.png" width="512" height="384"/>
+ </tileset>
+ <tileset firstgid="193" name="Tileset 2" tilewidth="32" tileheight="32">
+  <image source="../Tilesets/rpg_maker_vx__modernrtp_tilea4_by_painhurt-d3f7s8m.png" width="512" height="480"/>
+ </tileset>
+ <tileset firstgid="433" name="Hogwarts" tilewidth="32" tileheight="32">
+  <image source="Hogwarts.png" width="3600" height="3600"/>
+ </tileset>
+ <tileset firstgid="12977" name="Hagrid's hut" tilewidth="32" tileheight="32">
+  <image source="../Tilesets/Hagrid's hut.png" width="678" height="675"/>
+ </tileset>
+ <layer name="Default grass" width="100" height="100">
+  <data encoding="base64" compression="zlib">
+   eJzt2DFywjAUQEHfgMPkrpyXIpMyE0yQ9Iy2eKXny1oswLev47jFuh/ffcqcq8ejFY9WPFrxaMWjFY9WPFrxaMWjFY9WPFrt7PGzpmI8Wu3oMes+zlzDg8eV49GKRyserXi04tGKRyserXi0muUx+v0KDx5X9ijex47xaDXbo9TqvefB48ycv/arvI+f5vHMZ5fHnDnPniM8xs85c6bzGDvn7Pcrj3FzXvmtw2PMnFd/d/J4/5z//AfgMdajutYdPQprXfluQKo345medQacvW7mPY3Yn1nr59Ey4dEy4dEy4dEy4dEy4dEy4dEy4dEy4dEy4dEyqb8HuFLvMOHRMuHRMuHRMuHRMuHRMuHRMuHRMuHRMuHRMuHRMuHRMuHRMuHRMuGxPh69ePTa3eO3s1vS+udz5TlS3oNSPFrxaMWjFY9WPFrxaMWjFY9WPFrxaMWjFY9WPFrxaMWjFY9WPFrxaMWjFY9WPFrxaMWjFY9WO3s8ACE3mjo=
+  </data>
+ </layer>
+</map>

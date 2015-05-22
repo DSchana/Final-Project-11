@@ -25,6 +25,8 @@ class Player:
 		self.straight_speed = speed
 		self.x = x
 		self.y = y
+		self.bx = -300
+		self.by = -400
 		self.playerRect = Rect(x, y, 22, 45) 
 		self.width = self.playerRect[2]
 		self.height = self. playerRect[3]
@@ -32,17 +34,20 @@ class Player:
 		self.learnSpell("Expelliarmus", 10, 1, 10)
 		self.selected_spell = self.spell_list[0]
 		self.direction = "left"
-		self.location = ""
+		self.location = "grounds"
 
-	def analyzeInput(self, camera, pressed, e, sprite):
+	def analyzeInput(self, camera, pressed, e, sprite, background):
 		"Centralized method that analyzes inputs and calls adequett functions"
+
+		sprite.showBackground(background[self.location], self.bx, self.by, camera)
+
 		if self.direction == "":
 			sprite.displayIdle(self, camera)
 		else:
 			sprite.changeSprite(self, camera)
 			
 		self.changeDirection(pressed)
-		self.move(pressed, camera, sprite)
+		self.move(pressed, camera, sprite, background[self.location])
 		self.regenerate()
 		# if e.type == KEYDOWN and pressed[K_SPACE]:
 		#	self.attack(camera)
@@ -71,31 +76,64 @@ class Player:
 	def changeLocation(self):
 		"Change the location ex. main entrance, grounds"
 
-	def move(self, pressed, camera, sprite):
+	def move(self, pressed, camera, sprite, back_image):
 		"Move player"
 
-		if pressed[K_LSHIFT] and self.stamina > 1.1:
-			if self.direction.find("up") != -1:
-				self.y -= self.speed*2
-				self.stamina -= 0.05
-			if self.direction.find("down") != -1:
-				self.y += self.speed*2
-				self.stamina -= 0.05
-			if self.direction.find("left") != -1:
-				self.x -= self.speed*2
-				self.stamina -= 0.05
-			if self.direction.find("right") != -1:
-				self.x += self.speed*2
-				self.stamina -= 0.05
+		if self.bx == -back_image.get_width()+camera.get_width() or self.bx == 0:
+			if pressed[K_LSHIFT] and self.stamina > 1.1:
+				if self.direction.find("left") != -1:
+					self.x -= self.speed*2
+					self.stamina -= 0.05
+				if self.direction.find("right") != -1:
+					self.x += self.speed*2
+					self.stamina -= 0.05
+			else:
+				if self.direction.find("left") != -1:
+					self.x -= self.speed
+				if self.direction.find("right") != -1:
+					self.x += self.speed
+
 		else:
-			if self.direction.find("up") != -1:
-				self.y -= self.speed
-			if self.direction.find("down") != -1:
-				self.y += self.speed
-			if self.direction.find("left") != -1:
-				self.x -= self.speed
-			if self.direction.find("right") != -1:
-				self.x += self.speed
+			if pressed[K_LSHIFT] and self.stamina > 1.1:
+				if self.direction.find("left") != -1:
+					self.bx += self.speed*2
+					self.stamina -= 0.05
+				if self.direction.find("right") != -1:
+					self.bx -= self.speed*2
+					self.stamina -= 0.05
+			else:
+				if self.direction.find("left") != -1:
+					self.bx += self.speed
+				if self.direction.find("right") != -1:
+					self.bx -= self.speed
+
+		if self.by == -back_image.get_height()+camera.get_height() or self.by == 0:
+			if pressed[K_LSHIFT] and self.stamina > 1.1:
+				if self.direction.find("up") != -1:
+					self.y -= self.speed*2
+					self.stamina -= 0.05
+				if self.direction.find("down") != -1:
+					self.y += self.speed*2
+					self.stamina -= 0.05
+			else:
+				if self.direction.find("up") != -1:
+					self.y -= self.speed
+				if self.direction.find("down") != -1:
+					self.y += self.speed
+
+		else:
+			if pressed[K_LSHIFT] and self.stamina > 1.1:
+				if self.direction.find("up") != -1:
+					self.by += self.speed*2
+					self.stamina -= 0.05
+				if self.direction.find("down") != -1:
+					self.by -= self.speed*2
+					self.stamina -= 0.05
+			else:
+				if self.direction.find("up") != -1:
+					self.by += self.speed
+				if self.direction.find("down") != -1:
+					self.by -= self.speed
 
 	def gotHit(self):
 		"do things for being hit"

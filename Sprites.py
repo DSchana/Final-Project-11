@@ -136,3 +136,12 @@ class Sprites:
 			camera.blit(self.idle[6], (px, py))
 		elif self.last_direction == "upright":
 			camera.blit(self.idle[7], (px, py))
+
+	def showBackground(self, back_image, x, y, camera):
+		camera.blit(back_image, (x, y))
+
+	def inGameAttack(self, Player, camera):
+		"Magic use sprites in game out of battle mode"
+
+	def battle(self):
+		"play sprite for battle, including idle, attacking and damaged"

@@ -45,13 +45,17 @@ while running:
 		if not gameScreenInit:
 			enemyList = []
 			playerList = []
+			backgrounds = {}
 
 			harrySprites = Sprites("Images/walking/walkUp/", "Images/walking/walkLeft/", "Images/walking/walkDown/", "Images/walking/walkRight/", "Images/walking/walkUpLeft/", 
 					"Images/walking/walkDownLeft/", "Images/walking/walkDownRight/", "Images/walking/walkUpRight/")
 			harrySprites.loadImages()
 
+			# load backgrounds
+			backgrounds["grounds"] = image.load("Images/Backgrounds/Grounds.png")
+
 			# create usable player
-			playerList.append(Player("Jeffery", 100,  "Huflepuff", 0, 1, 1, 1, 200, 100, [], 10, 2, 400, 300))
+			playerList.append(Player("Jeffery", 100,  "Huflepuff", 0, 1, 1, 1, 200, 100, [], 10, 5, 400, 300))
 
 			# Constant player values
 			p_width = playerList[0].getWidth()
@@ -59,15 +63,13 @@ while running:
 
 			gameClock = time.Clock()
 
-			music["main"].execute(0)
+			music["main"].execute(-1)
 
 			gameScreenInit = True
 
 		elif gameScreenInit:
 			mx, my = mouse.get_pos()
 			pressed = key.get_pressed()
-
-			camera.fill((0, 168, 64))  # replace with blit background
 			for e in event.get():
 				# do player stuff
 				#playerList[0].analyzeInput(camera, pressed, e, harrySprites)
@@ -75,7 +77,7 @@ while running:
 					running = False
 
 			# do player stuff
-			playerList[0].analyzeInput(camera, pressed, False, harrySprites)
+			playerList[0].analyzeInput(camera, pressed, False, harrySprites, backgrounds)
 
 			# do enemy methods
 			for i in range(len(enemyList)):
@@ -87,6 +89,7 @@ while running:
 		elif mode_select == "exit":
 			running = False
 
+		display.set_caption("Harry Potter: New Horizons " + str(round(gameClock.get_fps(), 2)))
 		gameClock.tick(60)
 		display.flip()
 
