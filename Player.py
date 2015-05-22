@@ -79,13 +79,18 @@ class Player:
 	def move(self, pressed, camera, sprite, back_image):
 		"Move player"
 
-		if self.bx == -back_image.get_width()+camera.get_width() or self.bx == 0:
-			if pressed[K_LSHIFT] and self.stamina > 1.1:
+		if self.bx < -back_image.get_width()+camera.get_width() or self.bx > 0:
+			if self.bx <= -back_image.get_width()+camera.get_width():
+				self.bx = -back_image.get_width()+camera.get_width()
+			if self.bx >= 0:
+				self.bx = 0
+
+			if pressed[K_LSHIFT] and self.stamina > 1.0:
 				if self.direction.find("left") != -1:
-					self.x -= self.speed*2
+					self.x -= self.speed*1.6
 					self.stamina -= 0.05
 				if self.direction.find("right") != -1:
-					self.x += self.speed*2
+					self.x += self.speed*1.6
 					self.stamina -= 0.05
 			else:
 				if self.direction.find("left") != -1:
@@ -94,12 +99,12 @@ class Player:
 					self.x += self.speed
 
 		else:
-			if pressed[K_LSHIFT] and self.stamina > 1.1:
+			if pressed[K_LSHIFT] and self.stamina > 1.0:
 				if self.direction.find("left") != -1:
-					self.bx += self.speed*2
+					self.bx += self.speed*1.6
 					self.stamina -= 0.05
 				if self.direction.find("right") != -1:
-					self.bx -= self.speed*2
+					self.bx -= self.speed*1.6
 					self.stamina -= 0.05
 			else:
 				if self.direction.find("left") != -1:
@@ -107,13 +112,18 @@ class Player:
 				if self.direction.find("right") != -1:
 					self.bx -= self.speed
 
-		if self.by == -back_image.get_height()+camera.get_height() or self.by == 0:
-			if pressed[K_LSHIFT] and self.stamina > 1.1:
+		if self.by < -back_image.get_height()+camera.get_height() or self.by > 0:
+			if self.by <= -back_image.get_height()+camera.get_height():
+				self.by = -back_image.get_height()+camera.get_height()
+			if self.by >= 0:
+				self.by = 0
+
+			if pressed[K_LSHIFT] and self.stamina > 1.0:
 				if self.direction.find("up") != -1:
-					self.y -= self.speed*2
+					self.y -= self.speed*1.6
 					self.stamina -= 0.05
 				if self.direction.find("down") != -1:
-					self.y += self.speed*2
+					self.y += self.speed*1.6
 					self.stamina -= 0.05
 			else:
 				if self.direction.find("up") != -1:
@@ -122,12 +132,12 @@ class Player:
 					self.y += self.speed
 
 		else:
-			if pressed[K_LSHIFT] and self.stamina > 1.1:
+			if pressed[K_LSHIFT] and self.stamina > 1.0:
 				if self.direction.find("up") != -1:
-					self.by += self.speed*2
+					self.by += self.speed*1.6
 					self.stamina -= 0.05
 				if self.direction.find("down") != -1:
-					self.by -= self.speed*2
+					self.by -= self.speed*1.6
 					self.stamina -= 0.05
 			else:
 				if self.direction.find("up") != -1:

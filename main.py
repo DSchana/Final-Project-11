@@ -55,7 +55,7 @@ while running:
 			backgrounds["grounds"] = image.load("Images/Backgrounds/Grounds.png")
 
 			# create usable player
-			playerList.append(Player("Jeffery", 100,  "Huflepuff", 0, 1, 1, 1, 200, 100, [], 10, 5, 400, 300))
+			playerList.append(Player("Jeffery", 100,  "Huflepuff", 0, 1, 1, 1, 200, 100, [], 10, 3, 425, 300))
 
 			# Constant player values
 			p_width = playerList[0].getWidth()

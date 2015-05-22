@@ -8,8 +8,10 @@ class Sound:
 		self.track_name = sound_track
 
 	def execute(self, repeat, start = 0.0):
-		mixer.music.load(self.track_name)
-		mixer.music.play(repeat, start)
+		"play music"
+		#mixer.music.load(self.track_name)
+		#mixer.music.play(repeat, start)
 
 	def halt(self):
-		mixer.music.fadeout(300)
+		"stop music"
+		#mixer.music.fadeout(300)
