@@ -9,9 +9,9 @@ class Sound:
 
 	def execute(self, repeat, start = 0.0):
 		"play music"
-		#mixer.music.load(self.track_name)
-		#mixer.music.play(repeat, start)
+		mixer.music.load(self.track_name)
+		mixer.music.play(repeat, start)
 
 	def halt(self):
 		"stop music"
-		#mixer.music.fadeout(300)
+		mixer.music.fadeout(300)

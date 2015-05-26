@@ -41,7 +41,7 @@ for i in range(6):
 
 playerX, playerY = 400,300 #placeholder values
 screen.fill((255,255,255))
-direction = "upRight"
+direction = "right"
 frame = 0
 
 #I assume you have some variable that keeps track of the direction that the player is facing,
@@ -60,65 +60,65 @@ while running:
     if key.get_pressed()[K_SPACE]:
         if direction == "left":
             screen.fill((255,255,255)) #Replace fill with subsurface
-            screen.blit(castSpellLeftSpriteList[frame],(playerX,playerY))
+            screen.blit(castSpellLeftSpriteList[int(frame)],(playerX,playerY))
             time.wait(20) #Find better way to delay animations 
-            frame += 1
+            frame += 0.2
             if frame>5: 
                 frame = 0
 
         elif direction == "right":
             screen.fill((255,255,255)) 
-            screen.blit(castSpellLeftSpriteList[frame],(playerX,playerY))
+            screen.blit(castSpellRightSpriteList[int(frame)],(playerX,playerY))
             time.wait(20) 
-            frame += 1
+            frame += 0.2
             if frame>5: 
                 frame = 0
 
         elif direction == "up":
             screen.fill((255,255,255))
-            screen.blit(castSpellUpSpriteList[frame],(playerX,playerY))
+            screen.blit(castSpellUpSpriteList[int(frame)],(playerX,playerY))
             time.wait(20)
-            frame += 1
+            frame += 0.2
             if frame>5: 
                 frame = 0
 
         elif direction == "down":
             screen.fill((255,255,255)) 
-            screen.blit(castSpellDownSpriteList[frame],(playerX,playerY))
+            screen.blit(castSpellDownSpriteList[int(frame)],(playerX,playerY))
             time.wait(20)
-            frame += 1
+            frame += 0.2
             if frame>5: 
                 frame = 0
 
         elif direction == "upRight":
             screen.fill((255,255,255))
-            screen.blit(castSpellUpRightSpriteList[frame],(playerX,playerY))
+            screen.blit(castSpellUpRightSpriteList[int(frame)],(playerX,playerY))
             time.wait(20) 
-            frame += 1
+            frame += 0.2
             if frame>5: 
                 frame = 0
                 
         elif direction == "upLeft":
             screen.fill((255,255,255)) 
-            screen.blit(castSpellUpLeftSpriteList[frame],(playerX,playerY))
+            screen.blit(castSpellUpLeftSpriteList[int(frame)],(playerX,playerY))
             time.wait(20) 
-            frame += 1
+            frame += 0.2
             if frame>5:
                 frame = 0
                 
         elif direction == "downRight":
             screen.fill((255,255,255)) 
-            screen.blit(castSpellDownRightSpriteList[frame],(playerX,playerY))
+            screen.blit(castSpellDownRightSpriteList[int(frame)],(playerX,playerY))
             time.wait(20) 
-            frame += 1
+            frame += 0.2
             if frame>5:
                 frame = 0
                 
         elif direction == "downLeft":
             screen.fill((255,255,255)) 
-            screen.blit(castSpellDownLeftSpriteList[frame],(playerX,playerY))
+            screen.blit(castSpellDownLeftSpriteList[int(frame)],(playerX,playerY))
             time.wait(20) 
-            frame += 1
+            frame += 0.2
             if frame>5:
                 frame = 0
                 

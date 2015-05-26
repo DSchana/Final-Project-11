@@ -43,16 +43,28 @@ while running:
 
 	elif mode_select == "play":
 		if not gameScreenInit:
+			loading1 = image.load("Images/loading/loading1.jpg")
+			loading2 = image.load("Images/loading/loading2.jpg")
+			loading3 = image.load("Images/loading/loading3.jpg")
+
+			screen.blit(loading1, (0, 0))
+			display.flip()
+
 			enemyList = []
 			playerList = []
 			backgrounds = {}
 
 			harrySprites = Sprites("Images/walking/walkUp/", "Images/walking/walkLeft/", "Images/walking/walkDown/", "Images/walking/walkRight/", "Images/walking/walkUpLeft/", 
-					"Images/walking/walkDownLeft/", "Images/walking/walkDownRight/", "Images/walking/walkUpRight/")
+					"Images/walking/walkDownLeft/", "Images/walking/walkDownRight/", "Images/walking/walkUpRight/", "Images/attack/castSpellUp/", "Images/attack/castSpellLeft/",
+					"Images/attack/castSpellDown/", "Images/attack/castSpellRight/", "Images/attack/castSpellUpLeft/", "Images/attack/castSpellDownLeft/","Images/attack/castSpellDownRight/",
+					"Images/attack/castSpellUpRight/")
 			harrySprites.loadImages()
 
 			# load backgrounds
 			backgrounds["grounds"] = image.load("Images/Backgrounds/Grounds.png")
+
+			screen.blit(loading2, (0, 0))
+			display.flip()
 
 			# create usable player
 			playerList.append(Player("Jeffery", 100,  "Huflepuff", 0, 1, 1, 1, 200, 100, [], 10, 3, 425, 300))
@@ -60,6 +72,9 @@ while running:
 			# Constant player values
 			p_width = playerList[0].getWidth()
 			p_height = playerList[0].getHeight()
+
+			screen.blit(loading3, (0, 0))
+			display.flip()
 
 			gameClock = time.Clock()
 
@@ -70,14 +85,18 @@ while running:
 		elif gameScreenInit:
 			mx, my = mouse.get_pos()
 			pressed = key.get_pressed()
+
 			for e in event.get():
-				# do player stuff
-				#playerList[0].analyzeInput(camera, pressed, e, harrySprites)
 				if e.type == QUIT:
 					running = False
 
-			# do player stuff
-			playerList[0].analyzeInput(camera, pressed, False, harrySprites, backgrounds)
+				if e.type == KEYDOWN:
+					if pressed[K_SPACE]:
+						playerList[0].attacking = True
+				if e.type == KEYUP:
+					playerList[0].attacking = False
+			
+			playerList[0].analyzeInput(camera, pressed, harrySprites, backgrounds)
 
 			# do enemy methods
 			for i in range(len(enemyList)):

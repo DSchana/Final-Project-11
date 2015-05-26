@@ -8,7 +8,8 @@ import glob
 #Put this in the loading screen to load these sprites
 
 class Sprites:
-	def __init__(self, up_directory, left_directory, down_directory, right_directory, upleft_directory, leftdown_directory, downright_directory, upright_directory):
+	def __init__(self, up_directory, left_directory, down_directory, right_directory, upleft_directory, leftdown_directory, downright_directory, upright_directory,
+		up_attack, left_attack, down_attack, right_attack, upleft_attack, leftdown_attack, downright_attack, upright_attack):
 		self.directories = []
 		self.directories.append(up_directory)  # sprites[0]
 		self.directories.append(left_directory)  # sprites[1]
@@ -19,11 +20,24 @@ class Sprites:
 		self.directories.append(downright_directory)  # sprites[6]
 		self.directories.append(upright_directory)  # sprites[7]
 
+		# Attack directories
+		self.directories.append(up_attack)  # sprites[8]
+		self.directories.append(left_attack)  # sprites[9]
+		self.directories.append(down_attack)  # sprites[10]
+		self.directories.append(right_attack)  # sprites[11]
+		self.directories.append(upleft_attack)  # sprites[12]
+		self.directories.append(leftdown_attack)  # sprites[13]
+		self.directories.append(downright_attack)  # sprites[14]
+		self.directories.append(upright_attack)  # sprites[15]
+
 		self.sprites = [[]]
 		self.idle = []
 
 		self.frame = 0
+		self.attack_frame = 0
 		self.max_frame = 0
+
+		self.attacking = False
 
 		self.last_direction = ""
 
@@ -33,11 +47,11 @@ class Sprites:
 				self.sprites.append(glob.glob(self.directories[i] + "*.png"))
 				self.sprites[i].sort()
 
-		# Fix the weird error in glob
+		# Compensate for the weird error in glob
 		del self.sprites[0]
-		self.sprites.append(self.directories[7])
+		self.sprites.append(self.directories[len(self.directories)-1])
 
-		for i in range(8):
+		for i in range(len(self.directories)):
 			for j in range(len(self.sprites[i])):
 				self.sprites[i][j] = image.load(self.sprites[i][j])
 
@@ -140,8 +154,76 @@ class Sprites:
 	def showBackground(self, back_image, x, y, camera):
 		camera.blit(back_image, (x, y))
 
-	def inGameAttack(self, Player, camera):
+	def inGameAttack(self, Player, camera, reset):
 		"Magic use sprites in game out of battle mode"
+		px = Player.getX()
+		py = Player.getY()
+		if Player.getDirection() == "":
+			pDirection = self.last_direction
+		else:
+			pDirection = Player.getDirection()
+
+		if reset:
+			self.attack_frame = 0
+			self.attacking = True
+
+		#print(self.attack_frame, self.attacking, reset)
+
+		if pDirection == "up":
+			if self.attack_frame < len(self.sprites[8]) - 1 and self.attacking:
+				camera.blit(self.sprites[8][int(self.attack_frame)], (px, py))
+				self.attack_frame += 0.20
+			else:
+				self.attacking = False
+
+		elif pDirection == "left":
+			if self.attack_frame < len(self.sprites[9]) - 1 and self.attacking:
+				camera.blit(self.sprites[9][int(self.attack_frame)], (px, py))
+				self.attack_frame += 0.20
+			else:
+				self.attacking = False
+
+		elif pDirection == "down":
+			if self.attack_frame < len(self.sprites[10]) - 1 and self.attacking:
+				camera.blit(self.sprites[10][int(self.attack_frame)], (px, py))
+				self.attack_frame += 0.20
+			else:
+				self.attacking = False
+
+		elif pDirection == "right":
+			if self.attack_frame < len(self.sprites[11]) - 1 and self.attacking:
+				camera.blit(self.sprites[11][int(self.attack_frame)], (px, py))
+				self.attack_frame += 0.20
+			else:
+				self.attacking = False
+
+		elif pDirection == "upleft":
+			if self.attack_frame < len(self.sprites[12]) - 1 and self.attacking:
+				camera.blit(self.sprites[12][int(self.attack_frame)], (px, py))
+				self.attack_frame += 0.20
+			else:
+				self.attacking = False
+
+		elif pDirection == "leftdown":
+			if self.attack_frame < len(self.sprites[13]) - 1 and self.attacking:
+				camera.blit(self.sprites[13][int(self.attack_frame)], (px, py))
+				self.attack_frame += 0.20
+			else:
+				self.attacking = False
+
+		elif pDirection == "downright":
+			if self.attack_frame < len(self.sprites[14]) - 1 and self.attacking:
+				camera.blit(self.sprites[14][int(self.attack_frame)], (px, py))
+				self.attack_frame += 0.2
+			else:
+				self.attacking = False
+
+		elif pDirection == "upright":
+			if self.attack_frame < len(self.sprites[15]) - 1 and self.attacking:
+				camera.blit(self.sprites[15][int(self.attack_frame)], (px, py))
+				self.attack_frame += 0.20
+			else:
+				self.attacking = False
 
 	def battle(self):
 		"play sprite for battle, including idle, attacking and damaged"

@@ -138,6 +138,9 @@ def loadImages(screen, music):
 				if key.get_pressed()[K_ESCAPE]:
 					music.halt()
 					return "exit"
+				if key.get_pressed()[K_RETURN]:
+					music.halt()
+					return "play"
 
 		display.flip()
 
