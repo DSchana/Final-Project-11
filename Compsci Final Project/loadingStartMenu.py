@@ -33,6 +33,7 @@ grifHouseSelect = image.load ("grifHouse.png")
 slyHouseSelect = image.load ("slyHouse.png")
 ravenHouseSelect = image.load ("ravenHouse.png")
 huffHouseSelect = image.load ("huffHouse.png")
+hogwartsBadge = image.load ("HogwartsBadge.png")
 grifHouseSelect = transform.scale(grifHouseSelect,(420,300))
 slyHouseSelect = transform.scale(slyHouseSelect,(420,300))
 ravenHouseSelect = transform.scale(ravenHouseSelect,(420,300))
@@ -52,7 +53,7 @@ blackScreen = image.load ("template.jpg")
 homeScreenBlur = image.load ("altHome.jpg")
 logo = image.load ("HPlogo.png")
 logo = transform.scale(logo,(450,170))
-#Used to hide unwated blit objects 
+#Used to hide unwated blit objects and highlights 
 screenGrabRect = Rect(0,0,850,600)
 menuGrabRect = Rect(0,0,850,600)
 
@@ -75,8 +76,12 @@ menu = "home" #used to control the screens drawn depending on the option selecte
 creditsComplete = False
 textComplete = False
 difficultyChosen = False
+goBack = False
 difficulty = ""
-playerHouse == ""
+playerHouse = ""
+
+#In-game menu
+#*****HERE
 
 #Setup
 songPlaylist = ["theme.mp3"]
@@ -86,6 +91,7 @@ mixer.music.play()
 
 font.init()
 otherFont = font.SysFont("High Tower Text", 28)
+subtitle = otherFont.render(("New Horizons"), True, (111,127,132))
 
 font.init()
 difficultyFont = font.SysFont("Castellar", 52)
@@ -101,6 +107,10 @@ while running:
     for e in event.get():       
         if e.type == QUIT:     
             running = False
+            
+        if e.type == KEYDOWN and e.key == 27: #If the esc key is pressed
+            goBack = True
+        
         if loadingComplete == False:
             screen.blit(blackScreen,(0,0))
             display.flip()
@@ -115,6 +125,7 @@ while running:
                 screen.blit(screenGrab,(0,0))
                 screen.blit(logo,(200,-i+15)) #Arbitrary 15px offset
                 display.flip()
+                
         loadingComplete = True #prevents the screen from sliding down again
         screenGrab = screen.subsurface(screenGrabRect).copy()
 
@@ -126,7 +137,6 @@ while running:
         screen.blit(controlsButton,(325,330))
         screen.blit(creditsButton,(325,410))
 
-        subtitle = otherFont.render(("New Horizons"), True, (111,127,132))
         screen.blit(subtitle,(460,145))
         
         #Fix the coordinates for the yellow rect to match the black rectangles
@@ -150,7 +160,7 @@ while running:
             draw.rect(screen,(0,255,0),[325,410,200,50],2)
             menu = "credits"
         else:
-            screen.blit(menuGrab,(0,0))
+            screen.blit(menuGrab,(0,0))            
 
     display.flip()
 font.quit()

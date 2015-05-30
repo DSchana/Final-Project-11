@@ -3,6 +3,9 @@
 
 from pygame import*
 
+#USE THE ESC KEY AS THE BACK BUTTON TO RETURN TO THE MAIN MENU
+#THAT CODE IS FOUND IN CHOOSE HOUSE AND LOADING 
+
 screen = display.set_mode((850,600)) #Game window resolution
 display.set_caption("Harry Potter: New Horizons")
 mouse.set_cursor(*cursors.tri_left)
