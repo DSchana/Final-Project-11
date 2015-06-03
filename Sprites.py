@@ -163,14 +163,12 @@ class Sprites:
 		else:
 			pDirection = Player.getDirection()
 
-		if reset:
+		if reset and self.attacking != True:
 			self.attack_frame = 0
 			self.attacking = True
 
-		#print(self.attack_frame, self.attacking, reset)
-
 		if pDirection == "up":
-			if self.attack_frame < len(self.sprites[8]) - 1 and self.attacking:
+			if self.attack_frame <= len(self.sprites[8]) - 1 and self.attacking:
 				camera.blit(self.sprites[8][int(self.attack_frame)], (px, py))
 				self.attack_frame += 0.20
 			else:
@@ -224,6 +222,8 @@ class Sprites:
 				self.attack_frame += 0.20
 			else:
 				self.attacking = False
+
+		return self.attacking
 
 	def battle(self):
 		"play sprite for battle, including idle, attacking and damaged"

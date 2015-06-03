@@ -11,7 +11,7 @@ from Battle import *
 from Sprites import *
 from Menu import *
 
-os.environ['SDL_VIDEO_WINDOW_POS'] = '25,50' #Opens up in the upper left corner 
+os.environ['SDL_VIDEO_WINDOW_POS'] = '25,50'  # Opens up in the upper left corner 
 screen = display.set_mode((850, 600))
 display.set_caption("Harry Potter: New Horizons")
 mouse.set_cursor(*cursors.tri_left)
@@ -26,6 +26,11 @@ music["menu"] = Sound("Audio/menu.mp3")
 music["credits"] = Sound("Audio/credits.mp3")
 
 mode_select = loadImages(screen, music["menu"])
+
+house = ""
+difficulty = ""
+
+gameClock = time.Clock()
 
 # Variable checks if the game has been drawn so it does not draw again
 gameScreenInit = False
@@ -43,60 +48,66 @@ while running:
 
 	elif mode_select == "play":
 		if not gameScreenInit:
-			loading1 = image.load("Images/loading/loading1.jpg")
-			loading2 = image.load("Images/loading/loading2.jpg")
-			loading3 = image.load("Images/loading/loading3.jpg")
+			if difficulty == "":
+				difficulty = chooseDifficulty(screen)
 
-			screen.blit(loading1, (0, 0))
-			display.flip()
+			elif house == "":
+				house = chooseHouse(screen)
 
-			enemyList = []
-			playerList = []
-			backgrounds = {}
+			else:
+				loading1 = image.load("Images/loading/loading1.jpg")
+				loading2 = image.load("Images/loading/loading2.jpg")
+				loading3 = image.load("Images/loading/loading3.jpg")
 
-			harrySprites = Sprites("Images/walking/walkUp/", "Images/walking/walkLeft/", "Images/walking/walkDown/", "Images/walking/walkRight/", "Images/walking/walkUpLeft/", 
-					"Images/walking/walkDownLeft/", "Images/walking/walkDownRight/", "Images/walking/walkUpRight/", "Images/attack/castSpellUp/", "Images/attack/castSpellLeft/",
-					"Images/attack/castSpellDown/", "Images/attack/castSpellRight/", "Images/attack/castSpellUpLeft/", "Images/attack/castSpellDownLeft/","Images/attack/castSpellDownRight/",
-					"Images/attack/castSpellUpRight/")
-			harrySprites.loadImages()
+				screen.blit(loading1, (0, 0))
+				display.flip()
 
-			# load backgrounds
-			backgrounds["grounds"] = image.load("Images/Backgrounds/Grounds.png")
+				enemyList = []
+				playerList = []
+				backgrounds = {}
+				back_mask = {}
 
-			screen.blit(loading2, (0, 0))
-			display.flip()
+				harrySprites = Sprites("Images/walking/walkUp/", "Images/walking/walkLeft/", "Images/walking/walkDown/", "Images/walking/walkRight/", "Images/walking/walkUpLeft/", 
+						"Images/walking/walkDownLeft/", "Images/walking/walkDownRight/", "Images/walking/walkUpRight/", "Images/attack/castSpellUp/", "Images/attack/castSpellLeft/",
+						"Images/attack/castSpellDown/", "Images/attack/castSpellRight/", "Images/attack/castSpellUpLeft/", "Images/attack/castSpellDownLeft/","Images/attack/castSpellDownRight/",
+						"Images/attack/castSpellUpRight/")
+				harrySprites.loadImages()
 
-			# create usable player
-			playerList.append(Player("Jeffery", 100,  "Huflepuff", 0, 1, 1, 1, 200, 100, [], 10, 3, 425, 300))
+				# load backgrounds
+				backgrounds["grounds"] = image.load("Images/Backgrounds/Grounds.png")
+				back_mask["grounds"] = image.load("Images/Backgrounds/Grounds_mask.png")
 
-			# Constant player values
-			p_width = playerList[0].getWidth()
-			p_height = playerList[0].getHeight()
+				screen.blit(loading2, (0, 0))
+				display.flip()
 
-			screen.blit(loading3, (0, 0))
-			display.flip()
+				# create usable player
+				playerList.append(Player("Jeffery", 100,  house, 0, 1, 1, 1, 200, 100, [], 10, 3, 425, 300))
 
-			gameClock = time.Clock()
+				# Constant player values
+				p_width = playerList[0].getWidth()
+				p_height = playerList[0].getHeight()
 
-			music["main"].execute(-1)
+				screen.blit(loading3, (0, 0))
+				display.flip()
 
-			gameScreenInit = True
+				music["main"].execute(-1)
+
+				gameScreenInit = True
 
 		elif gameScreenInit:
 			mx, my = mouse.get_pos()
 			pressed = key.get_pressed()
 
+			print(playerList[0].getHouse(), difficulty)
+
 			for e in event.get():
 				if e.type == QUIT:
 					running = False
 
-				if e.type == KEYDOWN:
-					if pressed[K_SPACE]:
-						playerList[0].attacking = True
-				if e.type == KEYUP:
-					playerList[0].attacking = False
+			if pressed[K_SPACE]:
+				playerList[0].attacking = True
 			
-			playerList[0].analyzeInput(camera, pressed, harrySprites, backgrounds)
+			playerList[0].analyzeInput(camera, pressed, harrySprites, backgrounds, back_mask)
 
 			# do enemy methods
 			for i in range(len(enemyList)):

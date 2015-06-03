@@ -25,8 +25,8 @@ class Player:
 		self.straight_speed = speed
 		self.x = x
 		self.y = y
-		self.bx = -300
-		self.by = -400
+		self.bx = -800
+		self.by = -800
 		self.playerRect = Rect(x, y, 22, 45) 
 		self.width = self.playerRect[2]
 		self.height = self. playerRect[3]
@@ -37,24 +37,29 @@ class Player:
 		self.location = "grounds"
 		self.attacking = False
 		self.sprint_multiplyer = 2
+		self.hit_box = Rect(self.x, self.y + 26, 22, 20)
 
-	def analyzeInput(self, camera, pressed, sprite, background):
-		"Centralized method that analyzes inputs and calls adequett functions"
+	def analyzeInput(self, camera, pressed, sprite, background, collision_mask):
+		"Centralized method that analyzes inputs and calls adequate functions"
+
+		self.hit_box = Rect(self.x, self.y + 26, 22, 20)
 
 		sprite.showBackground(background[self.location], self.bx, self.by, camera)
 
-		if self.direction == "":
-			sprite.displayIdle(self, camera)
+		if self.attacking == False:
+			if self.direction == "":
+				sprite.displayIdle(self, camera)
+			else:
+				sprite.changeSprite(self, camera)
 		else:
-			sprite.changeSprite(self, camera)
-
-		sprite.inGameAttack(self, camera, self.attacking)
+			self.attacking = sprite.inGameAttack(self, camera, self.attacking)
+			self.attack(camera)
 			
 		self.changeDirection(pressed)
-		self.move(pressed, camera, sprite, background[self.location])
+		if not self.getCollision(collision_mask):
+			self.move(pressed, camera, sprite, background[self.location])
+
 		self.regenerate()
-		# if e.type == KEYDOWN and pressed[K_SPACE]:
-		#	self.attack(camera)
 
 	def changeDirection(self, pressed):
 		"Change the direction used to affect player"
@@ -191,30 +196,22 @@ class Player:
 
 		# straight facing spells
 		if self.direction == "up":
-			# do up spell animation
 			print("up")
 		if self.direction == "left":
-			# do left spell animation
 			print("up")
 		if self.direction == "down":
-			# do down spell animation
 			print("up")
 		if self.direction == "right":
-			# do right animation
 			print("up")
 
-			# diagonal facing spells
+		# diagonal facing spells
 		if self.direction == "upleft":
-			# do upleft animation
 			print("up")
 		if self.direction == "leftdown":
-			# do leftdown animation
 			print("up")
 		if self.direction == "downright":
-			# do downright animation
 			print("up")
 		if self.direction == "upright":
-			# do rightup anumation
 			print("up")
 		
 		# Turns out the game has a turn based attack system similar to pokemon
@@ -229,6 +226,30 @@ class Player:
 		#         self.selected_spell.doSpell((self.x+self.width/2), (self.y+self.height/2)+self.attack_radius, self.width, self.height, self.x, self.y, self.attack_radius, camera)
 
 		#     self.spell_energy -= self.selected_spell.getEnergy()
+
+	def getCollision(self, collision_mask):
+		check_x = self.hit_box[0] + self.hit_box[2]/2 - self.bx
+		check_y = self.hit_box[1] + self.hit_box[3]/2 - self.by
+		if self.direction.find("up") != -1:
+			check_y -= self.hit_box[3]/2
+		if self.direction.find("left") != 1:
+			check_x -= self.hit_box[2]/2
+		if self.direction.find("down") != -1:
+			check_y += self.hit_box[3]/2
+		if self.direction.find("right") != 1:
+			check_x += self.hit_box[2]/2
+
+		if self.direction.find("right") != -1:
+			mask_col = collision_mask[self.location].get_at((int(check_x) + 7, int(check_y)))
+		if self.direction.find("left") != -1:
+			mask_col = collision_mask[self.location].get_at((int(check_x) - 7, int(check_y)))
+		else:
+			mask_col = collision_mask[self.location].get_at((int(check_x), int(check_y)))
+
+		if mask_col == (255, 0, 0, 255):
+			return True
+		else:
+			return False
 
 	def learnSpell(self, name, power, level, energy):
 		"Add spell to the player's spell list"
@@ -290,3 +311,7 @@ class Player:
 	def getDirection(self):
 		"get the direction of the player"
 		return self.direction
+
+	def getHouse(self):
+		"get the house of player"
+		return self.house
