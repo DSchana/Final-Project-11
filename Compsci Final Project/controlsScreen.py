@@ -23,7 +23,8 @@ while running:
     for e in event.get():       
         if e.type == QUIT:     
             running = False
-        #if menu = "credits"
+            
+        #if menu = "controls"
         if controlsComplete == False:
             for i in range (-600,0,10):
                 screen.blit(controlsScreen,(0,i+20)) 

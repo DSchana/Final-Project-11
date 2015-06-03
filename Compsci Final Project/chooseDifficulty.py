@@ -36,7 +36,8 @@ screen.blit(difficultyEasyIdle,(285,180))
 screen.blit(difficultyNormalIdle,(275,300))
 screen.blit(difficultyHardIdle,(225,420))
 
-difficultyEasyButtonRect = Rect(225,180,415,70) #same rects as above
+#Rects for the difficulty buttons
+difficultyEasyButtonRect = Rect(225,180,415,70) 
 difficultyNormalButtonRect = Rect(225,300,415,70)
 difficultyHardButtonRect = Rect(225,420,415,70)
 
@@ -48,8 +49,8 @@ difficultyTitle = difficultyFont.render(("Select Difficulty"), True, (0,0,0))
 screen.blit(difficultyTitle,(162,75))
 difficulty = ""
 
-screenGrabRect = Rect(0,0,850,600)
-screenGrab = screen.subsurface(screenGrabRect).copy()
+diffScreenGrabRect = Rect(0,0,850,600)
+diffScreenGrab = screen.subsurface(diffScreenGrabRect).copy()
 
 running = True
 while running:
@@ -62,28 +63,28 @@ while running:
             running = False
 
         if difficultyEasyButtonRect.collidepoint((mx,my)) and difficultyChosen==False:
-            screen.blit(screenGrab,(0,0))
+            screen.blit(diffScreenGrab,(0,0))
             screen.blit(difficultyEasyHighlight,(285,180))
             if mb[0] == 1:
                 difficultyChosen = True
                 difficulty = "easy"
             
         elif difficultyNormalButtonRect.collidepoint((mx,my)) and difficultyChosen==False:
-            screen.blit(screenGrab,(0,0))
+            screen.blit(diffScreenGrab,(0,0))
             screen.blit(difficultyNormalHighlight,(275,300))
             if mb[0] == 1:
                 difficultyChosen = True
                 difficulty = "normal"
             
         elif difficultyHardButtonRect.collidepoint((mx,my)) and difficultyChosen==False:
-            screen.blit(screenGrab,(0,0))
+            screen.blit(diffScreenGrab,(0,0))
             screen.blit(difficultyHardHighlight,(225,420))
             if mb[0] == 1:
                 difficultyChosen = True
                 difficulty = "hard"
-
+                
         else:
-            screen.blit(screenGrab,(0,0))
+            screen.blit(diffScreenGrab,(0,0))
 
     display.flip()
 font.quit()
