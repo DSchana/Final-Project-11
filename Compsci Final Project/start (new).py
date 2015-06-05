@@ -101,8 +101,11 @@ difficultyHardButtonRect = Rect(225,420,415,70)
 
 playerHouse = ""
 
-#In-game menu
+#In-game Menu
 #*****HERE
+
+#Battle Menu
+profilePic = image.load ("profilePic.png")
 
 #Music
 songPlaylist = ["theme.mp3"]
