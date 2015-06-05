@@ -25,8 +25,8 @@ class Player:
 		self.straight_speed = speed
 		self.x = x
 		self.y = y
-		self.bx = -800
-		self.by = -800
+		self.bx = -2000
+		self.by = -2000
 		self.playerRect = Rect(x, y, 22, 45) 
 		self.width = self.playerRect[2]
 		self.height = self. playerRect[3]
@@ -37,12 +37,12 @@ class Player:
 		self.location = "grounds"
 		self.attacking = False
 		self.sprint_multiplyer = 2
-		self.hit_box = Rect(self.x, self.y + 26, 22, 20)
+		self.hit_box = Rect(self.x, self.y + 26, self.width, 20)
 
 	def analyzeInput(self, camera, pressed, sprite, background, collision_mask):
 		"Centralized method that analyzes inputs and calls adequate functions"
 
-		self.hit_box = Rect(self.x, self.y + 26, 22, 20)
+		self.hit_box = Rect(self.x, self.y + 26, self.width, 20)
 
 		sprite.showBackground(background[self.location], self.bx, self.by, camera)
 
@@ -56,10 +56,11 @@ class Player:
 			self.attack(camera)
 			
 		self.changeDirection(pressed)
-		if not self.getCollision(collision_mask):
+		if not self.getCollision(collision_mask, background[self.location]):
 			self.move(pressed, camera, sprite, background[self.location])
 
 		self.regenerate()
+		draw.rect(camera, (255, 255, 0), self.hit_box)
 
 	def changeDirection(self, pressed):
 		"Change the direction used to affect player"
@@ -227,9 +228,11 @@ class Player:
 
 		#     self.spell_energy -= self.selected_spell.getEnergy()
 
-	def getCollision(self, collision_mask):
+	def getCollision(self, collision_mask, back_image):
 		check_x = self.hit_box[0] + self.hit_box[2]/2 - self.bx
 		check_y = self.hit_box[1] + self.hit_box[3]/2 - self.by
+		off_screen = False
+
 		if self.direction.find("up") != -1:
 			check_y -= self.hit_box[3]/2
 		if self.direction.find("left") != 1:
@@ -239,14 +242,21 @@ class Player:
 		if self.direction.find("right") != 1:
 			check_x += self.hit_box[2]/2
 
-		if self.direction.find("right") != -1:
-			mask_col = collision_mask[self.location].get_at((int(check_x) + 7, int(check_y)))
-		if self.direction.find("left") != -1:
-			mask_col = collision_mask[self.location].get_at((int(check_x) - 7, int(check_y)))
+		# Left and right checking is weird, this compensates for that
+		if self.direction == "":
+			return False
+		elif self.direction.find("right") != -1:
+			mask_col = collision_mask[self.location].get_at((int(check_x) + 9, int(check_y)))
+		elif self.direction.find("left") != -1:
+			mask_col = collision_mask[self.location].get_at((int(check_x) - 9, int(check_y)))
 		else:
 			mask_col = collision_mask[self.location].get_at((int(check_x), int(check_y)))
 
-		if mask_col == (255, 0, 0, 255):
+		# check if player is leaving screen
+		if check_x <= 15 or check_x >= back_image.get_rect()[2] - 15 or check_y <= 23 or check_y >= back_image.get_rect()[3]-8:
+			off_screen = True
+
+		if mask_col == (255, 0, 0, 255) or off_screen:
 			return True
 		else:
 			return False

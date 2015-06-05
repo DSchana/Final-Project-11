@@ -206,9 +206,6 @@ def chooseHouse(screen):
 		for e in event.get():       
 			if e.type == QUIT:     
 				running = False
-			
-			if e.type == KEYDOWN and e.key == 27: #If the esc key is pressed
-				goBack = True
 				
 			#The house selected is highlighted in yellow
 			#The previous highlights are hidden with a clean image, screenGrab  
@@ -240,13 +237,6 @@ def chooseHouse(screen):
 				screen.blit(hogwartsBadge,(275,150))
 				if mb[0]==1:
 					playerHouse = "ravenclaw"
-
-			if goBack:
-				#Resets previouly selected items and the flags are reversed 
-				playerHouse = ""
-				textComplete = False
-				goBack = False
-				return playerHouse
 	
 			if textComplete == False and playerHouse != "": 
 				#Text drops down when a house is chosen
@@ -255,7 +245,8 @@ def chooseHouse(screen):
 					time.wait(2)
 					display.flip()
 				textComplete = True
-				time.wait(2000)
+
+			if textComplete and e.type == MOUSEBUTTONDOWN:
 				return playerHouse
 			
 		display.flip()
@@ -293,7 +284,7 @@ def chooseDifficulty(screen):
 	difficultyChosen = False
 	font.init()
 	difficultyFont = font.SysFont("Castellar", 52)
-	difficultyTitle = difficultyFont.render(("Select Difficulty"), True, (0,0,0))
+	difficultyTitle = difficultyFont.render(("Select Difficulty"), True, (255,255,0))
 	screen.blit(difficultyTitle,(162,75))
 	difficulty = ""
 
@@ -303,38 +294,42 @@ def chooseDifficulty(screen):
 	running = True
 	while running:
 
-	    mb = mouse.get_pressed()
-	    mx,my = mouse.get_pos()
+		mb = mouse.get_pressed()
+		mx,my = mouse.get_pos()
 
-	    for e in event.get():       
-	        if e.type == QUIT:     
-	            running = False
+		for e in event.get():
+			if e.type == QUIT:
+				running = False
 
-	        if difficultyEasyButtonRect.collidepoint((mx,my)) and difficultyChosen==False:
-	            screen.blit(screenGrab,(0,0))
-	            screen.blit(difficultyEasyHighlight,(285,180))
-	            if mb[0] == 1:
-	                difficultyChosen = True
-	                difficulty = "easy"
-	                return difficulty
-	            
-	        elif difficultyNormalButtonRect.collidepoint((mx,my)) and difficultyChosen==False:
-	            screen.blit(screenGrab,(0,0))
-	            screen.blit(difficultyNormalHighlight,(275,300))
-	            if mb[0] == 1:
-	                difficultyChosen = True
-	                difficulty = "normal"
-	                return difficulty
-	            
-	        elif difficultyHardButtonRect.collidepoint((mx,my)) and difficultyChosen==False:
-	            screen.blit(screenGrab,(0,0))
-	            screen.blit(difficultyHardHighlight,(225,420))
-	            if mb[0] == 1:
-	                difficultyChosen = True
-	                difficulty = "hard"
-	                return difficulty
+			screen.blit(difficultyEasyIdle, (285, 180))
+			screen.blit(difficultyNormalIdle, (275, 300))
+			screen.blit(difficultyHardIdle, (225, 420))
 
-	        else:
-	            screen.blit(screenGrab,(0,0))
+			if difficultyEasyButtonRect.collidepoint((mx,my)) and difficultyChosen==False:
+				screen.blit(screenGrab,(0,0))
+				screen.blit(difficultyEasyHighlight,(285,180))
+				if mb[0] == 1:
+					time.delay(200)
+					difficultyChosen = True
+					difficulty = "easy"
+					return difficulty
+				
+			elif difficultyNormalButtonRect.collidepoint((mx,my)) and difficultyChosen==False:
+				screen.blit(screenGrab,(0,0))
+				screen.blit(difficultyNormalHighlight,(275,300))
+				if mb[0] == 1:
+					time.delay(200)
+					difficultyChosen = True
+					difficulty = "normal"
+					return difficulty
+				
+			elif difficultyHardButtonRect.collidepoint((mx,my)) and difficultyChosen==False:
+				screen.blit(screenGrab,(0,0))
+				screen.blit(difficultyHardHighlight,(225,420))
+				if mb[0] == 1:
+					time.delay(200)
+					difficultyChosen = True
+					difficulty = "hard"
+					return difficulty
 
-	    display.flip()
+		display.flip()

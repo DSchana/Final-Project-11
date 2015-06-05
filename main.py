@@ -1,5 +1,10 @@
 # main.py
 
+# THINGS TO DO:
+# Hogwarts
+# Story
+# 	Characters
+
 import os
 from pygame import *
 from math import *
@@ -97,9 +102,7 @@ while running:
 		elif gameScreenInit:
 			mx, my = mouse.get_pos()
 			pressed = key.get_pressed()
-
-			print(playerList[0].getHouse(), difficulty)
-
+			test = "good"
 			for e in event.get():
 				if e.type == QUIT:
 					running = False
