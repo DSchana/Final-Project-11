@@ -15,6 +15,7 @@ from Enemy import *
 from Battle import *
 from Sprites import *
 from Menu import *
+from Gates import *
 
 os.environ['SDL_VIDEO_WINDOW_POS'] = '25,50'  # Opens up in the upper left corner 
 screen = display.set_mode((850, 600))
@@ -29,6 +30,9 @@ music = {}
 music["main"] = Sound("Audio/main.mp3")
 music["menu"] = Sound("Audio/menu.mp3")
 music["credits"] = Sound("Audio/credits.mp3")
+music["grounds"] = Sound("Audio/grounds.mp3")
+music["hagrid's hut"] = Sound("Audio/grounds.mp3")
+music["entrance hall"] = Sound("Audio/entrance hall.mp3")
 
 mode_select = loadImages(screen, music["menu"])
 
@@ -69,8 +73,12 @@ while running:
 
 				enemyList = []
 				playerList = []
+				gates = []
 				backgrounds = {}
 				back_mask = {}
+
+				# create usable player
+				playerList.append(Player("Jeffery", 100,  house, 0, 1, 1, 1, 200, 100, [], 10, 1.5, 425, 300))
 
 				harrySprites = Sprites("Images/walking/walkUp/", "Images/walking/walkLeft/", "Images/walking/walkDown/", "Images/walking/walkRight/", "Images/walking/walkUpLeft/", 
 						"Images/walking/walkDownLeft/", "Images/walking/walkDownRight/", "Images/walking/walkUpRight/", "Images/attack/castSpellUp/", "Images/attack/castSpellLeft/",
@@ -78,15 +86,27 @@ while running:
 						"Images/attack/castSpellUpRight/")
 				harrySprites.loadImages()
 
-				# load backgrounds
-				backgrounds["grounds"] = image.load("Images/Backgrounds/Grounds.png")
-				back_mask["grounds"] = image.load("Images/Backgrounds/Grounds_mask.png")
-
 				screen.blit(loading2, (0, 0))
-				display.flip()
 
-				# create usable player
-				playerList.append(Player("Jeffery", 100,  house, 0, 1, 1, 1, 200, 100, [], 10, 3, 425, 300))
+				# create gates for player to travle through buildings
+				gates.append(Gate(playerList[0], 1771, 462, 169, 184, "entrance hall", 870, 1130, ["Images/gate/"]))
+				gates.append(Gate(playerList[0], 841, 1177, 71, 10, "grounds", 1868, 654))
+				gates.append(Gate(playerList[0], 2881, 3112, 33, 41, "hagrid's hut", 480, 590))
+				gates.append(Gate(playerList[0], 465, 641, 48, 11, "grounds", 2886, 3142))
+
+				for i in range(len(gates)):
+					gates[i].loadImages()
+
+				# load backgrounds
+				backgrounds["grounds"] = image.load("Images/Backgrounds/grounds.png")
+				backgrounds["entrance hall"] = image.load("Images/Backgrounds/entrance hall.png")
+				backgrounds["hagrid's hut"] = image.load("Images/Backgrounds/hagrid's hut.png")
+
+				back_mask["grounds"] = image.load("Images/Backgrounds/grounds_mask.png")
+				back_mask["entrance hall"] = image.load("Images/Backgrounds/entrance hall_mask.png")
+				back_mask["hagrid's hut"] = image.load("Images/Backgrounds/hagrid's hut_mask.png")
+
+				display.flip()
 
 				# Constant player values
 				p_width = playerList[0].getWidth()
@@ -95,7 +115,7 @@ while running:
 				screen.blit(loading3, (0, 0))
 				display.flip()
 
-				music["main"].execute(-1)
+				music[playerList[0].getLocation()].execute(-1)
 
 				gameScreenInit = True
 
@@ -110,7 +130,7 @@ while running:
 			if pressed[K_SPACE]:
 				playerList[0].attacking = True
 			
-			playerList[0].analyzeInput(camera, pressed, harrySprites, backgrounds, back_mask)
+			playerList[0].analyzeInput(camera, pressed, harrySprites, gates, backgrounds, back_mask, music)
 
 			# do enemy methods
 			for i in range(len(enemyList)):

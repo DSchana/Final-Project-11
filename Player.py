@@ -5,6 +5,7 @@ from random import *
 from math import *
 from Spells import *
 from Sprites import *
+from Gates import *
 
 class Player:
 	def __init__(self, name, health, house, xp, level, spell_level, potion_level, attack_radius, spell_energy, spell_list, stamina, speed, x, y):
@@ -39,12 +40,20 @@ class Player:
 		self.sprint_multiplyer = 2
 		self.hit_box = Rect(self.x, self.y + 26, self.width, 20)
 
-	def analyzeInput(self, camera, pressed, sprite, background, collision_mask):
+	def analyzeInput(self, camera, pressed, sprite, gates, background, collision_mask, music):
 		"Centralized method that analyzes inputs and calls adequate functions"
 
 		self.hit_box = Rect(self.x, self.y + 26, self.width, 20)
 
 		sprite.showBackground(background[self.location], self.bx, self.by, camera)
+
+		# coordinates to check players location relative to the map, not screen
+		check_x = self.x + self.width/2 - self.bx
+		check_y = self.y + self.height/2 - self.by
+
+		# draw door depending on player's location
+		for i in range(len(gates)):
+			gates[i].idle(camera, self)
 
 		if self.attacking == False:
 			if self.direction == "":
@@ -56,11 +65,10 @@ class Player:
 			self.attack(camera)
 			
 		self.changeDirection(pressed)
-		if not self.getCollision(collision_mask, background[self.location]):
+		if not self.getCollision(collision_mask[self.location], background[self.location], gates, camera, music):
 			self.move(pressed, camera, sprite, background[self.location])
 
 		self.regenerate()
-		draw.rect(camera, (255, 255, 0), self.hit_box)
 
 	def changeDirection(self, pressed):
 		"Change the direction used to affect player"
@@ -82,9 +90,6 @@ class Player:
 			self.speed = self.angle_speed
 		else:
 			self.speed = self.straight_speed
-
-	def changeLocation(self):
-		"Change the location ex. main entrance, grounds"
 
 	def move(self, pressed, camera, sprite, back_image):
 		"Move player"
@@ -228,10 +233,9 @@ class Player:
 
 		#     self.spell_energy -= self.selected_spell.getEnergy()
 
-	def getCollision(self, collision_mask, back_image):
+	def getCollision(self, collision_mask, back_image, gates, camera, music):
 		check_x = self.hit_box[0] + self.hit_box[2]/2 - self.bx
 		check_y = self.hit_box[1] + self.hit_box[3]/2 - self.by
-		off_screen = False
 
 		if self.direction.find("up") != -1:
 			check_y -= self.hit_box[3]/2
@@ -241,25 +245,35 @@ class Player:
 			check_y += self.hit_box[3]/2
 		if self.direction.find("right") != 1:
 			check_x += self.hit_box[2]/2
+		print(check_x, check_y)
 
 		# Left and right checking is weird, this compensates for that
-		if self.direction == "":
-			return False
-		elif self.direction.find("right") != -1:
-			mask_col = collision_mask[self.location].get_at((int(check_x) + 9, int(check_y)))
+		if self.direction.find("right") != -1:
+			mask_col = collision_mask.get_at((int(check_x) + 9, int(check_y)))
 		elif self.direction.find("left") != -1:
-			mask_col = collision_mask[self.location].get_at((int(check_x) - 9, int(check_y)))
+			mask_col = collision_mask.get_at((int(check_x) - 9, int(check_y)))
 		else:
-			mask_col = collision_mask[self.location].get_at((int(check_x), int(check_y)))
+			mask_col = collision_mask.get_at((int(check_x), int(check_y)))
 
-		# check if player is leaving screen
-		if check_x <= 15 or check_x >= back_image.get_rect()[2] - 15 or check_y <= 23 or check_y >= back_image.get_rect()[3]-8:
-			off_screen = True
-
-		if mask_col == (255, 0, 0, 255) or off_screen:
+		# Check for wall collisions
+		if mask_col == (255, 0, 0, 255):
 			return True
+		# Check for door collisions
+		elif mask_col == (255, 255, 0, 255):
+			self.interactDoor(gates, camera, music)
 		else:
 			return False
+
+	def interactDoor(self, gates, camera, music):
+		"Check which door the player has collided with and act accordingly"
+		for i in range(len(gates)):
+			if self.x > gates[i].getX() and self.x < gates[i].getX()+gates[i].getWidth():
+				gates[i].open(camera, self)
+				self.location = gates[i].getNewLocation()
+				self.bx = -(gates[i].getNewX() - 425)
+				self.by = -(gates[i].getNewY() - 300)
+		music[self.location].halt()
+		music[self.location].execute(0)
 
 	def learnSpell(self, name, power, level, energy):
 		"Add spell to the player's spell list"
@@ -289,6 +303,14 @@ class Player:
 	def getWidth(self):
 		"get width of player"
 		return self.width
+
+	def getBX(self):
+		"get bx of player"
+		return self.bx
+
+	def getBY(self):
+		"get by of player"
+		return self.by
 	
 	def getHeight(self):
 		"get length of player"
@@ -325,3 +347,8 @@ class Player:
 	def getHouse(self):
 		"get the house of player"
 		return self.house
+
+	def getLocation(self):
+		"""get the current location of the player
+		Location is used to determine backgrounds and sounds"""
+		return self.location
