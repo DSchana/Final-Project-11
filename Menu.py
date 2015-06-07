@@ -333,3 +333,114 @@ def chooseDifficulty(screen):
 					return difficulty
 
 		display.flip()
+
+def inGameMenu(screen, Player, music):
+	music[Player.getLocation()].halt()
+	music["menu"].execute(0)
+
+	openMenu = True
+	spellMenuBack = image.load ("Images/menu/spellMenuBack.png")
+	spellMenuBack = transform.scale(spellMenuBack,(700,600))
+	spellMenuRect = Rect (75,5,700,600)
+	spellARect = Rect (135,140,80,80)
+	spellBRect = Rect (135,260,80,80)
+	spellCRect = Rect (135,380,80,80)
+	spellAPic = image.load ("Images/menu/spellAPic.jpg")
+	spellAPic = transform.scale(spellAPic,(76,76))
+	spellBPic = image.load ("Images/menu/spellBPic.jpg")
+	spellBPic = transform.scale(spellBPic,(76,76))
+	spellCPic = image.load ("Images/menu/spellCPic.jpg")
+	spellCPic = transform.scale(spellCPic,(76,76))
+	closeMenuRect = Rect (635,25,45,55)
+	font.init()
+	menuFont = font.SysFont("Verdana", 50) #Font for both menu descriptions and "X" exit button
+	#This font is only used once at size 50, later resized smaller to text in descriptions
+	closeMenuText = menuFont.render(("X"), True, (255,0,0))
+	menuFont = font.SysFont("Verdana", 38)
+	menuSelectionText = menuFont.render(("INVENTORY"), True, (255,0,0))
+	menuFont = font.SysFont("Verdana", 22) 
+	spellAText = menuFont.render(("Alahamoro:"), True, (0,0,0))
+	spellADescripText = menuFont.render(("Unlocks doors, grants access to new areas"), True, (0,0,0))
+	spellBText = menuFont.render(("Lumos:"), True, (0,0,0))
+	spellBDescripText = menuFont.render(("Illuinates dark areas on the map"), True, (0,0,0))
+	spellCText = menuFont.render(("Wingardium Leviosa:"), True, (0,0,0))
+	spellCDescripText = menuFont.render(("Lifts obstacles out of the way"), True, (0,0,0))
+	currentSpell = "" #Keeps track of the selected in-game spell (non-battle spells)
+	availibleSpells = ["Alahamoro"]  # Player.getSpellList() #This list keeps track of the spells availible for the player to use 
+	#**************************************************
+
+	#This program draws the in-game inventory menu that displays the availible spells
+	#The player starts off with only 1 spell. As the player progesses, add THIS CODE
+
+	#When he learns lumos
+	# availibleSpells.append("Lumos")
+
+	#When he learns Wingardium Leviosa
+	# availibleSpells.append("Wingardium Leviosa")
+
+	screenGrabRect = Rect(0,0,850,600)
+
+	running = True
+	while running:
+		mb = mouse.get_pressed()
+		mx,my = mouse.get_pos()
+
+		#  THIS CODE IS KIND OF UNACCEPTABLE, IT IS TOO HARD CODED
+		##  GENERALIZE DIS SHIT
+
+		#When E is pressed, the spell menu is opened
+		screen.blit(spellMenuBack,(75,5))
+		#The inventory only displays spells that the player has unlocked 
+		if "Alahamoro" in availibleSpells:
+			draw.rect(screen,(0,0,0),[135,140,80,80],2) #A
+			screen.blit(spellAPic,(137,142))
+			screen.blit(spellAText,(230,160))
+			screen.blit(spellADescripText,(230,180))
+
+		if  "Lumos" in availibleSpells:
+			draw.rect(screen,(0,0,0),[135,260,80,80],2) #B
+			screen.blit(spellBPic,(137,262))
+			screen.blit(spellBText,(230,285))
+			screen.blit(spellBDescripText,(230,305))
+			
+		if "Wingardium Leviosa" in availibleSpells:
+			draw.rect(screen,(0,0,0),[135,380,80,80],2) #C
+			screen.blit(spellCPic,(137,382))
+			screen.blit(spellCText,(230,400))
+			screen.blit(spellCDescripText,(230,420))
+		
+		screenGrab = screen.subsurface(screenGrabRect).copy()
+		
+		if spellARect.collidepoint((mx,my)) and "Alahamoro" in availibleSpells:
+			screen.blit(screenGrab,(0,0))
+			draw.rect(screen,(255,255,0),[135,140,80,80],2) #A highlight
+			if mb[0] == 1:
+				currentSpell = "Alahamoro"
+				#When the spell is clicked, the window closes
+				screen.fill ((0,0,0)) #simulates the window closing, replace later 
+
+		elif spellBRect.collidepoint((mx,my)) and "Lumos" in availibleSpells:
+			screen.blit(screenGrab,(0,0))
+			draw.rect(screen,(255,255,0),[135,260,80,80],2) #B highlight
+			if mb[0] == 1:
+				currentSpell = "Lumos"
+				screen.fill ((0,0,0))
+
+		elif spellCRect.collidepoint((mx,my)) and "Wingardium Leviosa" in availibleSpells:
+			screen.blit(screenGrab,(0,0))
+			draw.rect(screen,(255,255,0),[135,380,80,80],2) #C highlight
+			if mb[0] == 1:
+				currentSpell = "Wingardium Leviosa"
+				screen.fill ((0,0,0)) 
+
+		screen.blit(closeMenuText,(640,20)) # "X" box closes menu
+		draw.rect(screen,(255,0,0),[635,25,45,55],3) #red box around X
+		
+		if mb[0]==1 and closeMenuRect.collidepoint((mx,my)):
+			running = False
+			print(0)
+				
+		display.flip()
+	music["menu"].halt()
+	music[Player.getLocation()].execute(0)
+	return 0
