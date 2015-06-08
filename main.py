@@ -3,7 +3,7 @@
 # THINGS TO DO:
 # Hogwarts
 # Story
-# 	Characters
+# Characters
 
 import os
 from pygame import *
@@ -17,6 +17,7 @@ from Sprites import *
 from Menu import *
 from Gates import *
 
+#Window preferemces 
 os.environ['SDL_VIDEO_WINDOW_POS'] = '25,50'  # Opens up in the upper left corner 
 screen = display.set_mode((850, 600))
 display.set_caption("Harry Potter: New Horizons")
@@ -36,6 +37,7 @@ music["entrance hall"] = Sound("Audio/entrance hall.mp3")
 
 mode_select = loadImages(screen, music["menu"])
 
+#defaults 
 house = ""
 difficulty = ""
 

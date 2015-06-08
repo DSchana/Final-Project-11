@@ -31,24 +31,14 @@ def loadImages(screen, music):
 
 	screen.blit(loadingPic2, (0,0))
 	display.flip()
-
-	#rightWalkSpriteList = []
-	#leftWalkSpriteList = []
-	#upWalkSpriteList = []
-	#downWalkSpriteList = []
-
-	#rightUpWalkSpriteList = []
-	#rightDownWalkSpriteList = []
-	#leftUpWalkSpriteList = []
-	#leftDownSpriteList = []
-
+	
+        #Main Menu assets
 	blackScreen = image.load ("Images/loading/template.jpg")
-	homeScreenBlur = image.load ("Images/loading/altHome.jpg")
+	homeScreenBlur = image.load ("Images/loading/altHome.jpg") 
 	logo = image.load ("Images/loading/HPlogo.png")
 	logo = transform.scale(logo,(450,170))
-	#Used to hide unwated blit objects 
-	screenGrabRect = Rect(0,0,850,600)
-	menuGrabRect = Rect(0,0,850,600) 
+	screenGrabRect = Rect(0,0,850,600)#Used to hide unwated blit objects 
+	menuGrabRect = Rect(0,0,850,600) #Used to hide unwated blit objects 
 	playButton = image.load ("Images/loading/playButton.png")
 	playButton = transform.scale(playButton,(200,80))
 	creditsButton = image.load ("Images/loading/creditsButton.png")
@@ -63,7 +53,7 @@ def loadImages(screen, music):
 	controlsButtonRect = Rect(325,330,200,50)
 	creditsButtonRect = Rect(325,410,200,50)
 
-	menu = "home" #used to control the rects drawn on different screens 
+	menu = "home" #used to control the rects drawn on different screens, default set as home (the main menu)
 
 	font.init()
 	otherFont = font.SysFont("High Tower Text", 28)
@@ -77,7 +67,7 @@ def loadImages(screen, music):
 		for e in event.get():
 			if e.type == QUIT:
 				return "exit"
-			if loadingComplete == False:
+			if loadingComplete == False:#prevents the screen from sliding down again
 				screen.blit(blackScreen,(0,0))
 				display.flip()
 				#Background drops down
@@ -90,10 +80,9 @@ def loadImages(screen, music):
 				for i in range (-600,0,10):
 					screen.blit(screenGrab,(0,0))
 					screen.blit(logo,(200,-i+15)) #Arbitrary 15px offset
-					#350
 					display.flip()
-			loadingComplete = True #prevents the screen from sliding down again
-			screenGrab = screen.subsurface(screenGrabRect).copy()
+			loadingComplete = True #flag is reversed, wont load again 
+			screenGrab = screen.subsurface(screenGrabRect).copy() #takes a copy of the main main screen to clear highlighted items
 
 			#This black rectangle hides the differences in size between the buttons
 			#and the yellow highlight rects for the Play button
@@ -106,13 +95,12 @@ def loadImages(screen, music):
 			subtitle = otherFont.render(("New Horizons"), True, (111,127,132))
 			screen.blit(subtitle,(460,145))
 			
-			#Fix the coordinates for the yellow rect to match the black rectangles
 			draw.rect(screen,(255,255,0),[322,218,202,82],2)
 			draw.rect(screen,(255,255,0),[325,330,200,50],2)
 			draw.rect(screen,(255,255,0),[325,410,200,50],2)
 			menuGrab = screen.subsurface(menuGrabRect).copy()
 			screen.blit(menuGrab,(0,0))
-			#Highlights the selected box when mouse is over it
+			#The following code highlights the selected box when mouse is over it
 			#Clears previous highlights when mouse is moved
 			if playButtonRect.collidepoint((mx,my)):
 				draw.rect(screen,(0,255,0),[322,218,202,82],2)
@@ -148,6 +136,7 @@ def displayCredits(screen, music):
 		for e in event.get():
 			if e.type == KEYDOWN:
 				if key.get_pressed()[K_ESCAPE]:
+                                        #The player returns to the main menu when ESC is pressed 
 					music.halt()
 					return "menu"
 
@@ -158,10 +147,12 @@ def displayControls(screen):
 	while True:
 		for e in event.get():
 			if e.type == KEYDOWN:
+                                #The player returns to the main menu when ESC is pressed
 				if key.get_pressed()[K_ESCAPE]:
 					return "menu"
 
 def chooseHouse(screen):
+        #Assets for choosing the house screen 
 	grifHouseSelect = image.load ("Images/loading/grifHouse.png")
 	slyHouseSelect = image.load ("Images/loading/slyHouse.png")
 	ravenHouseSelect = image.load ("Images/loading/ravenHouse.png")
@@ -183,13 +174,11 @@ def chooseHouse(screen):
 	huffHouseSelectRect = Rect(0,300,420,300)
 	ravenHouseSelectRect = Rect(430,300,420,300)
 
-	playerHouse = ""
-	goBack = False
-	textComplete = False
+	playerHouse = "" #default no house chosen 
+	goBack = False #flag controls going back to the menu, if True, other flags are reset 
+	textComplete = False #flag that controls the assets being blit once
 
 	screen.blit(blackScreen,(0,0)) #Hides gaps between the pictures
-	#This should be inside the loop with if statement condition in the actual code
-	#eg. if textComplete==True:
 	screen.blit(grifHouseSelect,(0,0))
 	screen.blit(slyHouseSelect,(430,0))
 	screen.blit(huffHouseSelect,(0,300))
@@ -208,7 +197,8 @@ def chooseHouse(screen):
 				running = False
 				
 			#The house selected is highlighted in yellow
-			#The previous highlights are hidden with a clean image, screenGrab  
+			#The previous highlights are hidden with a clean image, screenGrab
+                        #player chooses a house by clicking on the flag 
 			if grifHouseSelectRect.collidepoint((mx,my)) and playerHouse=="":
 				screen.blit(screenGrab,(0,0))
 				draw.rect(screen,(255,255,0),[0,0,420,300],2)
@@ -239,7 +229,7 @@ def chooseHouse(screen):
 					playerHouse = "ravenclaw"
 	
 			if textComplete == False and playerHouse != "": 
-				#Text drops down when a house is chosen
+			#Text drops down when a house is chosen
 				for i in range (-500,0,5):
 					screen.blit(textScreen,(0,i+10)) 
 					time.wait(2)
@@ -252,6 +242,7 @@ def chooseHouse(screen):
 		display.flip()
 
 def chooseDifficulty(screen):
+        #Assets for choose difficulty
 	difficultyScreen = image.load ("Images/loading/difficulty.jpg")
 	difficultyEasyIdle = image.load ("Images/loading/EasyIdle.png")
 	difficultyEasyHighlight = image.load ("Images/loading/EasyHigh.png")
@@ -260,7 +251,6 @@ def chooseDifficulty(screen):
 	difficultyHardIdle = image.load ("Images/loading/HardIdle.png")
 	difficultyHardHighlight = image.load ("Images/loading/HardHigh.png")
 
-	#relevant to this screen only
 	screen.blit(difficultyScreen,(-10,0))
 	display.flip()
 
@@ -280,15 +270,14 @@ def chooseDifficulty(screen):
 	difficultyNormalButtonRect = Rect(225,300,415,70)
 	difficultyHardButtonRect = Rect(225,420,415,70)
 
-	#The following is already defined in the main program start.py
-	difficultyChosen = False
+	difficultyChosen = False #flag that controls assets being blit once 
 	font.init()
 	difficultyFont = font.SysFont("Castellar", 52)
 	difficultyTitle = difficultyFont.render(("Select Difficulty"), True, (255,255,0))
 	screen.blit(difficultyTitle,(162,75))
-	difficulty = ""
+	difficulty = "" #default nothing chosen
 
-	screenGrabRect = Rect(0,0,850,600)
+	screenGrabRect = Rect(0,0,850,600) #rects used to blit over hightlighted items 
 	screenGrab = screen.subsurface(screenGrabRect).copy()
 
 	running = True
@@ -300,13 +289,13 @@ def chooseDifficulty(screen):
 		for e in event.get():
 			if e.type == QUIT:
 				running = False
-
+                        #Starts off with non-highlighted items (idle), when the mouse is over a box, it becomes highlighted
 			screen.blit(difficultyEasyIdle, (285, 180))
 			screen.blit(difficultyNormalIdle, (275, 300))
 			screen.blit(difficultyHardIdle, (225, 420))
 
 			if difficultyEasyButtonRect.collidepoint((mx,my)) and difficultyChosen==False:
-				screen.blit(screenGrab,(0,0))
+				screen.blit(screenGrab,(0,0)) #clears any previous highlight
 				screen.blit(difficultyEasyHighlight,(285,180))
 				if mb[0] == 1:
 					time.delay(200)
@@ -337,7 +326,7 @@ def chooseDifficulty(screen):
 def inGameMenu(screen, Player, music):
 	music[Player.getLocation()].halt()
 	music["menu"].execute(0)
-
+        #Assets for the inventory
 	openMenu = True
 	spellMenuBack = image.load ("Images/menu/spellMenuBack.png")
 	spellMenuBack = transform.scale(spellMenuBack,(700,600))
@@ -351,7 +340,7 @@ def inGameMenu(screen, Player, music):
 	spellBPic = transform.scale(spellBPic,(76,76))
 	spellCPic = image.load ("Images/menu/spellCPic.jpg")
 	spellCPic = transform.scale(spellCPic,(76,76))
-	closeMenuRect = Rect (635,25,45,55)
+	closeMenuRect = Rect (635,25,45,55) #"X" button to close inventory menu 
 	font.init()
 	menuFont = font.SysFont("Verdana", 50) #Font for both menu descriptions and "X" exit button
 	#This font is only used once at size 50, later resized smaller to text in descriptions
@@ -388,11 +377,14 @@ def inGameMenu(screen, Player, music):
 		#  THIS CODE IS KIND OF UNACCEPTABLE, IT IS TOO HARD CODED
 		##  GENERALIZE DIS SHIT
 
+		###REPLY: THIS IS THE ONLY WAY IT CAN BE DONE
+
 		#When E is pressed, the spell menu is opened
 		screen.blit(spellMenuBack,(75,5))
-		#The inventory only displays spells that the player has unlocked 
+		#The inventory only displays spells that the player has unlocked
+		#The following checks if a spell has been unlocked, if yes, it appears in the inventory menu 
 		if "Alahamoro" in availibleSpells:
-			draw.rect(screen,(0,0,0),[135,140,80,80],2) #A
+			draw.rect(screen,(0,0,0),[135,140,80,80],2) #spell choice A, letter corresponds below
 			screen.blit(spellAPic,(137,142))
 			screen.blit(spellAText,(230,160))
 			screen.blit(spellADescripText,(230,180))
@@ -409,10 +401,10 @@ def inGameMenu(screen, Player, music):
 			screen.blit(spellCText,(230,400))
 			screen.blit(spellCDescripText,(230,420))
 		
-		screenGrab = screen.subsurface(screenGrabRect).copy()
+		screenGrab = screen.subsurface(screenGrabRect).copy() #used to clear hightlights
 		
 		if spellARect.collidepoint((mx,my)) and "Alahamoro" in availibleSpells:
-			screen.blit(screenGrab,(0,0))
+			screen.blit(screenGrab,(0,0)) #clears previous highlight
 			draw.rect(screen,(255,255,0),[135,140,80,80],2) #A highlight
 			if mb[0] == 1:
 				currentSpell = "Alahamoro"
@@ -436,7 +428,7 @@ def inGameMenu(screen, Player, music):
 		screen.blit(closeMenuText,(640,20)) # "X" box closes menu
 		draw.rect(screen,(255,0,0),[635,25,45,55],3) #red box around X
 		
-		if mb[0]==1 and closeMenuRect.collidepoint((mx,my)):
+		if mb[0]==1 and closeMenuRect.collidepoint((mx,my)): #inventory is closed
 			running = False
 			print(0)
 				
