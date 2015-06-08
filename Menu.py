@@ -356,7 +356,13 @@ def inGameMenu(screen, Player, music):
 	spellCText = menuFont.render(("Wingardium Leviosa:"), True, (0,0,0))
 	spellCDescripText = menuFont.render(("Lifts obstacles out of the way"), True, (0,0,0))
 	currentSpell = "" #Keeps track of the selected in-game spell (non-battle spells)
-	availibleSpells = ["Alahamoro"]  # Player.getSpellList() #This list keeps track of the spells availible for the player to use 
+	availibleSpells = Player.getSpellList()  # Player.getSpellList() #This list keeps track of the spells availible for the player to use 
+	spellTitles = []
+	spellDescriptions = []
+
+	for i in range(len(availibleSpells)):
+		spellTitles.append(menuFont.render(availibleSpells[i].getName(), True, (0, 0, 0)))
+		spellDescriptions.append(menuFont.render(availibleSpells[i].getDescription(), True, (0, 0, 0)))
 	#**************************************************
 
 	#This program draws the in-game inventory menu that displays the availible spells
@@ -380,27 +386,35 @@ def inGameMenu(screen, Player, music):
 			#When E is pressed, the spell menu is opened
 			screen.blit(spellMenuBack,(75,5))
 			#The inventory only displays spells that the player has unlocked
-			#The following checks if a spell has been unlocked, if yes, it appears in the inventory menu 
-			if "Alahamoro" in availibleSpells:
-				draw.rect(screen,(0,0,0),[135,140,80,80],2) #spell choice A, letter corresponds below
-				screen.blit(spellAPic,(137,142))
-				screen.blit(spellAText,(230,160))
-				screen.blit(spellADescripText,(230,180))
+			#The following checks if a spell has been unlocked, if yes, it appears in the inventory menu
+			for i in range(len(availibleSpells)):
+				draw.rect(screen, (0, 0, 0), [135, 140 + 120 * i, 80, 80], 2)
+				screen.blit(spellCPic, (137, 142 + 120 * i))
+				screen.blit(spellTitles[i], (230, 160 + 120 * i))
+				screen.blit(spellDescriptions[i], (230, 180 + 120 * i))
 
-			if  "Lumos" in availibleSpells:
-				draw.rect(screen,(0,0,0),[135,260,80,80],2) #B
-				screen.blit(spellBPic,(137,262))
-				screen.blit(spellBText,(230,285))
-				screen.blit(spellBDescripText,(230,305))
+
+			#if "Alahamoro" in availibleSpells:
+			#	draw.rect(screen,(0,0,0),[135,140,80,80],2) #spell choice A, letter corresponds below
+			#	screen.blit(spellAPic,(137,142))
+			#	screen.blit(spellAText,(230,160))
+			#	screen.blit(spellADescripText,(230,180))
+
+			#if  "Lumos" in availibleSpells:
+			#	draw.rect(screen,(0,0,0),[135,260,80,80],2) #B
+			#	screen.blit(spellBPic,(137,262))
+			#	screen.blit(spellBText,(230,285))
+			#	screen.blit(spellBDescripText,(230,305))
 				
-			if "Wingardium Leviosa" in availibleSpells:
-				draw.rect(screen,(0,0,0),[135,380,80,80],2) #C
-				screen.blit(spellCPic,(137,382))
-				screen.blit(spellCText,(230,400))
-				screen.blit(spellCDescripText,(230,420))
+			#if "Wingardium Leviosa" in availibleSpells:
+			#	draw.rect(screen,(0,0,0),[135,380,80,80],2) #C
+			#	screen.blit(spellCPic,(137,382))
+			#	screen.blit(spellCText,(230,400))
+			#	screen.blit(spellCDescripText,(230,420))
 			
 			screenGrab = screen.subsurface(screenGrabRect).copy() #used to clear hightlights
 			
+			# Generalize
 			if spellARect.collidepoint((mx,my)) and "Alahamoro" in availibleSpells:
 				screen.blit(screenGrab,(0,0)) #clears previous highlight
 				draw.rect(screen,(255,255,0),[135,140,80,80],2) #A highlight

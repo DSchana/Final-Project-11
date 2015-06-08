@@ -5,11 +5,12 @@ from random import *
 from math import *
 
 class Spells:
-	def __init__(self, name, power, level, energy):
+	def __init__(self, name, description, power, level, energy):
 		self.name = name
 		self.power = power
 		self.level = level
 		self.energy = energy
+		self.description = description
 
 	def doSpell(self, mx, my, width, height, x, y, attack_radius, camera):
 		"Have player perform spell"
@@ -32,6 +33,10 @@ class Spells:
 	def getName(self):
 		"get name of spell"
 		return self.name
+
+	def getDescription(self):
+		"get the description of spell"
+		return self.description
 
 	def getPower(self):
 		"get power level"

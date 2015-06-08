@@ -32,7 +32,7 @@ class Player:
 		self.width = self.playerRect[2]
 		self.height = self. playerRect[3]
 		self.spell_list = spell_list
-		self.learnSpell("Expelliarmus", 10, 1, 10)
+		self.learnSpell("lumos", "illuminate the tip of the caster's wand", 0, 1, 0)
 		self.selected_spell = self.spell_list[0]
 		self.direction = "left"
 		self.location = "grounds"
@@ -274,9 +274,9 @@ class Player:
 		music[self.location].halt()
 		music[self.location].execute()
 
-	def learnSpell(self, name, power, level, energy):
+	def learnSpell(self, name, description, power, level, energy):
 		"Add spell to the player's spell list"
-		self.spell_list.append(Spells(name, power, level, energy))
+		self.spell_list.append(Spells(name, description, power, level, energy))
 
 	def regenerate(self):
 		"regenerate health, stamina, and energy over time"
