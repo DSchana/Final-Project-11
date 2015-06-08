@@ -115,7 +115,7 @@ while running:
 				screen.blit(loading3, (0, 0))
 				display.flip()
 
-				music[playerList[0].getLocation()].execute(-1)
+				music[playerList[0].getLocation()].execute()
 
 				gameScreenInit = True
 
@@ -126,6 +126,10 @@ while running:
 			for e in event.get():
 				if e.type == QUIT:
 					running = False
+
+				# Display in game menu
+				if e.type == KEYDOWN and e.key == 27:
+					inGameMenu(camera, playerList[0], music)
 
 			if pressed[K_SPACE]:
 				playerList[0].attacking = True

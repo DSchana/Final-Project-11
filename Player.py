@@ -204,21 +204,21 @@ class Player:
 		if self.direction == "up":
 			print("up")
 		if self.direction == "left":
-			print("up")
+			print("left")
 		if self.direction == "down":
-			print("up")
+			print("down")
 		if self.direction == "right":
-			print("up")
+			print("right")
 
 		# diagonal facing spells
 		if self.direction == "upleft":
-			print("up")
+			print("upleft")
 		if self.direction == "leftdown":
-			print("up")
+			print("leftdown")
 		if self.direction == "downright":
-			print("up")
+			print("downright")
 		if self.direction == "upright":
-			print("up")
+			print("upright")
 		
 		# Turns out the game has a turn based attack system similar to pokemon
 		# if self.spell_energy > self.selected_spell.getEnergy():
@@ -245,7 +245,6 @@ class Player:
 			check_y += self.hit_box[3]/2
 		if self.direction.find("right") != 1:
 			check_x += self.hit_box[2]/2
-		print(check_x, check_y)
 
 		# Left and right checking is weird, this compensates for that
 		if self.direction.find("right") != -1:
@@ -273,7 +272,7 @@ class Player:
 				self.bx = -(gates[i].getNewX() - 425)
 				self.by = -(gates[i].getNewY() - 300)
 		music[self.location].halt()
-		music[self.location].execute(0)
+		music[self.location].execute()
 
 	def learnSpell(self, name, power, level, energy):
 		"Add spell to the player's spell list"

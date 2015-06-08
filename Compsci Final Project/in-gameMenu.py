@@ -53,72 +53,71 @@ screenGrabRect = Rect(0,0,850,600)
 
 running = True
 while running:
+	mb = mouse.get_pressed()
+	mx,my = mouse.get_pos()
 
-    mb = mouse.get_pressed()
-    mx,my = mouse.get_pos()
+	for e in event.get():
+		if e.type == QUIT:
+			running = False
 
-    for e in event.get():       
-        if e.type == QUIT:     
-            running = False
+		if e.type == KEYDOWN and e.key == 27 and openMenu == False:
+			openMenu = True #Flag that controls opening the in-game menu
+			
+	if openMenu:
+		#When E is pressed, the spell menu is opened
+		screen.blit(spellMenuBack,(75,5))
+		#The inventory only displays spells that the player has unlocked 
+		if "Alahamoro" in availibleSpells:
+			draw.rect(screen,(0,0,0),[135,140,80,80],2) #A
+			screen.blit(spellAPic,(137,142))
+			screen.blit(spellAText,(230,160))
+			screen.blit(spellADescripText,(230,180))
 
-        if e.type == KEYDOWN and e.key == 101 and openMenu == False:
-            openMenu = True #Flag that controls opening the in-game menu
-            
-    if openMenu:
-        #When E is pressed, the spell menu is opened
-        screen.blit(spellMenuBack,(75,5))
-        #The inventory only displays spells that the player has unlocked 
-        if "Alahamoro" in availibleSpells:
-            draw.rect(screen,(0,0,0),[135,140,80,80],2) #A
-            screen.blit(spellAPic,(137,142))
-            screen.blit(spellAText,(230,160))
-            screen.blit(spellADescripText,(230,180))
+		if  "Lumos" in availibleSpells:
+			draw.rect(screen,(0,0,0),[135,260,80,80],2) #B
+			screen.blit(spellBPic,(137,262))
+			screen.blit(spellBText,(230,285))
+			screen.blit(spellBDescripText,(230,305))
+			
+		if "Wingardium Leviosa" in availibleSpells:
+			draw.rect(screen,(0,0,0),[135,380,80,80],2) #C
+			screen.blit(spellCPic,(137,382))
+			screen.blit(spellCText,(230,400))
+			screen.blit(spellCDescripText,(230,420))
+		
+		screenGrab = screen.subsurface(screenGrabRect).copy()
+		
+		if spellARect.collidepoint((mx,my)) and "Alahamoro" in availibleSpells:
+			screen.blit(screenGrab,(0,0))
+			draw.rect(screen,(255,255,0),[135,140,80,80],2) #A highlight
+			if mb[0] == 1:
+				currentSpell = "Alahamoro"
+				#When the spell is clicked, the window closes
+				screen.fill ((0,0,0)) #simulates the window closing, replace later 
 
-        if  "Lumos" in availibleSpells:
-            draw.rect(screen,(0,0,0),[135,260,80,80],2) #B
-            screen.blit(spellBPic,(137,262))
-            screen.blit(spellBText,(230,285))
-            screen.blit(spellBDescripText,(230,305))
-            
-        if "Wingardium Leviosa" in availibleSpells:
-            draw.rect(screen,(0,0,0),[135,380,80,80],2) #C
-            screen.blit(spellCPic,(137,382))
-            screen.blit(spellCText,(230,400))
-            screen.blit(spellCDescripText,(230,420))
-        
-        screenGrab = screen.subsurface(screenGrabRect).copy()
-        
-        if spellARect.collidepoint((mx,my)) and "Alahamoro" in availibleSpells:
-            screen.blit(screenGrab,(0,0))
-            draw.rect(screen,(255,255,0),[135,140,80,80],2) #A highlight
-            if mb[0] == 1:
-                currentSpell = "Alahamoro"
-                #When the spell is clicked, the window closes
-                screen.fill ((0,0,0)) #simulates the window closing, replace later 
+		elif spellBRect.collidepoint((mx,my)) and "Lumos" in availibleSpells:
+			screen.blit(screenGrab,(0,0))
+			draw.rect(screen,(255,255,0),[135,260,80,80],2) #B highlight
+			if mb[0] == 1:
+				currentSpell = "Lumos"
+				screen.fill ((0,0,0))
 
-        elif spellBRect.collidepoint((mx,my)) and "Lumos" in availibleSpells:
-            screen.blit(screenGrab,(0,0))
-            draw.rect(screen,(255,255,0),[135,260,80,80],2) #B highlight
-            if mb[0] == 1:
-                currentSpell = "Lumos"
-                screen.fill ((0,0,0))
+		elif spellCRect.collidepoint((mx,my)) and "Wingardium Leviosa" in availibleSpells:
+			screen.blit(screenGrab,(0,0))
+			draw.rect(screen,(255,255,0),[135,380,80,80],2) #C highlight
+			if mb[0] == 1:
+				currentSpell = "Wingardium Leviosa"
+				screen.fill ((0,0,0)) 
 
-        elif spellCRect.collidepoint((mx,my)) and "Wingardium Leviosa" in availibleSpells:
-            screen.blit(screenGrab,(0,0))
-            draw.rect(screen,(255,255,0),[135,380,80,80],2) #C highlight
-            if mb[0] == 1:
-                currentSpell = "Wingardium Leviosa"
-                screen.fill ((0,0,0)) 
-
-        screen.blit(closeMenuText,(640,20)) # "X" box closes menu
-        draw.rect(screen,(255,0,0),[635,25,45,55],3) #red box around X
-        
-    if mb[0]==1 and closeMenuRect.collidepoint((mx,my)) and openMenu:
-        openMenu = False
-        #Placeholder, use a subsurface to resume game when menu is closed
-        screen.fill ((0,0,0)) #REPLACE LATER
-            
-    display.flip()
+		screen.blit(closeMenuText,(640,20)) # "X" box closes menu
+		draw.rect(screen,(255,0,0),[635,25,45,55],3) #red box around X
+		
+	if mb[0]==1 and closeMenuRect.collidepoint((mx,my)) and openMenu:
+		openMenu = False
+		#Placeholder, use a subsurface to resume game when menu is closed
+		screen.fill ((0,0,0)) #REPLACE LATER
+			
+	display.flip()
 #Remember to add this in the actual file to del fonts
 font.quit()
 del menuFont
