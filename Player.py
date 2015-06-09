@@ -8,7 +8,7 @@ from Sprites import *
 from Gates import *
 
 class Player:
-	def __init__(self, name, health, house, xp, level, spell_level, potion_level, attack_radius, spell_energy, spell_list, stamina, speed, x, y):
+	def __init__(self, name, health, house, xp, level, spell_level, potion_level, spell_energy, stamina, speed, x, y):
 		# initialize all variables
 		self.name = name
 		self.health = health
@@ -32,7 +32,16 @@ class Player:
 		self.width = self.playerRect[2]
 		self.height = self. playerRect[3]
 		self.spell_list = spell_list
-		self.learnSpell("lumos", "illuminate the tip of the caster's wand", 0, 1, 0)
+		self.attack_spells = []
+
+		self.spell_list.append(learnSpell("lumos", "Illuminate the tip of the caster's wand", 0, 1, 0))
+		self.spell_list.append(learnSpell("wingardium leviosa", "Make objects fly or levitate", 0, 1, 0))
+		
+		self.attack_spells.append(learnSpell("Expulso", "Light dameage, no energy drain", 10, 1, 0))
+		self.attack_spells.append(learnSpell("Imerio", "Moderate damage, low energy", 15, 1, 5))
+		self.attack_spells.append(learnSpell("Crucio", "Heavy damage, costs more energy", 20, 1, 15))
+		self.attack_spells.append(learnSpell("Stupefy", "Weakens next enemy attack", 0, 1, 10))
+
 		self.selected_spell = self.spell_list[0]
 		self.direction = "left"
 		self.location = "grounds"
@@ -69,6 +78,8 @@ class Player:
 			self.move(pressed, camera, sprite, background[self.location])
 
 		self.regenerate()
+
+		print(self.selected_spell.getName())
 
 	def changeDirection(self, pressed):
 		"Change the direction used to affect player"
@@ -276,7 +287,7 @@ class Player:
 
 	def learnSpell(self, name, description, power, level, energy):
 		"Add spell to the player's spell list"
-		self.spell_list.append(Spells(name, description, power, level, energy))
+		return (Spells(name, description, power, level, energy))
 
 	def regenerate(self):
 		"regenerate health, stamina, and energy over time"
@@ -327,6 +338,10 @@ class Player:
 		"get the list possible spells player can currently cast"
 		return self.spell_list
 
+	def getAttackSpells(self):
+		"get list  of spells player can use in battle"
+		return attack_spells
+
 	def getSelectedSpell(self):
 		"get the current spell the user has selected"
 		return self.selected_spell
@@ -351,3 +366,8 @@ class Player:
 		"""get the current location of the player
 		Location is used to determine backgrounds and sounds"""
 		return self.location
+
+	# set methods
+	def setSelectedSpell(self, spell):
+		"changes the spell chooses"
+		self.selected_spell = spell

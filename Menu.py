@@ -359,10 +359,12 @@ def inGameMenu(screen, Player, music):
 	availibleSpells = Player.getSpellList()  # Player.getSpellList() #This list keeps track of the spells availible for the player to use 
 	spellTitles = []
 	spellDescriptions = []
+	spellRects = []
 
 	for i in range(len(availibleSpells)):
 		spellTitles.append(menuFont.render(availibleSpells[i].getName(), True, (0, 0, 0)))
 		spellDescriptions.append(menuFont.render(availibleSpells[i].getDescription(), True, (0, 0, 0)))
+		spellRects.append(Rect(135, 140 + 120 * i, 80, 80))
 	#**************************************************
 
 	#This program draws the in-game inventory menu that displays the availible spells
@@ -392,50 +394,14 @@ def inGameMenu(screen, Player, music):
 				screen.blit(spellCPic, (137, 142 + 120 * i))
 				screen.blit(spellTitles[i], (230, 160 + 120 * i))
 				screen.blit(spellDescriptions[i], (230, 180 + 120 * i))
-
-
-			#if "Alahamoro" in availibleSpells:
-			#	draw.rect(screen,(0,0,0),[135,140,80,80],2) #spell choice A, letter corresponds below
-			#	screen.blit(spellAPic,(137,142))
-			#	screen.blit(spellAText,(230,160))
-			#	screen.blit(spellADescripText,(230,180))
-
-			#if  "Lumos" in availibleSpells:
-			#	draw.rect(screen,(0,0,0),[135,260,80,80],2) #B
-			#	screen.blit(spellBPic,(137,262))
-			#	screen.blit(spellBText,(230,285))
-			#	screen.blit(spellBDescripText,(230,305))
-				
-			#if "Wingardium Leviosa" in availibleSpells:
-			#	draw.rect(screen,(0,0,0),[135,380,80,80],2) #C
-			#	screen.blit(spellCPic,(137,382))
-			#	screen.blit(spellCText,(230,400))
-			#	screen.blit(spellCDescripText,(230,420))
 			
 			screenGrab = screen.subsurface(screenGrabRect).copy() #used to clear hightlights
-			
-			# Generalize
-			if spellARect.collidepoint((mx,my)) and "Alahamoro" in availibleSpells:
-				screen.blit(screenGrab,(0,0)) #clears previous highlight
-				draw.rect(screen,(255,255,0),[135,140,80,80],2) #A highlight
-				if mb[0] == 1:
-					currentSpell = "Alahamoro"
-					#When the spell is clicked, the window closes
-					screen.fill ((0,0,0)) #simulates the window closing, replace later 
 
-			elif spellBRect.collidepoint((mx,my)) and "Lumos" in availibleSpells:
-				screen.blit(screenGrab,(0,0))
-				draw.rect(screen,(255,255,0),[135,260,80,80],2) #B highlight
-				if mb[0] == 1:
-					currentSpell = "Lumos"
-					screen.fill ((0,0,0))
-
-			elif spellCRect.collidepoint((mx,my)) and "Wingardium Leviosa" in availibleSpells:
-				screen.blit(screenGrab,(0,0))
-				draw.rect(screen,(255,255,0),[135,380,80,80],2) #C highlight
-				if mb[0] == 1:
-					currentSpell = "Wingardium Leviosa"
-					screen.fill ((0,0,0)) 
+			for i in range(len(availibleSpells)):
+				if spellRects[i].collidepoint((mx, my)):
+					draw.rect(screen, (255, 255, 0), spellRects[i], 2)
+					if MOUSEBUTTONDOWN:
+						currentSpell = availibleSpells[i]
 
 			screen.blit(closeMenuText,(640,20)) # "X" box closes menu
 			draw.rect(screen,(255,0,0),[635,25,45,55],3) #red box around X
@@ -444,6 +410,7 @@ def inGameMenu(screen, Player, music):
 				running = False
 				music["menu"].halt()
 				music[Player.getLocation()].execute()
+				Player.setSelectedSpell(currentSpell)
 				return 0
 					
 			display.flip()

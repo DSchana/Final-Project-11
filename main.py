@@ -80,7 +80,7 @@ while running:
 				back_mask = {}
 
 				# create usable player
-				playerList.append(Player("Jeffery", 100,  house, 0, 1, 1, 1, 200, 100, [], 10, 1.5, 425, 300))
+				playerList.append(Player("Jeffery", 100,  house, 0, 1, 1, 1, 100, 10, 1.5, 425, 300))
 
 				harrySprites = Sprites("Images/walking/walkUp/", "Images/walking/walkLeft/", "Images/walking/walkDown/", "Images/walking/walkRight/", "Images/walking/walkUpLeft/", 
 						"Images/walking/walkDownLeft/", "Images/walking/walkDownRight/", "Images/walking/walkUpRight/", "Images/attack/castSpellUp/", "Images/attack/castSpellLeft/",
