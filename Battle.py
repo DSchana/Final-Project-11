@@ -33,7 +33,7 @@ class Battle:
 		#controls the lengths of the health/energy bars, also ends game when health = 0 
 		self.playerHealth = 100 
 		self.playerEnergy = 100
-		self.enemyHealth = 100 #though it depends on the enemy 
+		self.enemyHealth = 100 
 		self.gameOverScreen = image.load ("Images/battle/gameOver.jpg")
 		self.gameOver = False
 		self.turn = True
@@ -65,7 +65,6 @@ class Battle:
 				screen.blit(self.battleMenuGrab,(0,450))#clears previous highlighted option 
 				draw.circle(screen,(0,0,0),[35,525],12)
 				if e.type == MOUSEBUTTONDOWN: #When "Fight" is clicked, proceed to battle
-					#can't be boolean since false would be automatically triggered, set to empty string as default
 					return True
 
 			elif self.battleMenuFleeChoiceRect.collidepoint((mx,my)) and self.gameOver==False:#mouse over "flee"
@@ -124,7 +123,9 @@ class Battle:
 						screen.blit(self.battleMenuGrab,(0,450))
 
 				# battle functionality
-				if self.enterBattle == "True" and self.gameOver==False:
+				#The following chunk of code is the interface for the turn-based battle sequences. player clicks over attacks,
+				#health and energy bars are updated on-screen and variables for them are also updated.
+				if self.enterBattle == "True" and self.gameOver==False: #player enters battle and health is not 0 (the flag for game over)
 					screen.blit(self.battleMenu2,(0,450))
 					self.battleMenuGrab = screen.subsurface(self.battleMenuGrabRect).copy()
 					#Player chooses a spell, update enemy health, player status bars
@@ -151,6 +152,7 @@ class Battle:
 							self.turn = False
 							
 					elif self.battleSpellCrucioRect.collidepoint((mx,my)) and self.playerEnergy>=15 and self.turn:
+                                                #spells cost energy, cannot use them and wont highlight if energy levels are not sufficient
 						screen.blit(self.battleMenuGrab,(0,450))
 						draw.circle(screen,(0,0,0),[38,540],6)
 						if MOUSEBUTTONDOWN:
@@ -181,8 +183,7 @@ class Battle:
 						
 				elif self.enterBattle== "Flee":
 					screen.blit(self.enterBattleScreenGrab,(0,0))
-					self.enterBattle = "" #flag resets
-					#mode = "not battle" #or whatever flag is keeping track of the battle scene
+					self.enterBattle = "" #flag resets for next time when battle starts
 
 				if self.playerHealth <= 0 and self.enterBattle=="True": #if player is killed in battle
 					self.gameOver = True #Game over, game ends.
@@ -191,16 +192,15 @@ class Battle:
 					
 				if self.enemyHealth <= 0 and self.enterBattle=="True": #player won battle by killing enemy
 					#gains some experience and unlock an inventory spell or whatever, eg. append a new spell to the inventory spell list
-					#mode = "not battle" #or whatever flag is keeping track of the battle scene
 					screen.blit(self.enterBattleScreenGrab,(0,0))
 					self.enterBattle = ""
 					self.playerHealth = 100 #resets
 					self.playerEnergy = 100 #resets 
 					#The following displays a dialogue box when the battle is won, eg. "Victory!"
-					self.box2 = randint (0,1) #randomly selects a win message
+					self.box2 = randint (0,1) #randomly selects a win message from the list of dialogue boxes 
 					screen.blit(self.dialogueList2[self.box2],(0,450))
 					display.flip()
 					time.wait (1200)
-					screen.blit(self.enterBattleScreenGrab,(0,0))
+					screen.blit(self.enterBattleScreenGrab,(0,0)) #blits back copy of screen taken before battle 
 					
 				display.flip()

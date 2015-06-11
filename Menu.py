@@ -14,9 +14,8 @@ def loadImages(screen, music):
 	display.flip()
 	loadingComplete = False
 	#The dots appear to be animated as the game loads
-	loadingPic2 = image.load ("Images/loading/loading2.jpg")
-	loadingPic3 = image.load ("Images/loading/loading3.jpg")
-
+	loadingPic2 = image.load ("Images/loading/loadingDot.jpg") #picture of a dot
+	
 	#Load the images 
 	difficultyScreen = image.load ("Images/loading/difficulty.jpg")
 	difficultyEasyIdle = image.load ("Images/loading/EasyIdle.png")
@@ -29,7 +28,7 @@ def loadImages(screen, music):
 	creditsScreen = image.load ("Images/loading/credits.jpg")
 	textScreen = image.load ("Images/loading/text.jpg")
 
-	screen.blit(loadingPic2, (0,0))
+	screen.blit(loadingPic2, (802,571))
 	display.flip()
 	
         #Main Menu assets
@@ -46,7 +45,7 @@ def loadImages(screen, music):
 	controlsButton = image.load ("Images/loading/controlsButton.png")
 	controlsButton = transform.scale(controlsButton,(200,50))
 
-	screen.blit(loadingPic3, (0,0))
+	screen.blit(loadingPic2, (812,571))
 	display.flip()
 
 	playButtonRect = Rect(323,217,202,82) 
@@ -129,8 +128,13 @@ def loadImages(screen, music):
 
 def displayCredits(screen, music):
 	creditsScreen = image.load ("Images/loading/credits.jpg")
-	screen.blit(creditsScreen, (0, 0))
-	display.flip()
+	#Un-comment to revert back to no animated scroll 
+	#screen.blit(creditsScreen, (0, 0))
+	#display.flip()
+	for i in range (-600,0,10):
+                screen.blit(creditsScreen,(0,i+10))
+                time.wait(3)
+                display.flip()
 	music.execute()
 	while True:
 		for e in event.get():
@@ -142,15 +146,19 @@ def displayCredits(screen, music):
 
 def displayControls(screen):
 	controlsScreen = image.load("Images/loading/controls.jpg")
-	screen.blit(controlsScreen, (0, 0))
-	display.flip()
+	#screen.blit(controlsScreen, (0, 0))
+	#display.flip()
+	for i in range (-600,0,10):
+                screen.blit(controlsScreen,(0,i+20))
+                time.wait(3)
+                display.flip()
 	while True:
 		for e in event.get():
 			if e.type == KEYDOWN:
                                 #The player returns to the main menu when ESC is pressed
 				if key.get_pressed()[K_ESCAPE]:
 					return "menu"
-
+				
 def chooseHouse(screen):
         #Assets for choosing the house screen 
 	grifHouseSelect = image.load ("Images/loading/grifHouse.png")
@@ -397,6 +405,7 @@ def inGameMenu(screen, Player, music):
 			
 			screenGrab = screen.subsurface(screenGrabRect).copy() #used to clear hightlights
 
+                        #when a spell box is clicked, the corresponding spell is selected 
 			for i in range(len(availibleSpells)):
 				if spellRects[i].collidepoint((mx, my)):
 					draw.rect(screen, (255, 255, 0), spellRects[i], 2)
