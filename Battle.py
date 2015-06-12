@@ -10,16 +10,17 @@ class Battle:
 		self.enemy = Enemy
 		self.location = location
 		self.battleScene = image.load("Images/Backgrounds/Battles/" + location + ".png")
+		self.battleScene = transform.scale(self.battleScene, (850, 450))
 
 		# Battle screen images
 		self.battleMenu1 = image.load ("Images/battle/battleMenuPic.png")
 		self.battleMenu2 = image.load ("Images/battle/battleMenuPic2.png")
 		self.healthLogo = image.load ("Images/battle/hpBox.png")
-		self.healthLogo = transform.scale(healthLogo,(25,25))
+		self.healthLogo = transform.scale(self.healthLogo,(25,25))
 		self.energyLogo = image.load ("Images/battle/spellBox.png")
-		self.energyLogo = transform.scale(energyLogo,(20,30))
+		self.energyLogo = transform.scale(self.energyLogo,(20,30))
 		self.profilePic = image.load ("Images/battle/profilePic.png")
-		self.profilePic = transform.scale(profilePic,(70,70))
+		self.profilePic = transform.scale(self.profilePic,(70,70))
 		self.battleMenuGrabRect = Rect (0,450,850,150) #The entire bottom of the screen where the menu is displayed
 		self.battleMenuFightChoiceRect = Rect (50,500,165,50)
 		self.battleMenuFleeChoiceRect = Rect (330,500,145,50)
@@ -43,57 +44,115 @@ class Battle:
 		self.dialogueBoxBattle3 = image.load ("Images/battle/dialogueBoxBattle3.png")
 		self.dialogueBoxWin1 = image.load ("Images/battle/dialogueBoxWin1.png")
 		self.dialogueBoxWin2 = image.load ("Images/battle/dialogueBoxWin2.png")
-		self.dialogueList1 = [dialogueBoxBattle1,dialogueBoxBattle2,dialogueBoxBattle3] #stores dialoge for before battle
-		self.dialogueList2 = [dialogueBoxWin1,dialogueBoxWin2] #stores dialoge for after battle
+		self.dialogueList1 = [self.dialogueBoxBattle1, self.dialogueBoxBattle2, self.dialogueBoxBattle3] #stores dialoge for before battle
+		self.dialogueList2 = [self.dialogueBoxWin1, self.dialogueBoxWin2] #stores dialoge for after battle
 		self.enterBattleScreenGrabRect = Rect (0,0,850,600)
 		self.mode = "" #or whatever variable is keeping track of the battle scene
+		self.fighting = True
 
-	def battleControl(self):
+		self.mx, self.my = mouse.get_pos()
+
+	def updateVar(self):
+		"Update variables in the battle system"
+		for e in event.get():
+			if e.type == MOUSEMOTION:
+				self.mx, self.my = mouse.get_pos()
+
+	def battleControl(self, screen, music):
 		"""Main hub of battle system
 		controls what happens in battle based on inputs"""
-		if turn:
-			if self.fightOrFlight():
-				attack = self.chooseAttack()
-				self.performAttack(attack)
-		else:
-			attack = self.chooseAttack()
-			self.performAttack(attack)
+		self.updateVar()
 
-	def fightOrFlight(self):
-		for e in event.get():
-			if self.battleMenuFightChoiceRect.collidepoint((mx,my)) and self.gameOver==False: #when mouse is over "fight"
-				screen.blit(self.battleMenuGrab,(0,450))#clears previous highlighted option 
-				draw.circle(screen,(0,0,0),[35,525],12)
-				if e.type == MOUSEBUTTONDOWN: #When "Fight" is clicked, proceed to battle
-					#can't be boolean since false would be automatically triggered, set to empty string as default
-					return True
+		music[self.player.getLocation()].halt()
+		music[self.player.getLocation() + " battle"].execute()
 
-			elif self.battleMenuFleeChoiceRect.collidepoint((mx,my)) and self.gameOver==False:#mouse over "flee"
-				screen.blit(self.battleMenuGrab,(0,450))
-				draw.circle(screen,(0,0,0),[325,525],12)
-				if e.type == MOUSEBUTTONDOWN: #When "Flee" is clicked, exit and go back to game
-					return False
+		while self.fighting:
+			screen.blit(self.battleScene, (0, 0))
+
+			if not self.gameOver:
+				if self.turn:
+					choice = self.fightOrFlight(screen)
+					if choice:
+						attack = self.chooseAttack(screen)
+						self.performAttack(attack, screen)
+					elif not choice:
+						self.fighting = False
+				else:
+					attack = self.chooseAttack(screen)
+					self.performAttack(attack, screen)
+
+			elif self.gameOver and self.player.getHealth() <= 0:
+				# faint animation
+				self.fighting = False
+			elif self.gameOver and self.enemy.getHealth() <= 0:
+				print("Victory")
+				# victory animation
+				self.fighting = False
+				return "victory"
+			else:
+				self.fighting = False
+
+			display.flip()
+
+	def fightOrFlight(self, screen):
+		while True:
+			self.updateVar()
+			screen.blit(self.battleMenu1, (0,450))#clears previous highlighted option 
+
+			if self.battleMenuFightChoiceRect.collidepoint((self.mx, self.my)): #when mouse is over "fight"
+				print(2)
+				draw.circle(screen,(0,0,0),(35,525),12)
+				for e in event.get():
+					if e.type == MOUSEBUTTONDOWN: #When "Fight" is clicked, proceed to battle
+						#can't be boolean since false would be automatically triggered, set to empty string as default
+						return True
+
+			elif self.battleMenuFleeChoiceRect.collidepoint((self.mx,self.my)):#mouse over "flee"
+				draw.circle(screen,(0,0,0),(325,525),12)
+				for e in event.get():
+					if e.type == MOUSEBUTTONDOWN: #When "Flee" is clicked, exit and go back to game
+						return False
+
+			display.flip()
+
 
 	# FINISH
-	def chooseAttack(self):
-		screen.blit(self.battleMenu2,(0,450))
-		self.battleMenuGrab = screen.subsurface(self.battleMenuGrabRect).copy()
-		#Player chooses a spell, update enemy health, player status bars
-		#battle is over if enemy dies or player dies
-		for i in range(len(self.spell_list)):
-			for e in event.get():
-				if self.spell_rects[i].collidepoint((mx,my)):
-					screen.blit(self.battleMenuGrab,(0,450))
+	def chooseAttack(self, screen):
+		while True:
+			screen.blit(self.battleMenu2,(0,450))
+			self.battleMenuGrab = screen.subsurface(self.battleMenuGrabRect).copy()
+			#Player chooses a spell, update enemy health, player status bars
+			#battle is over if enemy dies or player dies
+			for i in range(len(self.spell_list)):
+				self.updateVar()
+				if self.spell_rects[i].collidepoint((self.mx, self.my)):
+					screen.blit(self.battleMenu2, (0,450))
 					draw.circle(screen,(0,0,0),[35,self.spell_rects[i][1]],6)
+					for e in event.get():
+						if e.type == MOUSEBUTTONDOWN:
+							return self.spell_list[i]
+
+			display.flip()
 
 	# FINISH
-	def performAttack(self, attack):
-		if e.type == MOUSEBUTTONDOWN: #player clicks spell to attack on their turn 
-			self.player.spell_energy -= 0 #no energy drain for this move
-			self.enemyHealth -= 8
+	def performAttack(self, attack, screen):
+		print("performAttack")
+		if self.turn:
+			self.player.drainEnergy(attack.getEnergy()) #no energy drain for this move
+			self.enemy.takeDamage(attack.getPower())
 			#ADD: explosion sprite animation over enemy*********
-			draw.rect(screen,(0,255,0),[560,564,self.playerEnergy*1.51,16]) 
+			draw.rect(screen,(0,255,0),[560,564,self.player.getSpellEnergy()*1.51,16]) 
 			self.turn = False
+		else:
+			self.player.takeDamage(attack.getPower())
+			self.enemy.drainEnergy(attack.getEnergy())
+			# animations
+			draw.rect(screen,(255,0,0),[560,500,self.player.getHealth()*1.51,16]) #updates the player's health bar
+			self.turn = True
+
+
+
+
 
 
 	def doBattle(self, screen):

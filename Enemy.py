@@ -6,30 +6,19 @@ from math import *
 from Spells import *
 
 class Enemy:
-	def __init__(self, health, house, speed, AI_level, attack_radius, fireRate, kind, x, y):
-		self.x = x
-		self.y = y
-		self.health = health
-		self.house = house
-		self.follow_radius = attack_radius + randint(50,150)
-		self.attack_radius = attack_radius
-		self.enemyRect = Rect(x, y, 40, 50)
-		self.width = self.enemyRect[2]
-		self.height = self.enemyRect[3]
-		self.speed = speed
+	def __init__(self, AI_level):
+		self.health = 100
+		self.house = "slytherin"
 		self.AI_level = AI_level
-		self.fireRate = fireRate
-		self.kind = kind
-		self.selected_spell = Spells("stun", randint(5, 15), 1, 10)
+		type_list = ["goblin", "spider", "knight"]
+		self.kind = choice(type_list)
+		self.spell_energy = 100
 
 	def analyzeInput(self, camera, player):
 		"Centralized method that analyzes inputs and calls adequett functions"
 		# Check attack
 		rx = player.getX()
 		ry = player.getY()
-		if self.checkCollision(rx, ry, player.getWidth(), player.getHeight(), self.x, self.y, self.attack_radius):
-			self.attack(player.getX()+player.getWidth()//2, player.getY()+player.getHeight()//2, camera, player)
-			self.show(camera)
 
 	def show(self, camera):
 		"Draw enemy"  # use only when enemy will not be moving
@@ -103,3 +92,11 @@ class Enemy:
 	def getFireRate(self):
 		"get fire rate of enemy"
 		return self.fireRate
+
+	def takeDamage(self, damage):
+		"Reduce enemy health based on attack"
+		self.health -= damage
+
+	def drainEnergy(self, energy):
+		"drains the enemy energy when an attack is used"
+		self.spell_energy -= energy

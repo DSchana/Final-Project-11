@@ -204,28 +204,28 @@ def chooseHouse(screen):
 				draw.rect(screen,(255,255,0),[0,0,420,300],2)
 				#The lines are drawn over the crest so the crest must be drawn again overtop
 				screen.blit(hogwartsBadge,(275,150))
-				if mb[0]==1:
+				if e.type == MOUSEBUTTONDOWN:
 					playerHouse = "gryffindor"
 					
 			elif slyHouseSelectRect.collidepoint((mx,my)) and playerHouse=="":
 				screen.blit(screenGrab,(0,0))
 				draw.rect(screen,(255,255,0),[430,0,420,300],2)
 				screen.blit(hogwartsBadge,(275,150))
-				if mb[0]==1:
+				if e.type == MOUSEBUTTONDOWN:
 					playerHouse = "slytherin"
 					
 			elif huffHouseSelectRect.collidepoint((mx,my)) and playerHouse=="":
 				screen.blit(screenGrab,(0,0))
 				draw.rect(screen,(255,255,0),[0,300,420,300],2)
 				screen.blit(hogwartsBadge,(275,150))
-				if mb[0]==1:
+				if e.type == MOUSEBUTTONDOWN:
 					playerHouse = "hufflepuff"
 					
 			elif ravenHouseSelectRect.collidepoint((mx,my)) and playerHouse=="":
 				screen.blit(screenGrab,(0,0))
 				draw.rect(screen,(255,255,0),[430,300,420,300],2)
 				screen.blit(hogwartsBadge,(275,150))
-				if mb[0]==1:
+				if e.type == MOUSEBUTTONDOWN:
 					playerHouse = "ravenclaw"
 	
 			if textComplete == False and playerHouse != "": 
@@ -236,7 +236,7 @@ def chooseHouse(screen):
 					display.flip()
 				textComplete = True
 
-			if textComplete and e.type == MOUSEBUTTONDOWN:
+			if textComplete and mouse.get_pressed()[0] == 1:
 				return playerHouse
 			
 		display.flip()
@@ -297,8 +297,7 @@ def chooseDifficulty(screen):
 			if difficultyEasyButtonRect.collidepoint((mx,my)) and difficultyChosen==False:
 				screen.blit(screenGrab,(0,0)) #clears any previous highlight
 				screen.blit(difficultyEasyHighlight,(285,180))
-				if mb[0] == 1:
-					time.delay(200)
+				if e.type == MOUSEBUTTONDOWN:
 					difficultyChosen = True
 					difficulty = "easy"
 					return difficulty
@@ -306,8 +305,7 @@ def chooseDifficulty(screen):
 			elif difficultyNormalButtonRect.collidepoint((mx,my)) and difficultyChosen==False:
 				screen.blit(screenGrab,(0,0))
 				screen.blit(difficultyNormalHighlight,(275,300))
-				if mb[0] == 1:
-					time.delay(200)
+				if e.type == MOUSEBUTTONDOWN:
 					difficultyChosen = True
 					difficulty = "normal"
 					return difficulty
@@ -315,8 +313,7 @@ def chooseDifficulty(screen):
 			elif difficultyHardButtonRect.collidepoint((mx,my)) and difficultyChosen==False:
 				screen.blit(screenGrab,(0,0))
 				screen.blit(difficultyHardHighlight,(225,420))
-				if mb[0] == 1:
-					time.delay(200)
+				if e.type == MOUSEBUTTONDOWN:
 					difficultyChosen = True
 					difficulty = "hard"
 					return difficulty

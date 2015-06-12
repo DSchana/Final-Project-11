@@ -1,6 +1,7 @@
 # objectSprites.py
 
 from pygame import *
+from battleBlob import *
 import glob
 
 class Gate:
@@ -44,7 +45,7 @@ class Gate:
 		if self.directoryList != False:
 			camera.blit(self.sprites[0][0], (self.door_x, self. door_y))
 
-	def open(self, camera, Player):
+	def open(self, camera, Player, backgrounds):
 		"Opens door when player approaches door"
 		self.door_x = Player.getBX() + self.dx
 		self.door_y = Player.getBY() + self.dy

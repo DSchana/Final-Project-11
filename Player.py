@@ -6,9 +6,12 @@ from math import *
 from Spells import *
 from Sprites import *
 from Gates import *
+from battleBlob import *
+from Battle import *
+from Enemy import *
 
 class Player:
-	def __init__(self, name, health, house, xp, level, spell_level, potion_level, spell_energy, stamina, speed, x, y):
+	def __init__(self, name, health, house, xp, level, spell_level, potion_level, spell_energy, stamina, speed, x, y, backgrounds, difficulty):
 		# initialize all variables
 		self.name = name
 		self.health = health
@@ -19,7 +22,6 @@ class Player:
 		self.spell_energy = spell_energy
 		self.max_spell_energy = spell_energy
 		self.potion_level = potion_level
-		self.attack_radius = attack_radius
 		self.stamina = stamina
 		self.max_stamina = stamina
 		self.angle_speed = speed * cos(radians(45))
@@ -31,16 +33,17 @@ class Player:
 		self.playerRect = Rect(x, y, 22, 45) 
 		self.width = self.playerRect[2]
 		self.height = self. playerRect[3]
-		self.spell_list = spell_list
+		self.spell_list = []
 		self.attack_spells = []
+		self.difficulty = difficulty
 
-		self.spell_list.append(learnSpell("lumos", "Illuminate the tip of the caster's wand", 0, 1, 0))
-		self.spell_list.append(learnSpell("wingardium leviosa", "Make objects fly or levitate", 0, 1, 0))
+		self.spell_list.append(self.learnSpell("lumos", "Illuminate the tip of the caster's wand", 0, 1, 0))
+		self.spell_list.append(self.learnSpell("wingardium leviosa", "Make objects fly or levitate", 0, 1, 0))
 		
-		self.attack_spells.append(learnSpell("Expulso", "Light dameage, no energy drain", 10, 1, 0))
-		self.attack_spells.append(learnSpell("Imerio", "Moderate damage, low energy", 15, 1, 5))
-		self.attack_spells.append(learnSpell("Crucio", "Heavy damage, costs more energy", 20, 1, 15))
-		self.attack_spells.append(learnSpell("Stupefy", "Weakens next enemy attack", 0, 1, 10))
+		self.attack_spells.append(self.learnSpell("Expulso", "Light dameage, no energy drain", 10, 1, 0))
+		self.attack_spells.append(self.learnSpell("Imerio", "Moderate damage, low energy", 15, 1, 5))
+		self.attack_spells.append(self.learnSpell("Crucio", "Heavy damage, costs more energy", 20, 1, 15))
+		self.attack_spells.append(self.learnSpell("Stupefy", "Weakens next enemy attack", 0, 1, 10))
 
 		self.selected_spell = self.spell_list[0]
 		self.direction = "left"
@@ -49,12 +52,23 @@ class Player:
 		self.sprint_multiplyer = 2
 		self.hit_box = Rect(self.x, self.y + 26, self.width, 20)
 
+		self.blob_list = []
+		for i in range(50):
+			self.blob_list.append(Blob(self, backgrounds))
+
+
 	def analyzeInput(self, camera, pressed, sprite, gates, background, collision_mask, music):
 		"Centralized method that analyzes inputs and calls adequate functions"
 
 		self.hit_box = Rect(self.x, self.y + 26, self.width, 20)
 
 		sprite.showBackground(background[self.location], self.bx, self.by, camera)
+
+		for i in range(len(self.blob_list)):
+			#if self.hit_box.colliderect(self.blob_list[i].getRect()):
+			#	print("fight")
+			#	self.battle = Battle(self, Enemy(self.difficulty), self.location)
+			self.blob_list[i].show(camera, collision_mask)
 
 		# coordinates to check players location relative to the map, not screen
 		check_x = self.x + self.width/2 - self.bx
@@ -74,12 +88,10 @@ class Player:
 			self.attack(camera)
 			
 		self.changeDirection(pressed)
-		if not self.getCollision(collision_mask[self.location], background[self.location], gates, camera, music):
+		if not self.getCollision(collision_mask[self.location], background[self.location], gates, camera, music, background):
 			self.move(pressed, camera, sprite, background[self.location])
 
 		self.regenerate()
-
-		print(self.selected_spell.getName())
 
 	def changeDirection(self, pressed):
 		"Change the direction used to affect player"
@@ -204,10 +216,6 @@ class Player:
 				if self.direction.find("down") != -1:
 					self.by -= self.speed
 
-	def gotHit(self):
-		"do things for being hit"
-		self.health -= 1
-
 	def attack(self, camera):
 		"player performs a spell"
 
@@ -244,7 +252,7 @@ class Player:
 
 		#     self.spell_energy -= self.selected_spell.getEnergy()
 
-	def getCollision(self, collision_mask, back_image, gates, camera, music):
+	def getCollision(self, collision_mask, back_image, gates, camera, music, backgrounds):
 		check_x = self.hit_box[0] + self.hit_box[2]/2 - self.bx
 		check_y = self.hit_box[1] + self.hit_box[3]/2 - self.by
 
@@ -265,25 +273,39 @@ class Player:
 		else:
 			mask_col = collision_mask.get_at((int(check_x), int(check_y)))
 
+		for i in range(len(self.blob_list)):
+			if self.blob_list[i].getRect().collidepoint((check_x, check_y)):
+				self.battle = Battle(self, Enemy(self.difficulty), self.location)
+				result = self.battle.battleControl(camera, music)
+				if result == "victory":
+					del self.blob_list[i]
+
+				music[self.location + " battle"].halt()
+				music[self.location].execute()
+
 		# Check for wall collisions
 		if mask_col == (255, 0, 0, 255):
 			return True
 		# Check for door collisions
 		elif mask_col == (255, 255, 0, 255):
-			self.interactDoor(gates, camera, music)
+			self.interactDoor(gates, camera, music, backgrounds)
 		else:
 			return False
 
-	def interactDoor(self, gates, camera, music):
+	def interactDoor(self, gates, camera, music, backgrounds):
 		"Check which door the player has collided with and act accordingly"
 		for i in range(len(gates)):
 			if self.x > gates[i].getX() and self.x < gates[i].getX()+gates[i].getWidth():
-				gates[i].open(camera, self)
+				gates[i].open(camera, self, backgrounds)
 				self.location = gates[i].getNewLocation()
 				self.bx = -(gates[i].getNewX() - 425)
 				self.by = -(gates[i].getNewY() - 300)
 		music[self.location].halt()
 		music[self.location].execute()
+
+		self.blob_list = []
+		for i in range(50):
+			self.blob_list.append(Blob(self, backgrounds))
 
 	def learnSpell(self, name, description, power, level, energy):
 		"Add spell to the player's spell list"
@@ -340,7 +362,7 @@ class Player:
 
 	def getAttackSpells(self):
 		"get list  of spells player can use in battle"
-		return attack_spells
+		return self.attack_spells
 
 	def getSelectedSpell(self):
 		"get the current spell the user has selected"
@@ -371,3 +393,11 @@ class Player:
 	def setSelectedSpell(self, spell):
 		"changes the spell chooses"
 		self.selected_spell = spell
+
+	def drainEnergy(self, energy):
+		"drains the users energy when an attack is used"
+		self.spell_energy -= energy
+
+	def takeDamage(self, damage):
+		"Reduce player health based on attack used"
+		self.health -= damage
