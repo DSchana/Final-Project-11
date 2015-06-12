@@ -3,7 +3,8 @@
 # THINGS TO DO:
 # Hogwarts
 # Story
-# Characters
+# battle sprites
+# house benefits
 
 import os
 from pygame import *
