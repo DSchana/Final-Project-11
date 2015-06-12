@@ -3,6 +3,7 @@
 from pygame import *
 from random import *
 from math import *
+from attackSprites import *
 
 class Battle:
 	def __init__(self, Player, Enemy, location):
@@ -52,6 +53,10 @@ class Battle:
 
 		self.mx, self.my = mouse.get_pos()
 
+		self.enemySprite = attackSprite("Images/attack/" + self.enemy.getKind() + "IdleSprite/", "Images/attack/" + self.enemy.getKind() + "AttackSprite/", 50, 200)
+		self.enemySprite.loadImages()
+		#self.playerSprite = attackSprite("Images/attack/playerIdle", "Images/attack/playerAttack", 100, 200)
+
 	def updateVar(self):
 		"Update variables in the battle system"
 		for e in event.get():
@@ -67,7 +72,9 @@ class Battle:
 		music[self.player.getLocation() + " battle"].execute()
 
 		while self.fighting:
+
 			screen.blit(self.battleScene, (0, 0))
+			self.checkHealth()
 
 			if not self.gameOver:
 				if self.turn:
@@ -92,6 +99,9 @@ class Battle:
 			else:
 				self.fighting = False
 
+			self.enemySprite.showIdle(screen)
+			self.displayHealth(screen)
+
 			display.flip()
 
 	def fightOrFlight(self, screen):
@@ -100,7 +110,6 @@ class Battle:
 			screen.blit(self.battleMenu1, (0,450))#clears previous highlighted option 
 
 			if self.battleMenuFightChoiceRect.collidepoint((self.mx, self.my)): #when mouse is over "fight"
-				print(2)
 				draw.circle(screen,(0,0,0),(35,525),12)
 				for e in event.get():
 					if e.type == MOUSEBUTTONDOWN: #When "Fight" is clicked, proceed to battle
@@ -113,11 +122,15 @@ class Battle:
 					if e.type == MOUSEBUTTONDOWN: #When "Flee" is clicked, exit and go back to game
 						return False
 
+			self.enemySprite.showIdle(screen)
+			self.displayHealth(screen)
+
 			display.flip()
 
 	# FINISH
 	def chooseAttack(self, screen):
 		while True:
+
 			screen.blit(self.battleMenu2,(0,450))
 			self.battleMenuGrab = screen.subsurface(self.battleMenuGrabRect).copy()
 			#Player chooses a spell, update enemy health, player status bars
@@ -126,140 +139,158 @@ class Battle:
 				self.updateVar()
 				if self.spell_rects[i].collidepoint((self.mx, self.my)):
 					screen.blit(self.battleMenu2, (0,450))
-					draw.circle(screen,(0,0,0),[35,self.spell_rects[i][1]],6)
+					draw.circle(screen,(0,0,0),[35, self.spell_rects[i][1] + 10], 6)
 					for e in event.get():
 						if e.type == MOUSEBUTTONDOWN:
 							return self.spell_list[i]
+
+			self.enemySprite.showIdle(screen)
+			self.displayHealth(screen)
 
 			display.flip()
 
 	# FINISH
 	def performAttack(self, attack, screen):
-		print("performAttack")
 		if self.turn:
+			self.enemySprite.showIdle(screen)
+
 			self.player.drainEnergy(attack.getEnergy()) #no energy drain for this move
 			self.enemy.takeDamage(attack.getPower())
 			#ADD: explosion sprite animation over enemy*********
-			draw.rect(screen,(0,255,0),[560,564,self.player.getSpellEnergy()*1.51,16]) 
 			self.turn = False
+
+			self.displayHealth(screen)
+
 		else:
+			self.enemySprite.showAttack(screen)
+
 			self.player.takeDamage(attack.getPower())
 			self.enemy.drainEnergy(attack.getEnergy())
 			# animations
-			draw.rect(screen,(255,0,0),[560,500,self.player.getHealth()*1.51,16]) #updates the player's health bar
 			self.turn = True
 
+			self.displayHealth(screen)
+
+	def displayHealth(self, screen):
+		draw.rect(screen, (0, 255, 0), [560, 564, self.player.getSpellEnergy()*1.51, 16])
+		draw.rect(screen, (255, 0, 0), [560, 500, self.player.getHealth()*1.51, 16])
+		draw.rect(screen, (255, 0, 0), (30, 180, self.enemy.getHealth(), 16))
+
+	def checkHealth(self):
+		if self.player.getHealth() <= 0 or self.enemy.getHealth() <= 0:
+			self.gameOver = True
 
 
 
 
 
-	def doBattle(self, screen):
-		"Draw battle scene"
-		screen.blit(self.battleScene)
-		# draw player and enemy sprites
-		running = True
-		while running:
-			mx, my = mouse.get_pos()
-			for e in event.get():
-				# Check if user selects fight or flight
-				if self.battleMenuFightChoiceRect.collidepoint((mx,my)) and self.gameOver==False: #when mouse is over "fight"
-					screen.blit(self.battleMenuGrab,(0,450))#clears previous highlighted option 
-					draw.circle(screen,(0,0,0),[35,525],12)
-					if MOUSEBUTTONDOWN: #When "Fight" is clicked, proceed to battle
-						#can't be boolean since false would be automatically triggered, set to empty string as default
-						self.enterBattle = "True"
 
-				elif self.battleMenuFleeChoiceRect.collidepoint((mx,my)) and self.gameOver==False:#mouse over "flee"
-					screen.blit(self.battleMenuGrab,(0,450))
-					draw.circle(screen,(0,0,0),[325,525],12)
-					if mb[0] == 1: #When "Flee" is clicked, exit and go back to game
-						self.enterBattle = "False"
-						running = False
+	#def doBattle(self, screen):
+	#	"Draw battle scene"
+	#	screen.blit(self.battleScene)
+	#	# draw player and enemy sprites
+	#	running = True
+	#	while running:
+	#		mx, my = mouse.get_pos()
+	#		for e in event.get():
+	#			# Check if user selects fight or flight
+	#			if self.battleMenuFightChoiceRect.collidepoint((mx,my)) and self.gameOver==False: #when mouse is over "fight"
+	#				screen.blit(self.battleMenuGrab,(0,450))#clears previous highlighted option 
+	#				draw.circle(screen,(0,0,0),[35,525],12)
+	#				if MOUSEBUTTONDOWN: #When "Fight" is clicked, proceed to battle
+	#					#can't be boolean since false would be automatically triggered, set to empty string as default
+	#					self.enterBattle = "True"
 
-				else: #when is mouse is hovering over neither
-					if self.gameOver==False: #fixes bug when it is blit even after game is over
-						screen.blit(self.battleMenuGrab,(0,450))
+	#			elif self.battleMenuFleeChoiceRect.collidepoint((mx,my)) and self.gameOver==False:#mouse over "flee"
+	#				screen.blit(self.battleMenuGrab,(0,450))
+	#				draw.circle(screen,(0,0,0),[325,525],12)
+	#				if mb[0] == 1: #When "Flee" is clicked, exit and go back to game
+	#					self.enterBattle = "False"
+	#					running = False
 
-				# battle functionality
-				#The following chunk of code is the interface for the turn-based battle sequences. player clicks over attacks,
-				#health and energy bars are updated on-screen and variables for them are also updated.
-				if self.enterBattle == "True" and self.gameOver==False: #player enters battle and health is not 0 (the flag for game over)
-					screen.blit(self.battleMenu2,(0,450))
-					self.battleMenuGrab = screen.subsurface(self.battleMenuGrabRect).copy()
-					#Player chooses a spell, update enemy health, player status bars
-					#battle is over if enemy dies or player dies
+	#			else: #when is mouse is hovering over neither
+	#				if self.gameOver==False: #fixes bug when it is blit even after game is over
+	#					screen.blit(self.battleMenuGrab,(0,450))
+
+	#			# battle functionality
+	#			#The following chunk of code is the interface for the turn-based battle sequences. player clicks over attacks,
+	#			#health and energy bars are updated on-screen and variables for them are also updated.
+	#			if self.enterBattle == "True" and self.gameOver==False: #player enters battle and health is not 0 (the flag for game over)
+	#				screen.blit(self.battleMenu2,(0,450))
+	#				self.battleMenuGrab = screen.subsurface(self.battleMenuGrabRect).copy()
+	#				#Player chooses a spell, update enemy health, player status bars
+	#				#battle is over if enemy dies or player dies
 					
-					if self.battleSpellExpulRect.collidepoint((mx,my)) and self.turn:
-						screen.blit(self.battleMenuGrab,(0,450))
-						draw.circle(screen,(0,0,0),[38,473],6)
-						if MOUSEBUTTONDOWN: #player clicks spell to attack on their turn 
-							self.playerEnergy -= 0 #no energy drain for this move
-							self.enemyHealth -= 8
-							#ADD: explosion sprite animation over enemy*********
-							draw.rect(screen,(0,255,0),[560,564,self.playerEnergy*1.51,16]) 
-							self.turn = False
+	#				if self.battleSpellExpulRect.collidepoint((mx,my)) and self.turn:
+	#					screen.blit(self.battleMenuGrab,(0,450))
+	#					draw.circle(screen,(0,0,0),[38,473],6)
+	#					if MOUSEBUTTONDOWN: #player clicks spell to attack on their turn 
+	#						self.playerEnergy -= 0 #no energy drain for this move
+	#						self.enemyHealth -= 8
+	#						#ADD: explosion sprite animation over enemy*********
+	#						draw.rect(screen,(0,255,0),[560,564,self.playerEnergy*1.51,16]) 
+	#						self.turn = False
 							
-					elif self.battleSpellImperRect.collidepoint((mx,my)) and self.playerEnergy>=10 and self.turn:
-						screen.blit(self.battleMenuGrab,(0,450))
-						draw.circle(screen,(0,0,0),[38,507],6)
-						if MOUSEBUTTONDOWN:
-							self.playerEnergy -= 10
-							self.enemyHealth -= 12
-							#ADD: explosion sprite animation over enemy*********
-							draw.rect(screen,(0,255,0),[560,564,self.playerEnergy*1.51,16]) 
-							self.turn = False
+	#				elif self.battleSpellImperRect.collidepoint((mx,my)) and self.playerEnergy>=10 and self.turn:
+	#					screen.blit(self.battleMenuGrab,(0,450))
+	#					draw.circle(screen,(0,0,0),[38,507],6)
+	#					if MOUSEBUTTONDOWN:
+	#						self.playerEnergy -= 10
+	#						self.enemyHealth -= 12
+	#						#ADD: explosion sprite animation over enemy*********
+	#						draw.rect(screen,(0,255,0),[560,564,self.playerEnergy*1.51,16]) 
+	#						self.turn = False
 							
-					elif self.battleSpellCrucioRect.collidepoint((mx,my)) and self.playerEnergy>=15 and self.turn:
-                                                #spells cost energy, cannot use them and wont highlight if energy levels are not sufficient
-						screen.blit(self.battleMenuGrab,(0,450))
-						draw.circle(screen,(0,0,0),[38,540],6)
-						if MOUSEBUTTONDOWN:
-							self.playerEnergy -= 15
-							self.enemyHealth -= 16
-							#ADD: explosion sprite animation over enemy*********
-							draw.rect(screen,(0,255,0),[560,564,self.playerEnergy*1.51,16]) 
-							self.turn = False
+	#				elif self.battleSpellCrucioRect.collidepoint((mx,my)) and self.playerEnergy>=15 and self.turn:
+ #                                               #spells cost energy, cannot use them and wont highlight if energy levels are not sufficient
+	#					screen.blit(self.battleMenuGrab,(0,450))
+	#					draw.circle(screen,(0,0,0),[38,540],6)
+	#					if MOUSEBUTTONDOWN:
+	#						self.playerEnergy -= 15
+	#						self.enemyHealth -= 16
+	#						#ADD: explosion sprite animation over enemy*********
+	#						draw.rect(screen,(0,255,0),[560,564,self.playerEnergy*1.51,16]) 
+	#						self.turn = False
 						
-					elif self.battleSpellStupRect.collidepoint((mx,my)) and self.playerEnergy>=8 and self.turn:
-						screen.blit(self.battleMenuGrab,(0,450))
-						draw.circle(screen,(0,0,0),[38,572],6)
-						if MOUSEBUTTONDOWN:
-							self.playerEnergy -= 10
-							#enemy damage is decreased when this move is used
-							self.damage = randint(4,10) #OR HOWEVER the damage system works, you can change this
-							draw.rect(screen,(0,255,0),[560,564,self.playerEnergy*1.51,16])
-							self.turn = False
+	#				elif self.battleSpellStupRect.collidepoint((mx,my)) and self.playerEnergy>=8 and self.turn:
+	#					screen.blit(self.battleMenuGrab,(0,450))
+	#					draw.circle(screen,(0,0,0),[38,572],6)
+	#					if MOUSEBUTTONDOWN:
+	#						self.playerEnergy -= 10
+	#						#enemy damage is decreased when this move is used
+	#						self.damage = randint(4,10) #OR HOWEVER the damage system works, you can change this
+	#						draw.rect(screen,(0,255,0),[560,564,self.playerEnergy*1.51,16])
+	#						self.turn = False
 							
-					#ADD THIS CODE: WHEN THE ENEMY ATTACKS YOU, ENEMY ATTACK ANIMATION 
-					elif turn == False: #the enemy's turn
-						#enemy attack animation *HERE
-						#enemy attacks, deals damage so player health decreases
-						self.damage = randint(6,12) #or however damage is calculated 
-						self.playerHealth -= self.damage
-						draw.rect(screen,(255,0,0),[560,500,self.playerHealth*1.51,16]) #updates the player's health bar
-						self.turn = True #back to player's turn
+	#				#ADD THIS CODE: WHEN THE ENEMY ATTACKS YOU, ENEMY ATTACK ANIMATION 
+	#				elif turn == False: #the enemy's turn
+	#					#enemy attack animation *HERE
+	#					#enemy attacks, deals damage so player health decreases
+	#					self.damage = randint(6,12) #or however damage is calculated 
+	#					self.playerHealth -= self.damage
+	#					draw.rect(screen,(255,0,0),[560,500,self.playerHealth*1.51,16]) #updates the player's health bar
+	#					self.turn = True #back to player's turn
 						
-				elif self.enterBattle== "Flee":
-					screen.blit(self.enterBattleScreenGrab,(0,0))
-					self.enterBattle = "" #flag resets for next time when battle starts
+	#			elif self.enterBattle== "Flee":
+	#				screen.blit(self.enterBattleScreenGrab,(0,0))
+	#				self.enterBattle = "" #flag resets for next time when battle starts
 
-				if self.playerHealth <= 0 and self.enterBattle=="True": #if player is killed in battle
-					self.gameOver = True #Game over, game ends.
-					screen.blit(self.gameOverScreen,(0,0))
-					self.enterBattle = ""
+	#			if self.playerHealth <= 0 and self.enterBattle=="True": #if player is killed in battle
+	#				self.gameOver = True #Game over, game ends.
+	#				screen.blit(self.gameOverScreen,(0,0))
+	#				self.enterBattle = ""
 					
-				if self.enemyHealth <= 0 and self.enterBattle=="True": #player won battle by killing enemy
-					#gains some experience and unlock an inventory spell or whatever, eg. append a new spell to the inventory spell list
-					screen.blit(self.enterBattleScreenGrab,(0,0))
-					self.enterBattle = ""
-					self.playerHealth = 100 #resets
-					self.playerEnergy = 100 #resets 
-					#The following displays a dialogue box when the battle is won, eg. "Victory!"
-					self.box2 = randint (0,1) #randomly selects a win message from the list of dialogue boxes 
-					screen.blit(self.dialogueList2[self.box2],(0,450))
-					display.flip()
-					time.wait (1200)
-					screen.blit(self.enterBattleScreenGrab,(0,0)) #blits back copy of screen taken before battle 
+	#			if self.enemyHealth <= 0 and self.enterBattle=="True": #player won battle by killing enemy
+	#				#gains some experience and unlock an inventory spell or whatever, eg. append a new spell to the inventory spell list
+	#				screen.blit(self.enterBattleScreenGrab,(0,0))
+	#				self.enterBattle = ""
+	#				self.playerHealth = 100 #resets
+	#				self.playerEnergy = 100 #resets 
+	#				#The following displays a dialogue box when the battle is won, eg. "Victory!"
+	#				self.box2 = randint (0,1) #randomly selects a win message from the list of dialogue boxes 
+	#				screen.blit(self.dialogueList2[self.box2],(0,450))
+	#				display.flip()
+	#				time.wait (1200)
+	#				screen.blit(self.enterBattleScreenGrab,(0,0)) #blits back copy of screen taken before battle 
 					
-				display.flip()
+	#			display.flip()

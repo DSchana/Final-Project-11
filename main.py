@@ -104,7 +104,7 @@ while running:
 				back_mask["hagrid's hut"] = image.load("Images/Backgrounds/hagrid's hut_mask.png")
 
 				# create usable player
-				playerList.append(Player("Jeffery", 100,  house, 0, 1, 1, 1, 100, 10, 1.5, 425, 300, backgrounds, difficulty))
+				playerList.append(Player(100,  house, 0, 1, 1, 1, 100, 10, 1.5, 425, 300, -2000, -2000, backgrounds, difficulty, "grounds"))
 
 				# create gates for player to travle through buildings
 				gates.append(Gate(playerList[0], 1771, 462, 169, 184, "entrance hall", 870, 1130, ["Images/gate/"]))
@@ -136,7 +136,7 @@ while running:
 
 				# Display in game menu
 				if e.type == KEYDOWN and e.key == 101:
-					inGameMenu(camera, playerList[0], music)
+					playerList[0] = inGameMenu(camera, playerList[0], music, backgrounds)
 
 			if pressed[K_SPACE]:
 				playerList[0].attacking = True

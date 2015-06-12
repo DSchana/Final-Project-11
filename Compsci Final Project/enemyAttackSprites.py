@@ -22,7 +22,7 @@ for i in range(3):
 
 knightAttackSpriteList = []
 for i in range(6):
-    knightAttackSpriteList.append(image.load("enemyAttackSprite3\\enemyAttackSprite3" + str(i) + ".png"))
+    knightAttackSpriteList.append(image.load("enemyAttackSprite3\\enemyAttackSprite" + str(i) + ".png"))
 
 knightIdleSpriteList = []
 for i in range(6):

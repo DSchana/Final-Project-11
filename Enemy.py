@@ -10,7 +10,7 @@ class Enemy:
 		self.health = 100
 		self.house = "slytherin"
 		self.AI_level = AI_level
-		type_list = ["goblin", "spider", "knight"]
+		type_list = ["goblin", "spider", "enemy"]
 		self.kind = choice(type_list)
 		self.spell_energy = 100
 
@@ -89,9 +89,9 @@ class Enemy:
 		"get health of enemy"
 		return self.health
 
-	def getFireRate(self):
-		"get fire rate of enemy"
-		return self.fireRate
+	def getKind(self):
+		"get type of enemy to show"
+		return self.kind
 
 	def takeDamage(self, damage):
 		"Reduce enemy health based on attack"

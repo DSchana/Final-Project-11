@@ -2,6 +2,7 @@
 #Loading, start screen with menu 
 
 from pygame import *
+from Player import *
 import os
 
 os.environ['SDL_VIDEO_WINDOW_POS'] = '25,50' #Opens up in the upper left corner 
@@ -31,7 +32,7 @@ def loadImages(screen, music):
 	screen.blit(loadingPic2, (802,571))
 	display.flip()
 	
-        #Main Menu assets
+		#Main Menu assets
 	blackScreen = image.load ("Images/loading/template.jpg")
 	homeScreenBlur = image.load ("Images/loading/altHome.jpg") 
 	logo = image.load ("Images/loading/HPlogo.png")
@@ -132,15 +133,15 @@ def displayCredits(screen, music):
 	#screen.blit(creditsScreen, (0, 0))
 	#display.flip()
 	for i in range (-600,0,10):
-                screen.blit(creditsScreen,(0,i+10))
-                time.wait(3)
-                display.flip()
+				screen.blit(creditsScreen,(0,i+10))
+				time.wait(3)
+				display.flip()
 	music.execute()
 	while True:
 		for e in event.get():
 			if e.type == KEYDOWN:
 				if key.get_pressed()[K_ESCAPE]:
-                                        #The player returns to the main menu when ESC is pressed 
+										#The player returns to the main menu when ESC is pressed 
 					music.halt()
 					return "menu"
 
@@ -149,18 +150,18 @@ def displayControls(screen):
 	#screen.blit(controlsScreen, (0, 0))
 	#display.flip()
 	for i in range (-600,0,10):
-                screen.blit(controlsScreen,(0,i+20))
-                time.wait(3)
-                display.flip()
+				screen.blit(controlsScreen,(0,i+20))
+				time.wait(3)
+				display.flip()
 	while True:
 		for e in event.get():
 			if e.type == KEYDOWN:
-                                #The player returns to the main menu when ESC is pressed
+								#The player returns to the main menu when ESC is pressed
 				if key.get_pressed()[K_ESCAPE]:
 					return "menu"
 				
 def chooseHouse(screen):
-        #Assets for choosing the house screen 
+		#Assets for choosing the house screen 
 	grifHouseSelect = image.load ("Images/loading/grifHouse.png")
 	slyHouseSelect = image.load ("Images/loading/slyHouse.png")
 	ravenHouseSelect = image.load ("Images/loading/ravenHouse.png")
@@ -206,7 +207,7 @@ def chooseHouse(screen):
 				
 			#The house selected is highlighted in yellow
 			#The previous highlights are hidden with a clean image, screenGrab
-                        #player chooses a house by clicking on the flag 
+						#player chooses a house by clicking on the flag 
 			if grifHouseSelectRect.collidepoint((mx,my)) and playerHouse=="":
 				screen.blit(screenGrab,(0,0))
 				draw.rect(screen,(255,255,0),[0,0,420,300],2)
@@ -250,7 +251,7 @@ def chooseHouse(screen):
 		display.flip()
 
 def chooseDifficulty(screen):
-        #Assets for choose difficulty
+		#Assets for choose difficulty
 	difficultyScreen = image.load ("Images/loading/difficulty.jpg")
 	difficultyEasyIdle = image.load ("Images/loading/EasyIdle.png")
 	difficultyEasyHighlight = image.load ("Images/loading/EasyHigh.png")
@@ -297,7 +298,7 @@ def chooseDifficulty(screen):
 		for e in event.get():
 			if e.type == QUIT:
 				running = False
-                        #Starts off with non-highlighted items (idle), when the mouse is over a box, it becomes highlighted
+						#Starts off with non-highlighted items (idle), when the mouse is over a box, it becomes highlighted
 			screen.blit(difficultyEasyIdle, (285, 180))
 			screen.blit(difficultyNormalIdle, (275, 300))
 			screen.blit(difficultyHardIdle, (225, 420))
@@ -328,11 +329,40 @@ def chooseDifficulty(screen):
 
 		display.flip()
 
-def inGameMenu(screen, Player, music):
+
+def save(player):
+	"health, house, xp, level, spell_level, potion_level, spell_energy, stamina, speed, x, y, bx, by, backgrounds, difficulty"
+	saveFile = open("saveFile.txt", "w")
+	saveFile.write(str(player.getHealth()) + "\n")
+	saveFile.write(str(player.getHouse()) + "\n")
+	saveFile.write(str(player.getXP()) + "\n")
+	saveFile.write(str(player.getLevel()) + "\n")
+	saveFile.write(str(player.getSpellLevel()) + "\n")
+	saveFile.write(str(player.getPotionLevel()) + "\n")
+	saveFile.write(str(player.getSpellEnergy()) + "\n")
+	saveFile.write(str(player.getStamina()) + "\n")
+	saveFile.write(str(player.getSpeed()) + "\n")
+	saveFile.write(str(player.getX()) + "\n")
+	saveFile.write(str(player.getY()) + "\n")
+	saveFile.write(str(player.getBX()) + "\n")
+	saveFile.write(str(player.getBY()) + "\n")
+	saveFile.write(str(player.getDifficulty()) + "\n")
+	saveFile.write(str(player.getLocation()) + "\n")
+	saveFile.close()
+
+def load(backgrounds):
+	saveFile = open("saveFile.txt", "r").read().strip().split("\n")
+
+	loadPlayer = Player(int(saveFile[0]), str(saveFile[1]), int(saveFile[2]), int(saveFile[3]), int(saveFile[4]), int(saveFile[5]), int(saveFile[6]), 
+		float(saveFile[7]), float(saveFile[8]), int(saveFile[9]), int(saveFile[10]), float(saveFile[12]) , float(saveFile[13]), backgrounds, str(saveFile[14]), str(saveFile[15]))
+
+	return loadPlayer
+
+def inGameMenu(screen, Player, music, backgrounds):
 	music[Player.getLocation()].halt()
 	music["menu"].execute()
 
-    #Assets for the inventory
+	#Assets for the inventory
 	openMenu = True
 	spellMenuBack = image.load ("Images/menu/spellMenuBack.png")
 	spellMenuBack = transform.scale(spellMenuBack,(700,600))
@@ -349,6 +379,10 @@ def inGameMenu(screen, Player, music):
 	closeMenuRect = Rect (635,25,45,55) #"X" button to close inventory menu 
 	font.init()
 	menuFont = font.SysFont("Verdana", 50) #Font for both menu descriptions and "X" exit button
+	saveBoxText = menuFont.render(("SAVE"), True, (255,0,0))
+	loadBoxText = menuFont.render(("LOAD"), True, (255,0,0))
+	saveButtonRect = Rect (175,520,120,50)
+	loadButtonRect = Rect (555,520,120,50)
 	#This font is only used once at size 50, later resized smaller to text in descriptions
 	closeMenuText = menuFont.render(("X"), True, (255,0,0))
 	menuFont = font.SysFont("Verdana", 38)
@@ -394,6 +428,35 @@ def inGameMenu(screen, Player, music):
 			screen.blit(spellMenuBack,(75,5))
 			#The inventory only displays spells that the player has unlocked
 			#The following checks if a spell has been unlocked, if yes, it appears in the inventory menu
+
+			# Load and save buttons
+			screen.blit(saveBoxText,(185,520))
+			screen.blit(loadBoxText,(562,520))
+			#draw.rect(screen,(255,0,0),[175,520,120,50],2) #save box
+			#draw.rect(screen,(255,0,0),[555,520,120,50],2) #load box
+			
+			# save
+			if saveButtonRect.collidepoint((mx,my)): #when the save button is clicked
+				screen.blit(screenGrab,(0,0))
+				draw.rect(screen,(255,0,0),[175,520,120,50],2) #highlight
+				if e.type == MOUSEBUTTONDOWN:
+					save(Player)
+					running = False
+					music["menu"].halt()
+					music[Player.getLocation()].execute()
+					return Player
+					#The player values variables are updated, i think u have the code that controls player level, experience, etc. 
+			
+			# load
+			if loadButtonRect.collidepoint((mx,my)): #when the load button is clicked
+				screen.blit(screenGrab,(0,0))
+				draw.rect(screen,(255,0,0),[555,520,120,50],2)
+				if e.type == MOUSEBUTTONDOWN:
+					return load(backgrounds)
+					#the saved changes are blit on-screen, eg. spells that have been unlocked and appear after previous save 
+
+
+
 			for i in range(len(availibleSpells)):
 				draw.rect(screen, (0, 0, 0), [135, 140 + 120 * i, 80, 80], 2)
 				screen.blit(spellCPic, (137, 142 + 120 * i))
@@ -402,7 +465,7 @@ def inGameMenu(screen, Player, music):
 			
 			screenGrab = screen.subsurface(screenGrabRect).copy() #used to clear hightlights
 
-                        #when a spell box is clicked, the corresponding spell is selected 
+						#when a spell box is clicked, the corresponding spell is selected 
 			for i in range(len(availibleSpells)):
 				if spellRects[i].collidepoint((mx, my)):
 					draw.rect(screen, (255, 255, 0), spellRects[i], 2)
@@ -417,6 +480,6 @@ def inGameMenu(screen, Player, music):
 				music["menu"].halt()
 				music[Player.getLocation()].execute()
 				Player.setSelectedSpell(currentSpell)
-				return 0
+				return Player
 					
 			display.flip()

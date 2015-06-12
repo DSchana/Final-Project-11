@@ -11,11 +11,11 @@ from Battle import *
 from Enemy import *
 
 class Player:
-	def __init__(self, name, health, house, xp, level, spell_level, potion_level, spell_energy, stamina, speed, x, y, backgrounds, difficulty):
+	def __init__(self, health, house, xp, level, spell_level, potion_level, spell_energy, stamina, speed, x, y, bx, by, backgrounds, difficulty, location):
 		# initialize all variables
-		self.name = name
 		self.health = health
 		self.max_health = health
+		self.xp = xp
 		self.house = house
 		self.level = level
 		self.spell_level = spell_level
@@ -28,8 +28,8 @@ class Player:
 		self.straight_speed = speed
 		self.x = x
 		self.y = y
-		self.bx = -2000
-		self.by = -2000
+		self.bx = bx
+		self.by = by
 		self.playerRect = Rect(x, y, 22, 45) 
 		self.width = self.playerRect[2]
 		self.height = self. playerRect[3]
@@ -47,7 +47,7 @@ class Player:
 
 		self.selected_spell = self.spell_list[0]
 		self.direction = "left"
-		self.location = "grounds"
+		self.location = location
 		self.attacking = False
 		self.sprint_multiplyer = 2
 		self.hit_box = Rect(self.x, self.y + 26, self.width, 20)
@@ -385,9 +385,23 @@ class Player:
 		return self.house
 
 	def getLocation(self):
-		"""get the current location of the player
-		Location is used to determine backgrounds and sounds"""
+		"get the current location of the player"
 		return self.location
+
+	def getLevel(self):
+		return self.level
+
+	def getPotionLevel(self):
+		return self.potion_level
+
+	def getSpellLevel(self):
+		return self.spell_level
+
+	def getXP(self):
+		return self.xp
+
+	def getDifficulty(self):
+		return self.difficulty
 
 	# set methods
 	def setSelectedSpell(self, spell):
