@@ -1,15 +1,15 @@
-100
-slytherin
-0
-1
-1
-1
-100
-3.1199999999999646
-1.5
-425
-300
--2288.4995667240987
--1693.5004332759017
-easy
-grounds
+playerList[0].health = 100
+playerList[0].house = 'slytherin'
+playerList[0].xp = 0
+playerList[0].level = 1
+playerList[0].spell_level = 1
+playerList[0].potion_level = 1
+playerList[0].spell_energy = 100
+playerList[0].stamina = 4.989999999999974
+playerList[0].speed = 1.5
+playerList[0].x = 425
+playerList[0].y = 300
+playerList[0].bx = -76.10660171779816
+playerList[0].by = -271.8933982822017
+playerList[0].difficulty = 'normal'
+playerList[0].location = "hagrid's hut"

@@ -1,4 +1,5 @@
 # Sound.py
+#controls the music, self-explanatory 
 
 from pygame import *
 mixer.init()

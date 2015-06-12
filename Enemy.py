@@ -1,4 +1,7 @@
 # Enemy.py
+#stores the AI and the attacks for the enemy
+#please note that not all of the following code is actually used in the game since
+#it changed from a dungeon crawler to a turn-based game 
 
 from pygame import *
 from random import *
@@ -7,15 +10,24 @@ from Spells import *
 
 class Enemy:
 	def __init__(self, AI_level):
+                #enemies have 100 hp and they are spawned randomly 
 		self.health = 100
 		self.house = "slytherin"
 		self.AI_level = AI_level
-		type_list = ["goblin", "spider", "enemy"]
+		type_list = ["goblin", "enemy", "goblin", "enemy", "spider", "enemy"] #note "enemy" is the knight 
+		#randomly choose enemy from the list, each has a different probaility 
 		self.kind = choice(type_list)
 		self.spell_energy = 100
 
+		self.attack_spells = []
+                #enemy's attacks 
+		self.attack_spells.append(self.learnSpell("Expulso", "Light dameage, no energy drain", 10, 1, 0))
+		self.attack_spells.append(self.learnSpell("Imerio", "Moderate damage, low energy", 15, 1, 5))
+		self.attack_spells.append(self.learnSpell("Crucio", "Heavy damage, costs more energy", 20, 1, 15))
+		self.attack_spells.append(self.learnSpell("Stupefy", "Weakens next enemy attack", 0, 1, 10))
+
 	def analyzeInput(self, camera, player):
-		"Centralized method that analyzes inputs and calls adequett functions"
+		"Centralized method that analyzes inputs and calls functions"
 		# Check attack
 		rx = player.getX()
 		ry = player.getY()
@@ -24,52 +36,20 @@ class Enemy:
 		"Draw enemy"  # use only when enemy will not be moving
 		draw.rect(camera, (255, 0, 0), self.enemyRect)
 
-	def AI(self):
-		"AI for enemies"
-
-	def checkCollision(self, rleft, rtop, width, height, center_x, center_y, radius):
-		"Detect collision between a rectangle and circle (playerRect and attack_radius)"
-
-		# complete boundbox of the rectangle
-		rright, rbottom = rleft + width/2, rtop + height/2
-
-		# bounding box of the circle
-		cleft, ctop     = center_x-radius, center_y-radius
-		cright, cbottom = center_x+radius, center_y+radius
-
-		# trivial reject if bounding boxes do not intersect
-		if rright < cleft or rleft > cright or rbottom < ctop or rtop > cbottom:
-			return False  # no collision possible
-
-		# check whether any point of rectangle is inside circle's radius
-		for x in (rleft, rleft+width):
-			for y in (rtop, rtop+height):
-				# compare distance between circle's center point and each point of
-				# the rectangle with the circle's radius
-				if hypot(x-center_x, y-center_y) <= radius:
-					return True  # collision detected
-
-		# check if center of circle is inside rectangle
-		if rleft <= center_x <= rright and rtop <= center_y <= rbottom:
-			return True
-
-		return False  # no collision detected
-
 	def gotHit(self):
 		"Damage to ememies"
 		self.health -= 1
 
-	def attack(self, x, y, camera, player):
-		"emeny performs a spell"
+	#def attack(self, x, y, camera, player):
+		#"emeny performs a spell"
 
-		# Not how it works, it is like pokemon, need to fix dis shit
-		'''
-		x += randint(-10, 10)
-		y += randint(-10, 10)
-		fireChance = randint(1, 50)
-		if fireChance % self.fireRate == 0:
-			self.selected_spell.doSpell(x, y, self.width, self.height, self.x, self.y, self.attack_radius, camera)
-			player.gotHit()'''
+	def learnSpell(self, name, description, power, level, energy):
+		"Add spell to the player's spell list"
+		return (Spells(name, description, power, level, energy))
+
+	def chooseSpell(self):
+		"choose spell for enemy in battle"
+		return choice(self.attack_spells)
 
 
 	# get methods
@@ -81,9 +61,13 @@ class Enemy:
 		"get y position of object"
 		return self.y
 
-	def getAttackRadius(self):
-		"get the attack radius"
-		return self.attack_radius
+	def getSpellEnergy(self):
+                #returns the energy of the enemy after attack is used
+		return self.spell_energy
+
+	#def getAttackRadius(self):
+	#	"get the attack radius"
+	#	return self.attack_radius
 
 	def getHealth(self):
 		"get health of enemy"

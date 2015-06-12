@@ -30,6 +30,7 @@ class Spells:
 			display.flip()
 
 	# spell get methods
+	#self-explanatory, returns some attribute for the spell
 	def getName(self):
 		"get name of spell"
 		return self.name

@@ -1,4 +1,5 @@
 # Player.py
+#stores the attributes for the player (eg. house, spells, movement,etc.)
 
 from pygame import *
 from random import *
@@ -13,6 +14,7 @@ from Enemy import *
 class Player:
 	def __init__(self, health, house, xp, level, spell_level, potion_level, spell_energy, stamina, speed, x, y, bx, by, backgrounds, difficulty, location):
 		# initialize all variables
+		#these variables store self-explanatory things
 		self.health = health
 		self.max_health = health
 		self.xp = xp
@@ -36,22 +38,51 @@ class Player:
 		self.spell_list = []
 		self.attack_spells = []
 		self.difficulty = difficulty
+		self.kills = 0
 
+				#there are 3 spells availible in total, player starts off with 2, needs to unlock the third 
 		self.spell_list.append(self.learnSpell("lumos", "Illuminate the tip of the caster's wand", 0, 1, 0))
 		self.spell_list.append(self.learnSpell("wingardium leviosa", "Make objects fly or levitate", 0, 1, 0))
 		
-		self.attack_spells.append(self.learnSpell("Expulso", "Light dameage, no energy drain", 10, 1, 0))
-		self.attack_spells.append(self.learnSpell("Imerio", "Moderate damage, low energy", 15, 1, 5))
-		self.attack_spells.append(self.learnSpell("Crucio", "Heavy damage, costs more energy", 20, 1, 15))
-		self.attack_spells.append(self.learnSpell("Stupefy", "Weakens next enemy attack", 0, 1, 10))
+				#The values of "house" are obtained after clicking on the house in the menu
+		##The following if tree assigns the values for the player's attackes based on which house was chosen
+		#Eg. some attacks are more powerful while other attacks drain more energy
+		#arguments (name,description,damage,level,drain)
+		if self.house == "slytherin":
+			self.attack_spells.append(self.learnSpell("Expulso", "Light dameage, no energy drain", 15, 1, 5))
+			self.attack_spells.append(self.learnSpell("Imerio", "Moderate damage, low energy", 20, 1, 10))
+			self.attack_spells.append(self.learnSpell("Crucio", "Heavy damage, costs more energy", 30, 1, 35))
+			self.attack_spells.append(self.learnSpell("Stupefy", "Weakens next enemy attack", 5, 1, 15))
 
-		self.selected_spell = self.spell_list[0]
+		if self.house == "hufflepuff":
+			self.attack_spells.append(self.learnSpell("Expulso", "Light dameage, no energy drain", 5, 1, 0))
+			self.attack_spells.append(self.learnSpell("Imerio", "Moderate damage, low energy", 10, 1, 5))
+			self.attack_spells.append(self.learnSpell("Crucio", "Heavy damage, costs more energy", 10, 1, 10))
+			self.attack_spells.append(self.learnSpell("Stupefy", "Weakens next enemy attack", 0, 1, 10))
+
+		if self.house == "ravenclaw":
+			self.attack_spells.append(self.learnSpell("Expulso", "Light dameage, no energy drain", 10, 1, 0))
+			self.attack_spells.append(self.learnSpell("Imerio", "Moderate damage, low energy", 10, 1, 5))
+			self.attack_spells.append(self.learnSpell("Crucio", "Heavy damage, costs more energy", 15, 1, 10))
+			self.attack_spells.append(self.learnSpell("Stupefy", "Weakens next enemy attack", 0, 1, 10))
+
+		if self.house == "gryffindor":
+			self.attack_spells.append(self.learnSpell("Expulso", "Light dameage, no energy drain", 10, 1, 5))
+			self.attack_spells.append(self.learnSpell("Imerio", "Moderate damage, low energy", 13, 1, 10))
+			self.attack_spells.append(self.learnSpell("Crucio", "Heavy damage, costs more energy", 15, 1, 13))
+			self.attack_spells.append(self.learnSpell("Stupefy", "Weakens next enemy attack", 2, 1, 10))
+
+		self.selected_spell = self.spell_list[0] #for the inventory system, player clicks the spell that they choose
+				#defaults
 		self.direction = "left"
 		self.location = location
 		self.attacking = False
 		self.sprint_multiplyer = 2
 		self.hit_box = Rect(self.x, self.y + 26, self.width, 20)
 
+		self.del_num = False
+
+				#stores the attributes of the blue blobs that spawn on the ground
 		self.blob_list = []
 		for i in range(50):
 			self.blob_list.append(Blob(self, backgrounds))
@@ -98,6 +129,7 @@ class Player:
 
 		self.direction = ""
 
+				#controlled with WASD
 		if pressed[K_w]:
 			self.direction += "up"
 		if pressed[K_a]:
@@ -121,7 +153,7 @@ class Player:
 		if self.bx > 0 or self.x < 415:
 			if self.bx >= 0:
 				self.bx = 0
-
+						#shift and WASD sprints 
 			if pressed[K_LSHIFT] and self.stamina > 1.0:
 				if self.direction.find("left") != -1:
 					self.x -= self.speed * self.sprint_multiplyer
@@ -216,43 +248,8 @@ class Player:
 				if self.direction.find("down") != -1:
 					self.by -= self.speed
 
-	def attack(self, camera):
-		"player performs a spell"
-
-		# straight facing spells
-		if self.direction == "up":
-			print("up")
-		if self.direction == "left":
-			print("left")
-		if self.direction == "down":
-			print("down")
-		if self.direction == "right":
-			print("right")
-
-		# diagonal facing spells
-		if self.direction == "upleft":
-			print("upleft")
-		if self.direction == "leftdown":
-			print("leftdown")
-		if self.direction == "downright":
-			print("downright")
-		if self.direction == "upright":
-			print("upright")
-		
-		# Turns out the game has a turn based attack system similar to pokemon
-		# if self.spell_energy > self.selected_spell.getEnergy():
-		#     if self.direction == "left":
-		#         self.selected_spell.doSpell((self.x+self.width/2)-self.attack_radius, (self.y+self.height/2), self.width, self.height, self.x, self.y, self.attack_radius, camera)
-		#     if self.direction == "right":
-		#         self.selected_spell.doSpell((self.x+self.width/2)+self.attack_radius, (self.y+self.height/2), self.width, self.height, self.x, self.y, self.attack_radius, camera)
-		#     if self.direction == "up":
-		#         self.selected_spell.doSpell((self.x+self.width/2), (self.y+self.height/2)-self.attack_radius, self.width, self.height, self.x, self.y, self.attack_radius, camera)
-		#     if self.direction == "down":
-		#         self.selected_spell.doSpell((self.x+self.width/2), (self.y+self.height/2)+self.attack_radius, self.width, self.height, self.x, self.y, self.attack_radius, camera)
-
-		#     self.spell_energy -= self.selected_spell.getEnergy()
-
 	def getCollision(self, collision_mask, back_image, gates, camera, music, backgrounds):
+		"Check player's position against mask to see if it collides"
 		check_x = self.hit_box[0] + self.hit_box[2]/2 - self.bx
 		check_y = self.hit_box[1] + self.hit_box[3]/2 - self.by
 
@@ -277,11 +274,15 @@ class Player:
 			if self.blob_list[i].getRect().collidepoint((check_x, check_y)):
 				self.battle = Battle(self, Enemy(self.difficulty), self.location)
 				result = self.battle.battleControl(camera, music)
-				if result == "victory":
-					del self.blob_list[i]
+				self.del_num = i
 
 				music[self.location + " battle"].halt()
 				music[self.location].execute()
+
+		if self.del_num != False:
+			del self.blob_list[self.del_num]
+			self.del_num = False
+			self.kills += 1
 
 		# Check for wall collisions
 		if mask_col == (255, 0, 0, 255):
@@ -303,12 +304,16 @@ class Player:
 		music[self.location].halt()
 		music[self.location].execute()
 
+		self.createBlobs(backgrounds)
+
+
+	def createBlobs(self, backgrounds):
 		self.blob_list = []
 		for i in range(50):
 			self.blob_list.append(Blob(self, backgrounds))
 
 	def learnSpell(self, name, description, power, level, energy):
-		"Add spell to the player's spell list"
+		"Add spell to the player's spell list" #the inventory spells
 		return (Spells(name, description, power, level, energy))
 
 	def regenerate(self):
@@ -389,9 +394,11 @@ class Player:
 		return self.location
 
 	def getLevel(self):
+		"level of player"
 		return self.level
 
 	def getPotionLevel(self):
+		"inventory spells"
 		return self.potion_level
 
 	def getSpellLevel(self):
@@ -402,6 +409,9 @@ class Player:
 
 	def getDifficulty(self):
 		return self.difficulty
+
+	def getKills(self):
+		return self.kills
 
 	# set methods
 	def setSelectedSpell(self, spell):

@@ -1,10 +1,5 @@
 # main.py
-
-# THINGS TO DO:
-# Hogwarts
-# Story
-# battle sprites
-# house benefits
+# Dilpreet Chana and Jesse Wang
 
 import os
 from pygame import *
@@ -41,6 +36,18 @@ music["entrance hall"] = Sound("Audio/entrance hall.mp3")
 music["entrance hall battle"] = Sound("Audio/entrance hall battle.mp3")
 
 mode_select = loadImages(screen, music["menu"])
+
+# control where in story player is in story
+story_stage = [True, False, False, False, False]  # check if player has finished part of story
+story_done = [False, False, False, False, False]  # choose what to blit
+
+# story sprites
+story_images = []
+story_images.append(image.load("Images/Story Dialogues/dialogueStory1.png"))
+story_images.append(image.load("Images/Story Dialogues/dialogueStory2.png"))
+story_images.append(image.load("Images/Story Dialogues/dialogueStory3.png"))
+story_images.append(image.load("Images/Story Dialogues/dialogueStory4.png"))
+story_images.append(image.load("Images/Story Dialogues/dialogueStory5.png"))
 
 #defaults 
 house = ""
@@ -99,6 +106,7 @@ while running:
 				backgrounds["entrance hall"] = image.load("Images/Backgrounds/entrance hall.png")
 				backgrounds["hagrid's hut"] = image.load("Images/Backgrounds/hagrid's hut.png")
 
+				# load collision masks
 				back_mask["grounds"] = image.load("Images/Backgrounds/grounds_mask.png")
 				back_mask["entrance hall"] = image.load("Images/Backgrounds/entrance hall_mask.png")
 				back_mask["hagrid's hut"] = image.load("Images/Backgrounds/hagrid's hut_mask.png")
@@ -112,6 +120,7 @@ while running:
 				gates.append(Gate(playerList[0], 2881, 3112, 33, 41, "hagrid's hut", 480, 590))
 				gates.append(Gate(playerList[0], 465, 641, 48, 11, "grounds", 2886, 3142))
 
+				# load gates as surfaces
 				for i in range(len(gates)):
 					gates[i].loadImages()
 
@@ -126,7 +135,18 @@ while running:
 
 				gameScreenInit = True
 
+				# check if user wants to load previous game
+				load = "no load"
+
 		elif gameScreenInit:
+			if load == "load":
+				save = open("saveFile.txt", "r")
+				for i in save.read().strip().split("\n"):
+					exec(i)
+				save.close()
+				load = "no load"
+				playerList[0].createBlobs(backgrounds)
+
 			mx, my = mouse.get_pos()
 			pressed = key.get_pressed()
 			test = "good"
@@ -136,7 +156,7 @@ while running:
 
 				# Display in game menu
 				if e.type == KEYDOWN and e.key == 101:
-					playerList[0] = inGameMenu(camera, playerList[0], music, backgrounds)
+					load = inGameMenu(camera, playerList[0], music, backgrounds)
 
 			if pressed[K_SPACE]:
 				playerList[0].attacking = True
@@ -149,6 +169,25 @@ while running:
 
 			if playerList[0].getHealth() <= 0:
 				running = False
+
+
+			# story progression
+			if playerList[0].getLocation() == "entrance hall" and not story_done[1]:
+				story_stage[1] = True
+			if playerList[0].getLocation() == "hagrid's hut" and not story_done[2]:
+				story_stage[2] = True
+			if playerList[0].getKills() >= 5 and not story_done[3]:
+				story_stage[3] = True
+				story_stage[4] = True
+
+
+			for i in range(len(story_stage)):
+				if story_stage[i]:
+					screen.blit(story_images[i], (0, 450))
+					display.flip()
+					time.delay(2000)
+					story_stage[i] = False
+					story_done[i] = True
 
 		elif mode_select == "exit":
 			running = False

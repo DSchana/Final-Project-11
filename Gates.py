@@ -1,4 +1,5 @@
 # objectSprites.py
+#class gate controls the doors in the game, eg. when player enter a door, the interior is shown 
 
 from pygame import *
 from battleBlob import *

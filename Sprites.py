@@ -1,11 +1,8 @@
 #sprites.py
-#This file contains the code to control the sprites v
+#This file contains the code to control the sprites 
 
 from pygame import *
 import glob
-
-#NOTE: REMEMBER TO ADD IN THE IDLE ANIMATION and also diagonal sprites and put into a function
-#Put this in the loading screen to load these sprites
 
 class Sprites:
 	def __init__(self, up_directory, left_directory, down_directory, right_directory, upleft_directory, leftdown_directory, downright_directory, upright_directory,
@@ -33,7 +30,7 @@ class Sprites:
 		self.sprites = [[]]
 		self.idle = []
 
-		self.frame = 0
+		self.frame = 0 #default first frame 
 		self.attack_frame = 0
 		self.max_frame = 0
 
@@ -42,6 +39,7 @@ class Sprites:
 		self.last_direction = ""
 
 	def loadImages(self):
+                #from above, it loads all the sprites from the directories
 		for i in range(len(self.directories)):
 			if self.directories[i] != False:
 				self.sprites.append(glob.glob(self.directories[i] + "*.png"))
@@ -70,7 +68,9 @@ class Sprites:
 		py = Player.getY()
 		pDirection = Player.getDirection()
 
-		if pDirection == "right":
+                #The following chunk controls the sprite movement for harry
+		#eg. when a key is pressed, blit the appropriate image (WASD movement)
+		if pDirection == "right": 
 			camera.blit(self.sprites[3][int(self.frame)],(px,py)) 
 			if self.frame > len(self.sprites[3]) - 1: #8 frames total for this animation
 				self.frame = 0
@@ -154,6 +154,8 @@ class Sprites:
 	def showBackground(self, back_image, x, y, camera):
 		camera.blit(back_image, (x, y))
 
+        #The following code controls the sprites for casting spells (Space bar)
+	#if character is facing a certain direction, blit the sprite of him casting the spell in that direction 
 	def inGameAttack(self, Player, camera, reset):
 		"Magic use sprites in game out of battle mode"
 		px = Player.getX()
@@ -225,5 +227,5 @@ class Sprites:
 
 		return self.attacking
 
-	def battle(self):
+	def battle(self): #used for the battle interface.
 		"play sprite for battle, including idle, attacking and damaged"
