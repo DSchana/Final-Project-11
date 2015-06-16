@@ -116,7 +116,6 @@ class Player:
 				sprite.changeSprite(self, camera)
 		else:
 			self.attacking = sprite.inGameAttack(self, camera, self.attacking)
-			self.attack(camera)
 			
 		self.changeDirection(pressed)
 		if not self.getCollision(collision_mask[self.location], background[self.location], gates, camera, music, background):
