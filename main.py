@@ -14,7 +14,7 @@ from Menu import *
 from Gates import *
 from battleBlob import *
 
-#Window preferemces 
+# Window preferences 
 os.environ['SDL_VIDEO_WINDOW_POS'] = '25,50'  # Opens up in the upper left corner 
 screen = display.set_mode((850, 600))
 display.set_caption("Harry Potter: New Horizons")
@@ -23,7 +23,7 @@ mouse.set_cursor(*cursors.tri_left)
 # create subsurface of a camera
 camera = screen.subsurface((0, 0, 850, 600))
 
-# main music
+# main music inititialization
 music = {}
 music["main"] = Sound("Audio/main.mp3")
 music["menu"] = Sound("Audio/menu.mp3")
